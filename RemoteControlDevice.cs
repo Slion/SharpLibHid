@@ -69,33 +69,100 @@ namespace BruceThomas.Devices.RemoteControl
 		Unknown
 	}
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum MceButton
+    {
+        Null                    =   0x00, //Not defined by the specs
+        GreenStart              =   0x0D,
+        ClosedCaptioning        =   0x2B,
+        Teletext                =   0x5A,
+        TeletextRed             =   0x5B,
+        TeletextGreen           =   0x5C,
+        TeletextYellow          =   0x5D,
+        TeletextBlue            =   0x5E,
+        LiveTv                  =   0x25,
+        Music                   =   0x47,
+        RecordedTv              =   0x48,
+        Pictures                =   0x49,
+        Videos                  =   0x4A,
+        FmRadio                 =   0x50,
+        Extras                  =   0x3C,
+        ExtrasApp               =   0x3D,
+        DvdMenu                 =   0x24,
+        DvdAngle                =   0x4B,
+        DvdAudio                =   0x4C,
+        DvdSubtitle             =   0x4D,
+        Eject                   =   0x28,
+        DvdTopMenu              =   0x43,
+        Ext0                    =   0x32,
+        Ext1                    =   0x33,
+        Ext2                    =   0x34,
+        Ext3                    =   0x35,
+        Ext4                    =   0x36,
+        Ext5                    =   0x37,
+        Ext6                    =   0x38,
+        Ext7                    =   0x39,
+        Ext8                    =   0x3A,
+        Ext9                    =   0x80,
+        Ext10                   =   0x81,
+        Ext11                   =   0x6F,
+        Zoom                    =   0x27,
+        ChannelInput            =   0x42,
+        SubAudio                =   0x2D,
+        Channel10               =   0x3E,
+        Channel11               =   0x3F,
+        Channel12               =   0x40,
+        Display                 =   0x4F,
+        Kiosk                   =   0x6A,
+        NetworkSelection        =   0x2C,
+        BlueRayTool             =   0x78,
+        ChannelInfo             =   0x41,
+        VideoSelection          =   0x61                
+    }
+
 
 	#region RemoteControlEventArgs
 
 	public class RemoteControlEventArgs : EventArgs
 	{
-		RemoteControlButton _rcb;
+        RemoteControlButton _rcb;
 		InputDevice _device;
+        MceButton iMceButton;
 
-		public RemoteControlEventArgs(RemoteControlButton rcb, InputDevice device)
+        public RemoteControlEventArgs(RemoteControlButton rcb, InputDevice device)
 		{
+            iMceButton = MceButton.Null;
 			_rcb = rcb;
 			_device = device;
 		}
 
+        public RemoteControlEventArgs(MceButton mce, InputDevice device)
+        {
+            iMceButton = mce;
+            _rcb = RemoteControlButton.Unknown;
+            _device = device;
+        }
 
 		public RemoteControlEventArgs()
 		{
+            iMceButton = MceButton.Null;
 			_rcb = RemoteControlButton.Unknown;
 			_device = InputDevice.Key;
 		}
-
 
 		public RemoteControlButton Button
 		{
 			get { return _rcb;  }
 			set { _rcb = value; }
 		}
+
+        public MceButton MceButton
+        {
+            get { return iMceButton; }
+            set { iMceButton = value; }
+        }
 
 		public InputDevice Device
 		{
@@ -230,22 +297,6 @@ namespace BruceThomas.Devices.RemoteControl
 		private const int APPCOMMAND_MEDIA_REWIND       = 50;
 		private const int APPCOMMAND_MEDIA_CHANNEL_UP   = 51;
 		private const int APPCOMMAND_MEDIA_CHANNEL_DOWN = 52;
-
-		private const int RAWINPUT_DETAILS				= 0x209;
-		private const int RAWINPUT_GUIDE				= 0x8D;
-		private const int RAWINPUT_TVJUMP				= 0x25;
-		private const int RAWINPUT_STANDBY				= 0x82;
-		private const int RAWINPUT_OEM1					= 0x80;
-		private const int RAWINPUT_OEM2					= 0x81;
-		private const int RAWINPUT_MYTV					= 0x46;
-		private const int RAWINPUT_MYVIDEOS				= 0x4A;
-		private const int RAWINPUT_MYPICTURES			= 0x49;
-		private const int RAWINPUT_MYMUSIC				= 0x47;
-		private const int RAWINPUT_RECORDEDTV			= 0x48;
-		private const int RAWINPUT_DVDANGLE				= 0x4B;
-		private const int RAWINPUT_DVDAUDIO				= 0x4C;
-		private const int RAWINPUT_DVDMENU				= 0x24;
-		private const int RAWINPUT_DVDSUBTITLE			= 0x4D;
 
 		private const int RIM_TYPEMOUSE					= 0;
 		private const int RIM_TYPEKEYBOARD				= 1;
@@ -498,57 +549,13 @@ namespace BruceThomas.Devices.RemoteControl
                     int rawData = bRawData[1]; //Get button code
                     Debug.WriteLine("HID " + raw.hid.dwCount + "/" + raw.hid.dwSizeHid + ":" + bRawData[0].ToString("X2") + bRawData[1].ToString("X2"));
 
-					switch (rawData)
-					{
-						case RAWINPUT_DETAILS:
-							rcb = RemoteControlButton.Details;
-							break;
-						case RAWINPUT_GUIDE:
-							rcb = RemoteControlButton.Guide;
-							break;
-						case RAWINPUT_TVJUMP:
-							rcb = RemoteControlButton.TVJump;
-							break;
-						case RAWINPUT_STANDBY:
-							rcb = RemoteControlButton.StandBy;
-							break;
-						case RAWINPUT_OEM1:
-							rcb = RemoteControlButton.OEM1;
-							break;
-						case RAWINPUT_OEM2:
-							rcb = RemoteControlButton.OEM2;
-							break;
-						case RAWINPUT_MYTV:
-							rcb = RemoteControlButton.MyTV;
-							break;
-						case RAWINPUT_MYVIDEOS:
-							rcb = RemoteControlButton.MyVideos;
-							break;
-						case RAWINPUT_MYPICTURES:
-							rcb = RemoteControlButton.MyPictures;
-							break;
-						case RAWINPUT_MYMUSIC:
-							rcb = RemoteControlButton.MyMusic;
-							break;
-						case RAWINPUT_RECORDEDTV:
-							rcb = RemoteControlButton.RecordedTV;
-							break;
-						case RAWINPUT_DVDANGLE:
-							rcb = RemoteControlButton.DVDAngle;
-							break;
-						case RAWINPUT_DVDAUDIO:
-							rcb = RemoteControlButton.DVDAudio;
-							break;
-						case RAWINPUT_DVDMENU:
-							rcb = RemoteControlButton.DVDMenu;
-							break;
-						case RAWINPUT_DVDSUBTITLE:
-							rcb = RemoteControlButton.DVDSubtitle;
-							break;
-					}
-
-					if (rcb != RemoteControlButton.Unknown && this.ButtonPressed != null)
-						this.ButtonPressed(this, new RemoteControlEventArgs(rcb, GetDevice(message.LParam.ToInt32())));
+                    if (Enum.IsDefined(typeof(MceButton), rawData) && rawData!=0) //Our button is a known MCE button
+                    {
+                        if (this.ButtonPressed != null) //What's that?
+                        {
+                            this.ButtonPressed(this, new RemoteControlEventArgs((MceButton)rawData, GetDevice(message.LParam.ToInt32())));
+                        }
+                    }
 				}
 				else if(raw.header.dwType == RIM_TYPEMOUSE)
 				{
