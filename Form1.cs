@@ -123,7 +123,18 @@ namespace RemoteControlSample
 		private void _remote_ButtonPressed(object sender, RemoteControlEventArgs e)
 		{
 			_timer.Enabled = false;
-			label1.Text = e.Button.ToString();
+            if (e.Button != RemoteControlButton.Unknown)
+            {
+                label1.Text = e.Button.ToString();
+            }
+            else if (e.MceButton != MceButton.Null)
+            {
+                label1.Text = e.MceButton.ToString();
+            }
+            else
+            {
+                label1.Text = "Unknown";
+            }
 			label2.Text = e.Device.ToString();			
 			_timer.Enabled = true;
 		}
