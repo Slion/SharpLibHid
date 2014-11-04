@@ -277,6 +277,9 @@ namespace BruceThomas.Devices.RemoteControl
 		[DllImport("User32.dll")]
 		extern static uint GetRawInputData(IntPtr hRawInput, uint uiCommand, IntPtr pData, ref uint pcbSize, uint cbSizeHeader);
 
+   		[DllImport("User32.dll")]
+		extern static uint GetRawInputDeviceInfo(IntPtr hDevice, uint uiCommand, IntPtr pData, ref uint pcbSize);
+
 
 		private const int WM_KEYDOWN	= 0x0100;
 		private const int WM_APPCOMMAND	= 0x0319;
@@ -538,15 +541,15 @@ namespace BruceThomas.Devices.RemoteControl
                     {
                         byte* source = (byte*)buffer;
                         source += sizeof(RAWINPUTHEADER) + sizeof(RAWHID);
-                        //source += 1;
                         pRawData = (int)source;
                     }
-                    //int pRawData = buffer.ToUint32() + Marshal.SizeOf(typeof(RAWINPUT)) + 1;
 
-					//Marshal.Copy(new IntPtr(pRawData), bRawData, 0, raw.hid.dwSizeHid - 1);
+                    //Copy HID message into our buffer
                     Marshal.Copy(new IntPtr(pRawData), bRawData, 0, raw.hid.dwSizeHid);
-					//int rawData = bRawData[0] | bRawData[1] << 8;
+                    //bRawData[0] //Not sure what's the meaning of the code at offset 0
+                    //TODO: check size before access
                     int rawData = bRawData[1]; //Get button code
+                    //Print HID codes in our debug output
                     Debug.WriteLine("HID " + raw.hid.dwCount + "/" + raw.hid.dwSizeHid + ":" + bRawData[0].ToString("X2") + bRawData[1].ToString("X2"));
 
                     if (Enum.IsDefined(typeof(MceButton), rawData) && rawData!=0) //Our button is a known MCE button
