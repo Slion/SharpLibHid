@@ -496,7 +496,7 @@ namespace BruceThomas.Devices.RemoteControl
                     Marshal.Copy(new IntPtr(pRawData), bRawData, 0, raw.hid.dwSizeHid);
 					//int rawData = bRawData[0] | bRawData[1] << 8;
                     int rawData = bRawData[1]; //Get button code
-                    Debug.WriteLine("HID " + raw.hid.dwCount + "/" + raw.hid.dwSizeHid + ":" + bRawData[0].ToString("X") + bRawData[1].ToString("X"));
+                    Debug.WriteLine("HID " + raw.hid.dwCount + "/" + raw.hid.dwSizeHid + ":" + bRawData[0].ToString("X2") + bRawData[1].ToString("X2"));
 
 					switch (rawData)
 					{
