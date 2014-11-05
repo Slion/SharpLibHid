@@ -4,8 +4,59 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 
 
-namespace BruceThomas.Devices.RemoteControl
+namespace Devices.RemoteControl
 {
+
+    public static class Hid
+    {
+        /// <summary>
+        /// From USB HID usage tables.
+        /// http://www.usb.org/developers/hidpage#HID_Usage
+        /// http://www.usb.org/developers/devclass_docs/Hut1_12v2.pdf
+        /// </summary>
+        public enum UsagePage : ushort
+        {
+            Undefined = 0,
+            GenericDesktopControl,
+            SimulationControl,
+            VirtualRealityControl,
+            SportControl,
+            GameControl,
+            GenericDeviceControl,
+            Keyboard,
+            LightEmittingDiode,
+            Button,
+            Ordinal,
+            Telephony,
+            Consumer,
+            Digitiser,
+            PhysicalInterfaceDevice = 0x0f,
+            Unicode = 0x10,
+            AlphaNumericDisplay = 0x14,
+            MedicalInstruments = 0x40,
+            MonitorPage0 = 0x80,
+            MonitorPage1,
+            MonitorPage2,
+            MonitorPage3,
+            PowerPage0,
+            PowerPage1,
+            PowerPage2,
+            PowerPage3,
+            BarCodeScanner = 0x8c,
+            Scale,
+            MagneticStripeReader,
+            ReservedPointOfSale,
+            CameraControl,
+            Arcade,
+            // http://msdn.microsoft.com/en-us/library/windows/desktop/bb417079.aspx
+            MceRemote = 0xffbc,
+            TerraTecRemote = 0xffcc
+        }
+
+        public const ushort MceRemoteUsage = 0x88;
+    }
+
+
 	public enum InputDevice
 	{
 		Key,
@@ -70,14 +121,14 @@ namespace BruceThomas.Devices.RemoteControl
 	}
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public enum MceButton
     {
         /// <summary>
         /// Not defined by the Microsoft specs.
         /// </summary>
-        Null                    =   0x00, 
+        Null                    =   0x00,
         GreenStart              =   0x0D,
         ClosedCaptioning        =   0x2B,
         Teletext                =   0x5A,
@@ -193,7 +244,7 @@ namespace BruceThomas.Devices.RemoteControl
         NetworkSelection        =   0x2C,
         BlueRayTool             =   0x78,
         ChannelInfo             =   0x41,
-        VideoSelection          =   0x61                
+        VideoSelection          =   0x61
     }
 
     public enum HpMceButton
@@ -395,14 +446,62 @@ namespace BruceThomas.Devices.RemoteControl
 		}
 
 
+        [StructLayout(LayoutKind.Sequential, Pack=1)]
+        internal struct RID_DEVICE_INFO_MOUSE
+		{
+            public uint dwId;
+            public uint dwNumberOfButtons;
+            public uint dwSampleRate;
+            public bool fHasHorizontalWheel;
+		}
+
+
+        [StructLayout(LayoutKind.Sequential, Pack=1)]
+        internal struct RID_DEVICE_INFO_KEYBOARD
+		{
+            public uint dwType;
+            public uint dwSubType;
+            public uint dwKeyboardMode;
+            public uint dwNumberOfFunctionKeys;
+            public uint dwNumberOfIndicators;
+            public uint dwNumberOfKeysTotal;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack=1)]
+        internal struct RID_DEVICE_INFO_HID
+		{
+            public uint dwVendorId;
+            public uint dwProductId;
+            public uint dwVersionNumber;
+            public ushort usUsagePage;
+            public ushort usUsage;
+        }
+
+        [StructLayout(LayoutKind.Explicit, Pack=1)]
+        internal struct RID_DEVICE_INFO
+		{
+            [FieldOffset(0)]
+            public uint cbSize;
+            [FieldOffset(4)]
+            public uint dwType;
+            [FieldOffset(8)]
+            public RID_DEVICE_INFO_MOUSE mouse;
+            [FieldOffset(8)]
+            public RID_DEVICE_INFO_KEYBOARD keyboard;
+            [FieldOffset(8)]
+            public RID_DEVICE_INFO_HID hid;
+		}
+
+
+
 		[DllImport("User32.dll")]
 		extern static bool RegisterRawInputDevices(RAWINPUTDEVICE[] pRawInputDevice, uint uiNumDevices, uint cbSize);
 
 		[DllImport("User32.dll")]
 		extern static uint GetRawInputData(IntPtr hRawInput, uint uiCommand, IntPtr pData, ref uint pcbSize, uint cbSizeHeader);
 
-   		[DllImport("User32.dll")]
-		extern static uint GetRawInputDeviceInfo(IntPtr hDevice, uint uiCommand, IntPtr pData, ref uint pcbSize);
+   		[DllImport("User32.dll", SetLastError=true)]
+		extern static int GetRawInputDeviceInfo(IntPtr hDevice, uint uiCommand, IntPtr pData, ref uint pcbSize);
 
 
 		private const int WM_KEYDOWN	= 0x0100;
@@ -425,10 +524,6 @@ namespace BruceThomas.Devices.RemoteControl
 		private const int APPCOMMAND_MEDIA_CHANNEL_UP   = 51;
 		private const int APPCOMMAND_MEDIA_CHANNEL_DOWN = 52;
 
-		private const int RIM_TYPEMOUSE					= 0;
-		private const int RIM_TYPEKEYBOARD				= 1;
-		private const int RIM_TYPEHID					= 2;
-
 		private const int RID_INPUT						= 0x10000003;
 		private const int RID_HEADER					= 0x10000005;
 
@@ -436,6 +531,37 @@ namespace BruceThomas.Devices.RemoteControl
 		private const int FAPPCOMMAND_MOUSE				= 0x8000;
 		private const int FAPPCOMMAND_KEY				= 0;
 		private const int FAPPCOMMAND_OEM				= 0x1000;
+
+        /// <summary>
+        /// GetRawInputDeviceInfo pData points to a string that contains the device name.
+        /// </summary>
+        public const uint RIDI_DEVICENAME = 0x20000007;
+        /// <summary>
+        /// GetRawInputDeviceInfo For this uiCommand only, the value in pcbSize is the character count (not the byte count).
+        /// </summary>
+        public const uint RIDI_DEVICEINFO = 0x2000000b;
+        /// <summary>
+        /// GetRawInputDeviceInfo pData points to an RID_DEVICE_INFO structure.
+        /// </summary>
+        public const uint RIDI_PREPARSEDDATA = 0x20000005;
+
+
+        /// <summary>
+        /// Data comes from a mouse.
+        /// </summary>
+        public const uint RIM_TYPEMOUSE = 0;
+        /// <summary>
+        /// Data comes from a keyboard.
+        /// </summary>
+        public const uint RIM_TYPEKEYBOARD = 1;
+        /// <summary>
+        /// Data comes from an HID that is not a keyboard or a mouse.
+        /// </summary>
+        public const uint RIM_TYPEHID = 2;
+
+
+
+
 
 		public delegate void RemoteControlDeviceEventHandler(object sender, RemoteControlEventArgs e);
 		public event RemoteControlDeviceEventHandler ButtonPressed;
@@ -629,7 +755,9 @@ namespace BruceThomas.Devices.RemoteControl
 
 		private void ProcessInputCommand(ref Message message)
 		{
-			RemoteControlButton rcb = RemoteControlButton.Unknown;
+
+
+
 			uint dwSize = 0;
 
             uint sizeOfHeader=(uint)Marshal.SizeOf(typeof(RAWINPUTHEADER));
@@ -638,20 +766,54 @@ namespace BruceThomas.Devices.RemoteControl
 			GetRawInputData(message.LParam,	RID_INPUT, IntPtr.Zero,	ref dwSize,	sizeOfHeader);
 
             //Allocate a large enough buffer
-			IntPtr buffer = Marshal.AllocHGlobal((int) dwSize);
+			IntPtr rawInputBuffer = Marshal.AllocHGlobal((int) dwSize);
 			try
 			{
-				if(buffer == IntPtr.Zero)
+				if(rawInputBuffer == IntPtr.Zero)
 					return;
 
                 //Now read our RAWINPUT data
-				if (GetRawInputData(message.LParam,	RID_INPUT, buffer, ref dwSize, (uint) Marshal.SizeOf(typeof(RAWINPUTHEADER))) != dwSize)
+				if (GetRawInputData(message.LParam,	RID_INPUT, rawInputBuffer, ref dwSize, (uint) Marshal.SizeOf(typeof(RAWINPUTHEADER))) != dwSize)
 				{
 					return;
 				}
 
                 //Cast our buffer
-                RAWINPUT raw = (RAWINPUT)Marshal.PtrToStructure(buffer, typeof(RAWINPUT));
+                RAWINPUT raw = (RAWINPUT)Marshal.PtrToStructure(rawInputBuffer, typeof(RAWINPUT));
+
+                //Get Device Info
+                uint deviceInfoSize = (uint)Marshal.SizeOf(typeof(RID_DEVICE_INFO));
+                IntPtr deviceInfoBuffer = Marshal.AllocHGlobal((int)deviceInfoSize);
+
+                int res = GetRawInputDeviceInfo(raw.header.hDevice, RIDI_DEVICEINFO, deviceInfoBuffer, ref deviceInfoSize);
+                if (res <= 0)
+                {
+                    Debug.WriteLine("WM_INPUT could not read device info: " + Marshal.GetLastWin32Error().ToString());
+                    return;
+                }
+
+                //Cast our buffer
+                RID_DEVICE_INFO deviceInfo = (RID_DEVICE_INFO)Marshal.PtrToStructure(deviceInfoBuffer, typeof(RID_DEVICE_INFO));
+
+                //Check type of input device and quite if we don't like it
+                switch (deviceInfo.dwType)
+                {
+                    case RIM_TYPEHID:
+                        Debug.WriteLine("WM_INPUT source device is HID.");
+                        break;
+                    case RIM_TYPEMOUSE:
+                        Debug.WriteLine("WM_INPUT source device is Mouse.");
+                        return;
+                    case RIM_TYPEKEYBOARD:
+                        Debug.WriteLine("WM_INPUT source device is Keyboard.");
+                        return;
+                    default:
+                        Debug.WriteLine("WM_INPUT source device is Unknown.");
+                        return;
+                }
+
+                //Get Usage Page and Usage
+                Debug.WriteLine("Usage Page: 0x" + deviceInfo.hid.usUsagePage.ToString("X4") + " Usage: 0x" + deviceInfo.hid.usUsage.ToString("X4"));
 
                 //Check that our raw input is HID
                 if (raw.header.dwType == RIM_TYPEHID && raw.hid.dwSizeHid>0)
@@ -663,7 +825,7 @@ namespace BruceThomas.Devices.RemoteControl
                     int pRawData = 0;
                     unsafe
                     {
-                        byte* source = (byte*)buffer;
+                        byte* source = (byte*)rawInputBuffer;
                         source += sizeof(RAWINPUTHEADER) + sizeof(RAWHID);
                         pRawData = (int)source;
                     }
@@ -674,7 +836,19 @@ namespace BruceThomas.Devices.RemoteControl
                     //TODO: check size before access
                     int rawData = bRawData[1]; //Get button code
                     //Print HID codes in our debug output
-                    Debug.WriteLine("HID " + raw.hid.dwCount + "/" + raw.hid.dwSizeHid + ":" + bRawData[0].ToString("X2") + bRawData[1].ToString("X2"));
+                    string hidDump = "HID " + raw.hid.dwCount + "/" + raw.hid.dwSizeHid + ":";
+                    foreach (byte b in bRawData)
+                    {
+                        hidDump += b.ToString("X2");
+                    }
+                    Debug.WriteLine(hidDump);
+
+                    //Make sure both usage page and usage are matching MCE remote
+                    if (deviceInfo.hid.usUsagePage != (ushort)Hid.UsagePage.MceRemote || deviceInfo.hid.usUsage != (ushort)Hid.MceRemoteUsage)
+                    {
+                        Debug.WriteLine("Not MCE remote page and usage.");
+                        return;
+                    }
 
                     if (Enum.IsDefined(typeof(MceButton), rawData) && rawData!=0) //Our button is a known MCE button
                     {
@@ -695,7 +869,7 @@ namespace BruceThomas.Devices.RemoteControl
 			}
 			finally
 			{
-				Marshal.FreeHGlobal(buffer);
+				Marshal.FreeHGlobal(rawInputBuffer);
 			}
 		}
 

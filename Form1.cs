@@ -4,7 +4,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
-using BruceThomas.Devices.RemoteControl;
+using Devices.RemoteControl;
 
 namespace RemoteControlSample
 {
@@ -34,7 +34,7 @@ namespace RemoteControlSample
 			_timer.Enabled = false;
 			_timer.Tick +=new EventHandler(_timer_Tick);
 			_remote = new RemoteControlDevice();
-			_remote.ButtonPressed +=new BruceThomas.Devices.RemoteControl.RemoteControlDevice.RemoteControlDeviceEventHandler(_remote_ButtonPressed);			
+			_remote.ButtonPressed +=new Devices.RemoteControl.RemoteControlDevice.RemoteControlDeviceEventHandler(_remote_ButtonPressed);
 		}
 
 		/// <summary>
@@ -44,7 +44,7 @@ namespace RemoteControlSample
 		{
 			if( disposing )
 			{
-				if (components != null) 
+				if (components != null)
 				{
 					components.Dispose();
 				}
@@ -62,9 +62,9 @@ namespace RemoteControlSample
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
-			// 
+			//
 			// label1
-			// 
+			//
 			this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
 			this.label1.ForeColor = System.Drawing.Color.White;
@@ -74,18 +74,18 @@ namespace RemoteControlSample
 			this.label1.TabIndex = 0;
 			this.label1.Text = "Ready...";
 			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
+			//
 			// label2
-			// 
+			//
 			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
 			this.label2.Location = new System.Drawing.Point(72, 32);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(576, 23);
 			this.label2.TabIndex = 1;
 			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
+			//
 			// Form1
-			// 
+			//
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.BackColor = System.Drawing.Color.LightSteelBlue;
 			this.ClientSize = new System.Drawing.Size(736, 266);
@@ -97,26 +97,26 @@ namespace RemoteControlSample
 			this.ResumeLayout(false);
 
 		}
-		#endregion
+		#endregion Windows Form Designer generated code
 
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
 		[STAThread]
-		static void Main() 
+		static void Main()
 		{
 			Application.Run(new Form1());
 		}
 
 		private void Form1_Load(object sender, System.EventArgs e)
 		{
-		
+
 		}
 
 
 		protected override void WndProc(ref Message message)
 		{
-			_remote.ProcessMessage(message);			
+			_remote.ProcessMessage(message);
 			base.WndProc(ref message);
 		}
 
@@ -136,13 +136,13 @@ namespace RemoteControlSample
                 {
                     //Also display HP button name
                     label1.Text += " / HP:" + ((HpMceButton)e.MceButton).ToString();
-                }                
+                }
             }
             else
             {
                 label1.Text = "Unknown";
             }
-			label2.Text = e.Device.ToString();			
+			label2.Text = e.Device.ToString();
 			_timer.Enabled = true;
 		}
 
