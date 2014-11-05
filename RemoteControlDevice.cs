@@ -755,8 +755,7 @@ namespace Devices.RemoteControl
 
 		private void ProcessInputCommand(ref Message message)
 		{
-
-
+            Debug.WriteLine("================WM_INPUT================");
 
 			uint dwSize = 0;
 
