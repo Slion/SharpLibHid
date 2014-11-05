@@ -74,7 +74,10 @@ namespace BruceThomas.Devices.RemoteControl
     /// </summary>
     public enum MceButton
     {
-        Null                    =   0x00, //Not defined by the specs
+        /// <summary>
+        /// Not defined by the Microsoft specs.
+        /// </summary>
+        Null                    =   0x00, 
         GreenStart              =   0x0D,
         ClosedCaptioning        =   0x2B,
         Teletext                =   0x5A,
@@ -94,11 +97,63 @@ namespace BruceThomas.Devices.RemoteControl
         DvdAngle                =   0x4B,
         DvdAudio                =   0x4C,
         DvdSubtitle             =   0x4D,
+        /// <summary>
+        /// First press action: Ejects a DVD drive.
+        /// <para />
+        /// Second press action: Repeats first press action.
+        /// <para />
+        /// Notably issued by XBOX360 remote as defined in irplus - Remote Control - Android application.
+        /// </summary>
         Eject                   =   0x28,
         DvdTopMenu              =   0x43,
+        /// <summary>
+        /// First press action: Generates EXTn HID message in the Media Center Vendor Specific
+        /// Collection (page 0xFFBC, usage 0x88).
+        /// <para />
+        /// Second press action: Repeats message.
+        /// <para />
+        /// Auto-repeat: No
+        /// <para />
+        /// Notably sent by the 'Visualization' button of HP Windows Media Center Remote (TSGH-IR08).
+        /// <para />
+        /// According to HP specs it displays visual imagery that is synchronized to the sound of your music tracks.
+        /// </summary>
         Ext0                    =   0x32,
+        /// <summary>
+        /// First press action: Generates EXTn HID message in the Media Center Vendor Specific
+        /// Collection (page 0xFFBC, usage 0x88).
+        /// <para />
+        /// Second press action: Repeats message.
+        /// <para />
+        /// Auto-repeat: No
+        /// <para />
+        /// Notably sent by the 'Slide Show' button of HP Windows Media Center Remote (TSGH-IR08).
+        /// <para />
+        /// According to HP specs it plays a slide show of all the pictures on your hard disk drive.
+        /// </summary>
         Ext1                    =   0x33,
+        /// <summary>
+        /// First press action: Generates EXTn HID message in the Media Center Vendor Specific
+        /// Collection (page 0xFFBC, usage 0x88).
+        /// <para />
+        /// Second press action: Repeats message.
+        /// <para />
+        /// Auto-repeat: No
+        /// <para />
+        /// Notably sent by the 'Eject' button of HP Windows Media Center Remote (TSGH-IR08).
+        /// Also interpreted as 'Eject' action by SoundGraph iMON Manager in MCE mode (OrigenAE VF310).
+        /// </summary>
         Ext2                    =   0x34,
+        /// <summary>
+        /// First press action: Generates EXTn HID message in the Media Center Vendor Specific
+        /// Collection (page 0xFFBC, usage 0x88).
+        /// <para />
+        /// Second press action: Repeats message.
+        /// <para />
+        /// Auto-repeat: No
+        /// <para />
+        /// Notably sent by the 'Input selection' button of HP Windows Media Center Remote (TSGH-IR08).
+        /// </summary>
         Ext3                    =   0x35,
         Ext4                    =   0x36,
         Ext5                    =   0x37,
@@ -114,13 +169,82 @@ namespace BruceThomas.Devices.RemoteControl
         Channel10               =   0x3E,
         Channel11               =   0x3F,
         Channel12               =   0x40,
+        /// <summary>
+        /// First press action: Generates OEM2 HID message in the Media Center Vendor Specific
+        /// Collection. This button is intended to control the front panel display of home entertainment
+        /// computers. When this button is pressed, the display could be turned on or off, or the display
+        /// mode could change.
+        /// <para />
+        /// Second press action: Repeats message.
+        /// <para />
+        /// Auto-repeat: No
+        /// <para />
+        /// Notably issued by XBOX360 remote as defined in irplus - Remote Control - Android application.
+        /// </summary>
         Display                 =   0x4F,
+        /// <summary>
+        /// First press action: To be determined.
+        /// <para />
+        /// Second press action: Repeats message.
+        /// <para />
+        /// Auto-repeat: No
+        /// </summary>
         Kiosk                   =   0x6A,
         NetworkSelection        =   0x2C,
         BlueRayTool             =   0x78,
         ChannelInfo             =   0x41,
         VideoSelection          =   0x61                
     }
+
+    public enum HpMceButton
+    {
+        /// <summary>
+        /// Displays visual imagery that is synchronized to the sound of your music tracks.
+        /// <para />
+        /// Second press action: Repeats message.
+        /// <para />
+        /// Auto-repeat: No
+        /// <para />
+        /// Notably sent by the 'Visualization' button of HP Windows Media Center Remote (TSGH-IR08).
+        /// <para />
+        /// According to HP specs it displays visual imagery that is synchronized to the sound of your music tracks.
+        /// </summary>
+        Visualization = MceButton.Ext0,
+        /// <summary>
+        /// Plays a slide show of all the pictures on your hard disk drive.
+        /// <para />
+        /// Second press action: Repeats message.
+        /// <para />
+        /// Auto-repeat: No
+        /// <para />
+        /// Notably sent by the 'Slide Show' button of HP Windows Media Center Remote (TSGH-IR08).
+        /// <para />
+        /// According to HP specs it plays a slide show of all the pictures on your hard disk drive.
+        /// </summary>
+        SlideShow = MceButton.Ext1,
+        /// <summary>
+        /// Eject optical drive.
+        /// <para />
+        /// Second press action: Repeats message.
+        /// <para />
+        /// Auto-repeat: No
+        /// <para />
+        /// Notably sent by the 'Eject' button of HP Windows Media Center Remote (TSGH-IR08).
+        /// Also interpreted as 'Eject' action by SoundGraph iMON Manager in MCE mode (OrigenAE VF310).
+        /// </summary>
+        Eject = MceButton.Ext2,
+        /// <summary>
+        /// Not sure what this should do.
+        /// <para />
+        /// Second press action: Repeats message.
+        /// <para />
+        /// Auto-repeat: No
+        /// <para />
+        /// Notably sent by the 'Input selection' button of HP Windows Media Center Remote (TSGH-IR08).
+        /// </summary>
+        InputSelection = MceButton.Ext3,
+    }
+
 
 
 	#region RemoteControlEventArgs

@@ -129,7 +129,14 @@ namespace RemoteControlSample
             }
             else if (e.MceButton != MceButton.Null)
             {
+                //Display MCE button name
                 label1.Text = e.MceButton.ToString();
+                //Check if this is an HP extension
+                if (Enum.IsDefined(typeof(HpMceButton), (int)e.MceButton))
+                {
+                    //Also display HP button name
+                    label1.Text += " / HP:" + ((HpMceButton)e.MceButton).ToString();
+                }                
             }
             else
             {
