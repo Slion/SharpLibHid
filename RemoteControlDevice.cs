@@ -145,9 +145,6 @@ namespace Devices.RemoteControl
 		private const int APPCOMMAND_MEDIA_CHANNEL_UP   = 51;
 		private const int APPCOMMAND_MEDIA_CHANNEL_DOWN = 52;
 
-		private const int RID_INPUT						= 0x10000003;
-		private const int RID_HEADER					= 0x10000005;
-
 		private const int FAPPCOMMAND_MASK				= 0xF000;
 		private const int FAPPCOMMAND_MOUSE				= 0x8000;
 		private const int FAPPCOMMAND_KEY				= 0;
@@ -349,42 +346,25 @@ namespace Devices.RemoteControl
 		{
             Debug.WriteLine("================WM_INPUT================");
 
-			uint dwSize = 0;
 
-            uint sizeOfHeader=(uint)Marshal.SizeOf(typeof(RAWINPUTHEADER));
+            //Declare a pointer
+            IntPtr rawInputBuffer = IntPtr.Zero;
 
-            //Get the size of our raw input data.
-			Win32.Function.GetRawInputData(message.LParam,	RID_INPUT, IntPtr.Zero,	ref dwSize,	sizeOfHeader);
-
-            //Allocate a large enough buffer
-			IntPtr rawInputBuffer = Marshal.AllocHGlobal((int) dwSize);
-			try
-			{
-				if(rawInputBuffer == IntPtr.Zero)
-					return;
-
-                //Now read our RAWINPUT data
-                if (Win32.Function.GetRawInputData(message.LParam, RID_INPUT, rawInputBuffer, ref dwSize, (uint)Marshal.SizeOf(typeof(RAWINPUTHEADER))) != dwSize)
-				{
-					return;
-				}
-
-                //Cast our buffer
-                RAWINPUT raw = (RAWINPUT)Marshal.PtrToStructure(rawInputBuffer, typeof(RAWINPUT));
-
-                //Get Device Info
-                uint deviceInfoSize = (uint)Marshal.SizeOf(typeof(RID_DEVICE_INFO));
-                IntPtr deviceInfoBuffer = Marshal.AllocHGlobal((int)deviceInfoSize);
-
-                int res = Win32.Function.GetRawInputDeviceInfo(raw.header.hDevice, Const.RIDI_DEVICEINFO, deviceInfoBuffer, ref deviceInfoSize);
-                if (res <= 0)
+            try
+            {
+                //Fetch raw input
+                RAWINPUT raw = new RAWINPUT();
+                if (!RawInput.GetRawInputData(message.LParam, ref raw, ref rawInputBuffer))
                 {
-                    Debug.WriteLine("WM_INPUT could not read device info: " + Marshal.GetLastWin32Error().ToString());
                     return;
                 }
 
-                //Cast our buffer
-                RID_DEVICE_INFO deviceInfo = (RID_DEVICE_INFO)Marshal.PtrToStructure(deviceInfoBuffer, typeof(RID_DEVICE_INFO));
+                //Fetch device info
+                RID_DEVICE_INFO deviceInfo = new RID_DEVICE_INFO();
+                if (!RawInput.GetDeviceInfo(raw.header.hDevice, ref deviceInfo))
+                {
+                    return;
+                }
 
                 //Check type of input device and quite if we don't like it
                 switch (deviceInfo.dwType)
@@ -406,11 +386,15 @@ namespace Devices.RemoteControl
                 //Get Usage Page and Usage
                 Debug.WriteLine("Usage Page: 0x" + deviceInfo.hid.usUsagePage.ToString("X4") + " Usage: 0x" + deviceInfo.hid.usUsage.ToString("X4"));
 
-                //Check that our raw input is HID
-                if (raw.header.dwType == Const.RIM_TYPEHID && raw.hid.dwSizeHid>0)
-				{
+
+                if (raw.header.dwType == Const.RIM_TYPEHID  //Check that our raw input is HID
+                    && raw.hid.dwSizeHid > 1    //Make sure our HID msg size more than 1. In fact the first ushort is irrelevant to us for now
+                    && raw.hid.dwCount > 0)     //Check that we have at least one HID msg
+                {
+                    //TODO: for each HID message
+
                     //Allocate a buffer for one HID message
-					byte[] bRawData = new byte[raw.hid.dwSizeHid];
+                    byte[] bRawData = new byte[raw.hid.dwSizeHid];
 
                     //Compute the address from which to copy our HID message
                     int pRawData = 0;
@@ -434,6 +418,7 @@ namespace Devices.RemoteControl
                     }
                     Debug.WriteLine(hidDump);
 
+
                     //Make sure both usage page and usage are matching MCE remote
                     if (deviceInfo.hid.usUsagePage != (ushort)Hid.UsagePage.MceRemote || deviceInfo.hid.usUsage != (ushort)Hid.UsageId.MceRemoteUsage)
                     {
@@ -441,27 +426,28 @@ namespace Devices.RemoteControl
                         return;
                     }
 
-                    if (Enum.IsDefined(typeof(MceButton), rawData) && rawData!=0) //Our button is a known MCE button
+                    if (Enum.IsDefined(typeof(MceButton), rawData) && rawData != 0) //Our button is a known MCE button
                     {
                         if (this.ButtonPressed != null) //What's that?
                         {
                             this.ButtonPressed(this, new RemoteControlEventArgs((MceButton)rawData, GetDevice(message.LParam.ToInt32())));
                         }
                     }
-				}
-				else if(raw.header.dwType == Const.RIM_TYPEMOUSE)
-				{
-					// do mouse handling...
-				}
-				else if(raw.header.dwType == Const.RIM_TYPEKEYBOARD)
-				{
-					// do keyboard handling...
-				}
-			}
-			finally
-			{
-				Marshal.FreeHGlobal(rawInputBuffer);
-			}
+                }
+                else if (raw.header.dwType == Const.RIM_TYPEMOUSE)
+                {
+                    // do mouse handling...
+                }
+                else if (raw.header.dwType == Const.RIM_TYPEKEYBOARD)
+                {
+                    // do keyboard handling...
+                }
+            }
+            finally
+            {
+                //Always executed when leaving our try block
+                Marshal.FreeHGlobal(rawInputBuffer);
+            }
 		}
 
 
