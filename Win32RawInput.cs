@@ -45,6 +45,10 @@ namespace Win32
         /// </summary>
         public const uint RIM_TYPEHID = 2;
 
+        public const int RID_INPUT = 0x10000003;
+        public const int RID_HEADER = 0x10000005;
+
+
     }
 
 
