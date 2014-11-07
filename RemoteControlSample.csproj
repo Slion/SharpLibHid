@@ -131,6 +131,7 @@
     <Compile Include="RemoteControlDevice.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Win32RawInput.cs" />
     <Content Include="App.ico" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

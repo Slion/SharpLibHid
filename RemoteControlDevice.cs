@@ -3,12 +3,10 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using Hid.UsageTables;
+using Win32;
 
 namespace Devices.RemoteControl
 {
-
- 
-
 
 	public enum InputDevice
 	{
@@ -127,159 +125,6 @@ namespace Devices.RemoteControl
 
 	public sealed class RemoteControlDevice
 	{
-
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-		internal struct RAWINPUTDEVICE
-		{
-			[MarshalAs(UnmanagedType.U2)]
-			public ushort usUsagePage;
-			[MarshalAs(UnmanagedType.U2)]
-			public ushort usUsage;
-			[MarshalAs(UnmanagedType.U4)]
-			public int	 dwFlags;
-			public IntPtr hwndTarget;
-		}
-
-
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-		internal struct RAWINPUTHEADER
-		{
-			[MarshalAs(UnmanagedType.U4)]
-			public int dwType;
-			[MarshalAs(UnmanagedType.U4)]
-			public int dwSize;
-            public IntPtr hDevice;
-			[MarshalAs(UnmanagedType.U4)]
-			public int wParam;
-		}
-
-
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-		internal struct RAWHID
-		{
-			[MarshalAs(UnmanagedType.U4)]
-			public int dwSizeHid;
-			[MarshalAs(UnmanagedType.U4)]
-			public int dwCount;
-            //
-            //BYTE  bRawData[1];
-		}
-
-
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-		internal struct BUTTONSSTR
-		{
-			[MarshalAs(UnmanagedType.U2)]
-			public ushort usButtonFlags;
-			[MarshalAs(UnmanagedType.U2)]
-			public ushort usButtonData;
-		}
-
-
-        [StructLayout(LayoutKind.Explicit, Pack = 1)]
-		internal struct RAWMOUSE
-		{
-			[MarshalAs(UnmanagedType.U2)]
-			[FieldOffset (0)] public ushort usFlags;
-			[MarshalAs(UnmanagedType.U4)]
-			[FieldOffset (4)] public uint ulButtons;
-			[FieldOffset (4)] public BUTTONSSTR buttonsStr;
-			[MarshalAs(UnmanagedType.U4)]
-			[FieldOffset (8)] public uint ulRawButtons;
-            [MarshalAs(UnmanagedType.U4)]
-            [FieldOffset (12)] public int lLastX;
-            [MarshalAs(UnmanagedType.U4)]
-            [FieldOffset (16)] public int lLastY;
-			[MarshalAs(UnmanagedType.U4)]
-			[FieldOffset (20)] public uint ulExtraInformation;
-		}
-
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-		internal struct RAWKEYBOARD
-		{
-			[MarshalAs(UnmanagedType.U2)]
-			public ushort MakeCode;
-			[MarshalAs(UnmanagedType.U2)]
-			public ushort Flags;
-			[MarshalAs(UnmanagedType.U2)]
-			public ushort Reserved;
-			[MarshalAs(UnmanagedType.U2)]
-			public ushort VKey;
-			[MarshalAs(UnmanagedType.U4)]
-			public uint Message;
-			[MarshalAs(UnmanagedType.U4)]
-			public uint ExtraInformation;
-		}
-
-
-		[StructLayout(LayoutKind.Explicit, Pack=1)]
-		internal struct RAWINPUT
-		{
-			[FieldOffset  (0)] public RAWINPUTHEADER header;
-			[FieldOffset (16)] public RAWMOUSE mouse;
-			[FieldOffset (16)] public RAWKEYBOARD keyboard;
-			[FieldOffset (16)] public RAWHID hid;
-		}
-
-
-        [StructLayout(LayoutKind.Sequential, Pack=1)]
-        internal struct RID_DEVICE_INFO_MOUSE
-		{
-            public uint dwId;
-            public uint dwNumberOfButtons;
-            public uint dwSampleRate;
-            public bool fHasHorizontalWheel;
-		}
-
-
-        [StructLayout(LayoutKind.Sequential, Pack=1)]
-        internal struct RID_DEVICE_INFO_KEYBOARD
-		{
-            public uint dwType;
-            public uint dwSubType;
-            public uint dwKeyboardMode;
-            public uint dwNumberOfFunctionKeys;
-            public uint dwNumberOfIndicators;
-            public uint dwNumberOfKeysTotal;
-        }
-
-        [StructLayout(LayoutKind.Sequential, Pack=1)]
-        internal struct RID_DEVICE_INFO_HID
-		{
-            public uint dwVendorId;
-            public uint dwProductId;
-            public uint dwVersionNumber;
-            public ushort usUsagePage;
-            public ushort usUsage;
-        }
-
-        [StructLayout(LayoutKind.Explicit, Pack=1)]
-        internal struct RID_DEVICE_INFO
-		{
-            [FieldOffset(0)]
-            public uint cbSize;
-            [FieldOffset(4)]
-            public uint dwType;
-            [FieldOffset(8)]
-            public RID_DEVICE_INFO_MOUSE mouse;
-            [FieldOffset(8)]
-            public RID_DEVICE_INFO_KEYBOARD keyboard;
-            [FieldOffset(8)]
-            public RID_DEVICE_INFO_HID hid;
-		}
-
-
-
-		[DllImport("User32.dll")]
-		extern static bool RegisterRawInputDevices(RAWINPUTDEVICE[] pRawInputDevice, uint uiNumDevices, uint cbSize);
-
-		[DllImport("User32.dll")]
-		extern static uint GetRawInputData(IntPtr hRawInput, uint uiCommand, IntPtr pData, ref uint pcbSize, uint cbSizeHeader);
-
-   		[DllImport("User32.dll", SetLastError=true)]
-		extern static int GetRawInputDeviceInfo(IntPtr hDevice, uint uiCommand, IntPtr pData, ref uint pcbSize);
-
-
 		private const int WM_KEYDOWN	= 0x0100;
 		private const int WM_APPCOMMAND	= 0x0319;
 		private const int WM_INPUT		= 0x00FF;
@@ -307,35 +152,6 @@ namespace Devices.RemoteControl
 		private const int FAPPCOMMAND_MOUSE				= 0x8000;
 		private const int FAPPCOMMAND_KEY				= 0;
 		private const int FAPPCOMMAND_OEM				= 0x1000;
-
-        /// <summary>
-        /// GetRawInputDeviceInfo pData points to a string that contains the device name.
-        /// </summary>
-        public const uint RIDI_DEVICENAME = 0x20000007;
-        /// <summary>
-        /// GetRawInputDeviceInfo For this uiCommand only, the value in pcbSize is the character count (not the byte count).
-        /// </summary>
-        public const uint RIDI_DEVICEINFO = 0x2000000b;
-        /// <summary>
-        /// GetRawInputDeviceInfo pData points to an RID_DEVICE_INFO structure.
-        /// </summary>
-        public const uint RIDI_PREPARSEDDATA = 0x20000005;
-
-
-        /// <summary>
-        /// Data comes from a mouse.
-        /// </summary>
-        public const uint RIM_TYPEMOUSE = 0;
-        /// <summary>
-        /// Data comes from a keyboard.
-        /// </summary>
-        public const uint RIM_TYPEKEYBOARD = 1;
-        /// <summary>
-        /// Data comes from an HID that is not a keyboard or a mouse.
-        /// </summary>
-        public const uint RIM_TYPEHID = 2;
-
-
 
 
 
@@ -367,7 +183,7 @@ namespace Devices.RemoteControl
 			rid[2].usUsage = 0x80;
 			rid[2].dwFlags = 0;
 
-			if (!RegisterRawInputDevices(rid,
+			if (!Function.RegisterRawInputDevices(rid,
 				(uint) rid.Length,
 				(uint) Marshal.SizeOf(rid[0]))
 				)
@@ -538,7 +354,7 @@ namespace Devices.RemoteControl
             uint sizeOfHeader=(uint)Marshal.SizeOf(typeof(RAWINPUTHEADER));
 
             //Get the size of our raw input data.
-			GetRawInputData(message.LParam,	RID_INPUT, IntPtr.Zero,	ref dwSize,	sizeOfHeader);
+			Win32.Function.GetRawInputData(message.LParam,	RID_INPUT, IntPtr.Zero,	ref dwSize,	sizeOfHeader);
 
             //Allocate a large enough buffer
 			IntPtr rawInputBuffer = Marshal.AllocHGlobal((int) dwSize);
@@ -548,7 +364,7 @@ namespace Devices.RemoteControl
 					return;
 
                 //Now read our RAWINPUT data
-				if (GetRawInputData(message.LParam,	RID_INPUT, rawInputBuffer, ref dwSize, (uint) Marshal.SizeOf(typeof(RAWINPUTHEADER))) != dwSize)
+                if (Win32.Function.GetRawInputData(message.LParam, RID_INPUT, rawInputBuffer, ref dwSize, (uint)Marshal.SizeOf(typeof(RAWINPUTHEADER))) != dwSize)
 				{
 					return;
 				}
@@ -560,7 +376,7 @@ namespace Devices.RemoteControl
                 uint deviceInfoSize = (uint)Marshal.SizeOf(typeof(RID_DEVICE_INFO));
                 IntPtr deviceInfoBuffer = Marshal.AllocHGlobal((int)deviceInfoSize);
 
-                int res = GetRawInputDeviceInfo(raw.header.hDevice, RIDI_DEVICEINFO, deviceInfoBuffer, ref deviceInfoSize);
+                int res = Win32.Function.GetRawInputDeviceInfo(raw.header.hDevice, Const.RIDI_DEVICEINFO, deviceInfoBuffer, ref deviceInfoSize);
                 if (res <= 0)
                 {
                     Debug.WriteLine("WM_INPUT could not read device info: " + Marshal.GetLastWin32Error().ToString());
@@ -573,13 +389,13 @@ namespace Devices.RemoteControl
                 //Check type of input device and quite if we don't like it
                 switch (deviceInfo.dwType)
                 {
-                    case RIM_TYPEHID:
+                    case Const.RIM_TYPEHID:
                         Debug.WriteLine("WM_INPUT source device is HID.");
                         break;
-                    case RIM_TYPEMOUSE:
+                    case Const.RIM_TYPEMOUSE:
                         Debug.WriteLine("WM_INPUT source device is Mouse.");
                         return;
-                    case RIM_TYPEKEYBOARD:
+                    case Const.RIM_TYPEKEYBOARD:
                         Debug.WriteLine("WM_INPUT source device is Keyboard.");
                         return;
                     default:
@@ -591,7 +407,7 @@ namespace Devices.RemoteControl
                 Debug.WriteLine("Usage Page: 0x" + deviceInfo.hid.usUsagePage.ToString("X4") + " Usage: 0x" + deviceInfo.hid.usUsage.ToString("X4"));
 
                 //Check that our raw input is HID
-                if (raw.header.dwType == RIM_TYPEHID && raw.hid.dwSizeHid>0)
+                if (raw.header.dwType == Const.RIM_TYPEHID && raw.hid.dwSizeHid>0)
 				{
                     //Allocate a buffer for one HID message
 					byte[] bRawData = new byte[raw.hid.dwSizeHid];
@@ -633,11 +449,11 @@ namespace Devices.RemoteControl
                         }
                     }
 				}
-				else if(raw.header.dwType == RIM_TYPEMOUSE)
+				else if(raw.header.dwType == Const.RIM_TYPEMOUSE)
 				{
 					// do mouse handling...
 				}
-				else if(raw.header.dwType == RIM_TYPEKEYBOARD)
+				else if(raw.header.dwType == Const.RIM_TYPEKEYBOARD)
 				{
 					// do keyboard handling...
 				}
