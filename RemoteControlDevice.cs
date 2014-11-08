@@ -440,20 +440,20 @@ namespace Devices.RemoteControl
                 {
                     Debug.WriteLine("WM_INPUT source device is HID.");
                     //Get Usage Page and Usage
-                    Debug.WriteLine("Usage Page: 0x" + deviceInfo.hid.usUsagePage.ToString("X4") + " Usage: 0x" + deviceInfo.hid.usUsage.ToString("X4"));
+                    Debug.WriteLine("Usage Page: 0x" + deviceInfo.hid.usUsagePage.ToString("X4") + " Usage ID: 0x" + deviceInfo.hid.usUsage.ToString("X4"));
 
                     //
-                    HidUsageHandler handler=null;
+                    HidUsageHandler usagePageHandler=null;
 
                     //Make sure both usage page and usage are matching MCE remote
                     //TODO: handle more that just MCE usage page.
                     if (deviceInfo.hid.usUsagePage == (ushort)Hid.UsagePage.MceRemote || deviceInfo.hid.usUsage == (ushort)Hid.UsageId.MceRemoteUsage)
                     {                        
-                        handler = HidMceRemoteHandler;
+                        usagePageHandler = HidMceRemoteHandler;
                     }
                     else if (deviceInfo.hid.usUsagePage == (ushort)Hid.UsagePage.Consumer || deviceInfo.hid.usUsage == (ushort)Hid.UsageId.ConsumerControl)
                     {
-                        handler = HidConsumerDeviceHandler;
+                        usagePageHandler = HidConsumerDeviceHandler;
                     }
                     else
                     {
@@ -507,8 +507,10 @@ namespace Devices.RemoteControl
                             usage = (ushort)((hidInput[2] << 8) + hidInput[1]);
                         }
 
-                        //
-                        handler(usage);
+                        Debug.WriteLine("Usage: 0x" + usage.ToString("X4"));
+
+                        //Call on our Usage Page handler
+                        usagePageHandler(usage);
                     }
 
                 }
