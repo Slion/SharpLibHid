@@ -54,7 +54,8 @@ namespace Devices.RemoteControl
 		RecordedTV,
 		Guide,
 		LiveTV,
-		Details,
+		MoreInfo,
+        Print,
 		DVDMenu,
 		DVDAngle,
 		DVDAudio,
@@ -155,6 +156,9 @@ namespace Devices.RemoteControl
 		public delegate void RemoteControlDeviceEventHandler(object sender, RemoteControlEventArgs e);
 		public event RemoteControlDeviceEventHandler ButtonPressed;
 
+        public delegate void HidUsageHandler(ushort aUsage);
+        
+
 
 		//-------------------------------------------------------------
 		// constructors
@@ -196,7 +200,7 @@ namespace Devices.RemoteControl
 
 		public void ProcessMessage(Message message)
 		{
-			int param;
+		int param;
 
 			switch (message.Msg)
 			{
@@ -341,6 +345,71 @@ namespace Devices.RemoteControl
 				this.ButtonPressed(this, new RemoteControlEventArgs(rcb, GetDevice(param)));
 		}
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="aUsage"></param>
+        private void HidConsumerDeviceHandler(ushort aUsage)
+        {
+            if (aUsage == 0)
+            {
+                //Just skip those
+                return;
+            }
+
+            if (Enum.IsDefined(typeof(ConsumerControl), aUsage) && aUsage != 0) //Our button is a known consumer control
+            {
+                if (this.ButtonPressed != null)
+                {
+                    RemoteControlButton button=RemoteControlButton.Unknown;
+                    if (aUsage== (ushort)ConsumerControl.AppCtrlProperties)
+                    {
+                        button = RemoteControlButton.MoreInfo;
+                    }
+                    else if (aUsage==(ushort)ConsumerControl.AppCtrlPrint)
+                    {
+                        button = RemoteControlButton.Print;
+                    }
+                    else if (aUsage==(ushort)ConsumerControl.MediaSelectProgramGuide)
+                    {
+                        button = RemoteControlButton.Guide;
+                    }
+                    this.ButtonPressed(this, new RemoteControlEventArgs(button, InputDevice.OEM));
+                }
+            }
+            else
+            {
+                Debug.WriteLine("Unknown Consumer Control!");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="aUsage"></param>
+        private void HidMceRemoteHandler(ushort aUsage)
+        {
+            if (aUsage == 0)
+            {
+                //Just skip those
+                return;
+            }
+
+
+            if (Enum.IsDefined(typeof(MceButton), aUsage) && aUsage != 0) //Our button is a known MCE button
+            {
+                if (this.ButtonPressed != null)
+                {
+                    this.ButtonPressed(this, new RemoteControlEventArgs((MceButton)aUsage, InputDevice.OEM));
+                }
+            }
+            else
+            {
+                Debug.WriteLine("Unknown MCE button!");
+            }
+
+        }
+
 
 		private void ProcessInputCommand(ref Message message)
 		{
@@ -373,9 +442,20 @@ namespace Devices.RemoteControl
                     //Get Usage Page and Usage
                     Debug.WriteLine("Usage Page: 0x" + deviceInfo.hid.usUsagePage.ToString("X4") + " Usage: 0x" + deviceInfo.hid.usUsage.ToString("X4"));
 
+                    //
+                    HidUsageHandler handler=null;
+
                     //Make sure both usage page and usage are matching MCE remote
                     //TODO: handle more that just MCE usage page.
-                    if (deviceInfo.hid.usUsagePage != (ushort)Hid.UsagePage.MceRemote || deviceInfo.hid.usUsage != (ushort)Hid.UsageId.MceRemoteUsage)
+                    if (deviceInfo.hid.usUsagePage == (ushort)Hid.UsagePage.MceRemote || deviceInfo.hid.usUsage == (ushort)Hid.UsageId.MceRemoteUsage)
+                    {                        
+                        handler = HidMceRemoteHandler;
+                    }
+                    else if (deviceInfo.hid.usUsagePage == (ushort)Hid.UsagePage.Consumer || deviceInfo.hid.usUsage == (ushort)Hid.UsageId.ConsumerControl)
+                    {
+                        handler = HidConsumerDeviceHandler;
+                    }
+                    else
                     {
                         Debug.WriteLine("Not MCE remote page and usage.");
                         return;
@@ -424,17 +504,11 @@ namespace Devices.RemoteControl
                         else if (hidInput.Length > 2) //Defensive
                         {
                             //Assuming double bytes code
-                            usage = (ushort)((hidInput[1] << 2) + hidInput[2]);
+                            usage = (ushort)((hidInput[2] << 8) + hidInput[1]);
                         }
 
                         //
-                        if (Enum.IsDefined(typeof(MceButton), usage) && usage != 0) //Our button is a known MCE button
-                        {
-                            if (this.ButtonPressed != null) //What's that?
-                            {
-                                this.ButtonPressed(this, new RemoteControlEventArgs((MceButton)usage, InputDevice.OEM));
-                            }
-                        }
+                        handler(usage);
                     }
 
                 }
