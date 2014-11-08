@@ -353,94 +353,101 @@ namespace Devices.RemoteControl
             try
             {
                 //Fetch raw input
-                RAWINPUT raw = new RAWINPUT();
-                if (!RawInput.GetRawInputData(message.LParam, ref raw, ref rawInputBuffer))
+                RAWINPUT rawInput = new RAWINPUT();
+                if (!RawInput.GetRawInputData(message.LParam, ref rawInput, ref rawInputBuffer))
                 {
                     return;
                 }
 
                 //Fetch device info
                 RID_DEVICE_INFO deviceInfo = new RID_DEVICE_INFO();
-                if (!RawInput.GetDeviceInfo(raw.header.hDevice, ref deviceInfo))
+                if (!RawInput.GetDeviceInfo(rawInput.header.hDevice, ref deviceInfo))
                 {
                     return;
                 }
+               
 
-                //Check type of input device and quite if we don't like it
-                switch (deviceInfo.dwType)
+                if (rawInput.header.dwType == Const.RIM_TYPEHID)  //Check that our raw input is HID                        
                 {
-                    case Const.RIM_TYPEHID:
-                        Debug.WriteLine("WM_INPUT source device is HID.");
-                        break;
-                    case Const.RIM_TYPEMOUSE:
-                        Debug.WriteLine("WM_INPUT source device is Mouse.");
-                        return;
-                    case Const.RIM_TYPEKEYBOARD:
-                        Debug.WriteLine("WM_INPUT source device is Keyboard.");
-                        return;
-                    default:
-                        Debug.WriteLine("WM_INPUT source device is Unknown.");
-                        return;
-                }
-
-                //Get Usage Page and Usage
-                Debug.WriteLine("Usage Page: 0x" + deviceInfo.hid.usUsagePage.ToString("X4") + " Usage: 0x" + deviceInfo.hid.usUsage.ToString("X4"));
-
-
-                if (raw.header.dwType == Const.RIM_TYPEHID  //Check that our raw input is HID
-                    && raw.hid.dwSizeHid > 1    //Make sure our HID msg size more than 1. In fact the first ushort is irrelevant to us for now
-                    && raw.hid.dwCount > 0)     //Check that we have at least one HID msg
-                {
-                    //TODO: for each HID message
-
-                    //Allocate a buffer for one HID message
-                    byte[] bRawData = new byte[raw.hid.dwSizeHid];
-
-                    //Compute the address from which to copy our HID message
-                    int pRawData = 0;
-                    unsafe
-                    {
-                        byte* source = (byte*)rawInputBuffer;
-                        source += sizeof(RAWINPUTHEADER) + sizeof(RAWHID);
-                        pRawData = (int)source;
-                    }
-
-                    //Copy HID message into our buffer
-                    Marshal.Copy(new IntPtr(pRawData), bRawData, 0, raw.hid.dwSizeHid);
-                    //bRawData[0] //Not sure what's the meaning of the code at offset 0
-                    //TODO: check size before access
-                    int rawData = bRawData[1]; //Get button code
-                    //Print HID codes in our debug output
-                    string hidDump = "HID " + raw.hid.dwCount + "/" + raw.hid.dwSizeHid + ":";
-                    foreach (byte b in bRawData)
-                    {
-                        hidDump += b.ToString("X2");
-                    }
-                    Debug.WriteLine(hidDump);
-
+                    Debug.WriteLine("WM_INPUT source device is HID.");
+                    //Get Usage Page and Usage
+                    Debug.WriteLine("Usage Page: 0x" + deviceInfo.hid.usUsagePage.ToString("X4") + " Usage: 0x" + deviceInfo.hid.usUsage.ToString("X4"));
 
                     //Make sure both usage page and usage are matching MCE remote
+                    //TODO: handle more that just MCE usage page.
                     if (deviceInfo.hid.usUsagePage != (ushort)Hid.UsagePage.MceRemote || deviceInfo.hid.usUsage != (ushort)Hid.UsageId.MceRemoteUsage)
                     {
                         Debug.WriteLine("Not MCE remote page and usage.");
                         return;
                     }
 
-                    if (Enum.IsDefined(typeof(MceButton), rawData) && rawData != 0) //Our button is a known MCE button
+                    if (!(rawInput.hid.dwSizeHid > 1     //Make sure our HID msg size more than 1. In fact the first ushort is irrelevant to us for now
+                        && rawInput.hid.dwCount > 0))    //Check that we have at least one HID msg
                     {
-                        if (this.ButtonPressed != null) //What's that?
+                        return;
+                    }
+
+
+                    //Allocate a buffer for one HID input
+                    byte[] hidInput = new byte[rawInput.hid.dwSizeHid];
+
+                    //For each HID input in our raw input
+                    for (int i = 0; i < rawInput.hid.dwCount; i++)
+                    {
+                        //Compute the address from which to copy our HID input
+                        int hidInputOffset = 0;
+                        unsafe
                         {
-                            this.ButtonPressed(this, new RemoteControlEventArgs((MceButton)rawData, GetDevice(message.LParam.ToInt32())));
+                            byte* source = (byte*)rawInputBuffer;
+                            source += sizeof(RAWINPUTHEADER) + sizeof(RAWHID) + (rawInput.hid.dwSizeHid * i);
+                            hidInputOffset = (int)source;
+                        }
+
+                        //Copy HID input into our buffer
+                        Marshal.Copy(new IntPtr(hidInputOffset), hidInput, 0, rawInput.hid.dwSizeHid);
+
+                        //Print HID raw input in our debug output
+                        string hidDump = "HID " + rawInput.hid.dwCount + "/" + rawInput.hid.dwSizeHid + ":";
+                        foreach (byte b in hidInput)
+                        {
+                            hidDump += b.ToString("X2");
+                        }
+                        Debug.WriteLine(hidDump);
+                        
+                        ushort usage = 0;
+                        //hidInput[0] //Not sure what's the meaning of the code at offset 0
+                        if (hidInput.Length == 2)
+                        {
+                            //Single byte code
+                            usage = hidInput[1]; //Get button code
+                        }
+                        else if (hidInput.Length > 2) //Defensive
+                        {
+                            //Assuming double bytes code
+                            usage = (ushort)((hidInput[1] << 2) + hidInput[2]);
+                        }
+
+                        //
+                        if (Enum.IsDefined(typeof(MceButton), usage) && usage != 0) //Our button is a known MCE button
+                        {
+                            if (this.ButtonPressed != null) //What's that?
+                            {
+                                this.ButtonPressed(this, new RemoteControlEventArgs((MceButton)usage, InputDevice.OEM));
+                            }
                         }
                     }
+
                 }
-                else if (raw.header.dwType == Const.RIM_TYPEMOUSE)
+                else if (rawInput.header.dwType == Const.RIM_TYPEMOUSE)
                 {
+                    Debug.WriteLine("WM_INPUT source device is Mouse.");
                     // do mouse handling...
                 }
-                else if (raw.header.dwType == Const.RIM_TYPEKEYBOARD)
+                else if (rawInput.header.dwType == Const.RIM_TYPEKEYBOARD)
                 {
+                    Debug.WriteLine("WM_INPUT source device is Keyboard.");
                     // do keyboard handling...
+
                 }
             }
             finally
