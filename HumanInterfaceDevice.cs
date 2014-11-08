@@ -64,7 +64,7 @@ namespace Hid
         /// <summary>
         ///
         /// </summary>
-        public enum MceButton
+        public enum MceButton: ushort
         {
             /// <summary>
             /// Not defined by the Microsoft specs.
@@ -188,6 +188,9 @@ namespace Hid
             VideoSelection          =   0x61
         }
 
+        /// <summary>
+        /// Those codes come from experimenting with HP remotes.
+        /// </summary>
         public enum HpMceButton: ushort
         {
             /// <summary>
