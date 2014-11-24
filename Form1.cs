@@ -32,9 +32,7 @@ namespace RemoteControlSample
 			_timer = new Timer();
 			_timer.Interval = 3000;
 			_timer.Enabled = false;
-			_timer.Tick +=new EventHandler(_timer_Tick);
-			_remote = new RemoteControlDevice();
-			_remote.ButtonPressed +=new Devices.RemoteControl.RemoteControlDevice.RemoteControlDeviceEventHandler(_remote_ButtonPressed);
+			_timer.Tick +=new EventHandler(_timer_Tick);            
 		}
 
 		/// <summary>
@@ -110,13 +108,17 @@ namespace RemoteControlSample
 
 		private void Form1_Load(object sender, System.EventArgs e)
 		{
-
+            _remote = new RemoteControlDevice(this.Handle);
+            _remote.ButtonPressed += new Devices.RemoteControl.RemoteControlDevice.RemoteControlDeviceEventHandler(_remote_ButtonPressed);
 		}
 
 
 		protected override void WndProc(ref Message message)
 		{
-			_remote.ProcessMessage(message);
+            if (_remote != null)
+            {
+                _remote.ProcessMessage(message);
+            }
 			base.WndProc(ref message);
 		}
 

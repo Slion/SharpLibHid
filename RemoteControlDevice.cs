@@ -126,45 +126,17 @@ namespace Devices.RemoteControl
 
 	public sealed class RemoteControlDevice
 	{
-		private const int WM_KEYDOWN	= 0x0100;
-		private const int WM_APPCOMMAND	= 0x0319;
-		private const int WM_INPUT		= 0x00FF;
-
-		private const int APPCOMMAND_BROWSER_BACKWARD   = 1;
-		private const int APPCOMMAND_VOLUME_MUTE        = 8;
-		private const int APPCOMMAND_VOLUME_DOWN        = 9;
-		private const int APPCOMMAND_VOLUME_UP          = 10;
-		private const int APPCOMMAND_MEDIA_NEXTTRACK    = 11;
-		private const int APPCOMMAND_MEDIA_PREVIOUSTRACK = 12;
-		private const int APPCOMMAND_MEDIA_STOP         = 13;
-		private const int APPCOMMAND_MEDIA_PLAY_PAUSE   = 14;
-		private const int APPCOMMAND_MEDIA_PLAY         = 46;
-		private const int APPCOMMAND_MEDIA_PAUSE        = 47;
-		private const int APPCOMMAND_MEDIA_RECORD       = 48;
-		private const int APPCOMMAND_MEDIA_FAST_FORWARD = 49;
-		private const int APPCOMMAND_MEDIA_REWIND       = 50;
-		private const int APPCOMMAND_MEDIA_CHANNEL_UP   = 51;
-		private const int APPCOMMAND_MEDIA_CHANNEL_DOWN = 52;
-
-		private const int FAPPCOMMAND_MASK				= 0xF000;
-		private const int FAPPCOMMAND_MOUSE				= 0x8000;
-		private const int FAPPCOMMAND_KEY				= 0;
-		private const int FAPPCOMMAND_OEM				= 0x1000;
-
-
-
 		public delegate void RemoteControlDeviceEventHandler(object sender, RemoteControlEventArgs e);
 		public event RemoteControlDeviceEventHandler ButtonPressed;
 
         public delegate void HidUsageHandler(ushort aUsage);
         
 
-
 		//-------------------------------------------------------------
 		// constructors
 		//-------------------------------------------------------------
 
-		public RemoteControlDevice()
+		public RemoteControlDevice(IntPtr aHWND)
 		{
 			// Register the input device to receive the commands from the
 			// remote device. See http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwmt/html/remote_control.asp
@@ -174,22 +146,22 @@ namespace Devices.RemoteControl
 
 			rid[0].usUsagePage = 0xFFBC;
 			rid[0].usUsage = 0x88;
-			rid[0].dwFlags = 0;
+            rid[0].dwFlags = Const.RIDEV_EXINPUTSINK;
+            rid[0].hwndTarget = aHWND;
 
 			rid[1].usUsagePage = 0x0C;
 			rid[1].usUsage = 0x01;
-			rid[1].dwFlags = 0;
+            rid[1].dwFlags = Const.RIDEV_EXINPUTSINK;
+            rid[1].hwndTarget = aHWND;
 
 			rid[2].usUsagePage = 0x0C;
 			rid[2].usUsage = 0x80;
-			rid[2].dwFlags = 0;
+            rid[2].dwFlags = Const.RIDEV_EXINPUTSINK;
+            rid[2].hwndTarget = aHWND;
 
-			if (!Function.RegisterRawInputDevices(rid,
-				(uint) rid.Length,
-				(uint) Marshal.SizeOf(rid[0]))
-				)
+			if (!Function.RegisterRawInputDevices(rid,(uint) rid.Length,(uint) Marshal.SizeOf(rid[0])))
 			{
-				throw new ApplicationException("Failed to register raw input devices.");
+                throw new ApplicationException("Failed to register raw input devices: " + Marshal.GetLastWin32Error().ToString());
 			}
 		}
 
@@ -200,19 +172,15 @@ namespace Devices.RemoteControl
 
 		public void ProcessMessage(Message message)
 		{
-		int param;
-
 			switch (message.Msg)
 			{
-				case WM_KEYDOWN:
-					param = message.WParam.ToInt32();
-					ProcessKeyDown(param);
+				case Const.WM_KEYDOWN:
+                    ProcessKeyDown(message.WParam);
 					break;
-				case WM_APPCOMMAND:
-					param = message.LParam.ToInt32();
-					ProcessAppCommand(param);
+                case Const.WM_APPCOMMAND:
+					ProcessAppCommand(message.LParam);
 					break;
-				case WM_INPUT:
+                case Const.WM_INPUT:
 					ProcessInputCommand(ref message);
                     message.Result = new IntPtr(0);
 					break;
@@ -225,11 +193,11 @@ namespace Devices.RemoteControl
 		// methods (helpers)
 		//-------------------------------------------------------------
 
-		private void ProcessKeyDown(int param)
+		private void ProcessKeyDown(IntPtr wParam)
 		{
 			RemoteControlButton rcb = RemoteControlButton.Unknown;
 
-			switch (param)
+            switch (wParam.ToInt32())
 			{
 				case (int) Keys.Escape:
 					rcb = RemoteControlButton.Clear;
@@ -282,67 +250,68 @@ namespace Devices.RemoteControl
 			}
 
 			if (this.ButtonPressed != null && rcb != RemoteControlButton.Unknown)
-				this.ButtonPressed(this, new RemoteControlEventArgs(rcb, GetDevice(param)));
+				this.ButtonPressed(this, new RemoteControlEventArgs(rcb, GetDevice(wParam)));
 		}
 
 
-		private void ProcessAppCommand(int param)
+		private void ProcessAppCommand(IntPtr lParam)
 		{
 			RemoteControlButton rcb = RemoteControlButton.Unknown;
 
-			int cmd	= (int) (((ushort) (param >> 16)) & ~FAPPCOMMAND_MASK);
+            int cmd = Macro.GET_APPCOMMAND_LPARAM(lParam);
+                //(int) (((ushort) (param >> 16)) & ~Const.FAPPCOMMAND_MASK);
 
 			switch (cmd)
 			{
-				case APPCOMMAND_BROWSER_BACKWARD:
+                case Const.APPCOMMAND_BROWSER_BACKWARD:
 					rcb = RemoteControlButton.Back;
 					break;
-				case APPCOMMAND_MEDIA_CHANNEL_DOWN:
+                case Const.APPCOMMAND_MEDIA_CHANNEL_DOWN:
 					rcb = RemoteControlButton.ChannelDown;
 					break;
-				case APPCOMMAND_MEDIA_CHANNEL_UP:
+                case Const.APPCOMMAND_MEDIA_CHANNEL_UP:
 					rcb = RemoteControlButton.ChannelUp;
 					break;
-				case APPCOMMAND_MEDIA_FAST_FORWARD:
+                case Const.APPCOMMAND_MEDIA_FAST_FORWARD:
 					rcb = RemoteControlButton.FastForward;
 					break;
-				case APPCOMMAND_VOLUME_MUTE:
+                case Const.APPCOMMAND_VOLUME_MUTE:
 					rcb = RemoteControlButton.VolumeMute;
 					break;
-				case APPCOMMAND_MEDIA_PAUSE:
+                case Const.APPCOMMAND_MEDIA_PAUSE:
 					rcb = RemoteControlButton.Pause;
 					break;
-				case APPCOMMAND_MEDIA_PLAY:
+                case Const.APPCOMMAND_MEDIA_PLAY:
 					rcb = RemoteControlButton.Play;
 					break;
-                case APPCOMMAND_MEDIA_PLAY_PAUSE:
+                case Const.APPCOMMAND_MEDIA_PLAY_PAUSE:
                     rcb = RemoteControlButton.PlayPause;
                     break;
-				case APPCOMMAND_MEDIA_RECORD:
+                case Const.APPCOMMAND_MEDIA_RECORD:
 					rcb = RemoteControlButton.Record;
 					break;
-				case APPCOMMAND_MEDIA_PREVIOUSTRACK:
+                case Const.APPCOMMAND_MEDIA_PREVIOUSTRACK:
 					rcb = RemoteControlButton.PreviousTrack;
 					break;
-				case APPCOMMAND_MEDIA_REWIND:
+                case Const.APPCOMMAND_MEDIA_REWIND:
 					rcb = RemoteControlButton.Rewind;
 					break;
-				case APPCOMMAND_MEDIA_NEXTTRACK:
+                case Const.APPCOMMAND_MEDIA_NEXTTRACK:
 					rcb = RemoteControlButton.NextTrack;
 					break;
-				case APPCOMMAND_MEDIA_STOP:
+                case Const.APPCOMMAND_MEDIA_STOP:
 					rcb = RemoteControlButton.Stop;
 					break;
-				case APPCOMMAND_VOLUME_DOWN:
+                case Const.APPCOMMAND_VOLUME_DOWN:
 					rcb = RemoteControlButton.VolumeDown;
 					break;
-				case APPCOMMAND_VOLUME_UP:
+                case Const.APPCOMMAND_VOLUME_UP:
 					rcb = RemoteControlButton.VolumeUp;
 					break;
 			}
 
 			if (this.ButtonPressed != null && rcb != RemoteControlButton.Unknown)
-				this.ButtonPressed(this, new RemoteControlEventArgs(rcb, GetDevice(param)));
+                this.ButtonPressed(this, new RemoteControlEventArgs(rcb, GetDevice(lParam)));
 		}
 
         /// <summary>
@@ -413,8 +382,18 @@ namespace Devices.RemoteControl
 
 		private void ProcessInputCommand(ref Message message)
 		{
+            //We received a WM_INPUT message
             Debug.WriteLine("================WM_INPUT================");
 
+            //Check if we received this message while in background or foreground
+            if (Macro.GET_RAWINPUT_CODE_WPARAM(message.WParam) == Const.RIM_INPUT)
+            {
+                Debug.WriteLine("================FOREGROUND");
+            }
+            else if (Macro.GET_RAWINPUT_CODE_WPARAM(message.WParam) == Const.RIM_INPUTSINK)
+            {
+                Debug.WriteLine("================BACKGROUND");
+            }
 
             //Declare a pointer
             IntPtr rawInputBuffer = IntPtr.Zero;
@@ -535,16 +514,16 @@ namespace Devices.RemoteControl
 		}
 
 
-		private InputDevice GetDevice(int param)
+		private InputDevice GetDevice(IntPtr lParam)
 		{
 			InputDevice inputDevice;
 
-			switch ((int) (((ushort) (param >> 16)) & FAPPCOMMAND_MASK))
+            switch (Macro.GET_DEVICE_LPARAM(lParam))
 			{
-				case FAPPCOMMAND_OEM:
+				case Const.FAPPCOMMAND_OEM:
 					inputDevice = InputDevice.OEM;
 					break;
-				case FAPPCOMMAND_MOUSE:
+				case Const.FAPPCOMMAND_MOUSE:
 					inputDevice = InputDevice.Mouse;
 					break;
 				default:
