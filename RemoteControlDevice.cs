@@ -445,19 +445,20 @@ namespace Devices.RemoteControl
                     //
                     HidUsageHandler usagePageHandler=null;
 
-                    //Make sure both usage page and usage are matching MCE remote
-                    //TODO: handle more that just MCE usage page.
-                    if (deviceInfo.hid.usUsagePage == (ushort)Hid.UsagePage.MceRemote || deviceInfo.hid.usUsage == (ushort)Hid.UsageId.MceRemoteUsage)
+                    //Check if this an MCE remote HID message
+                    if (deviceInfo.hid.usUsagePage == (ushort)Hid.UsagePage.MceRemote && deviceInfo.hid.usUsage == (ushort)Hid.UsageId.MceRemoteUsage)
                     {                        
                         usagePageHandler = HidMceRemoteHandler;
                     }
-                    else if (deviceInfo.hid.usUsagePage == (ushort)Hid.UsagePage.Consumer || deviceInfo.hid.usUsage == (ushort)Hid.UsageId.ConsumerControl)
+                    //Check if this is a consumer control HID message
+                    else if (deviceInfo.hid.usUsagePage == (ushort)Hid.UsagePage.Consumer && deviceInfo.hid.usUsage == (ushort)Hid.UsageId.ConsumerControl)
                     {
                         usagePageHandler = HidConsumerDeviceHandler;
                     }
+                    //Unknown HID message
                     else
                     {
-                        Debug.WriteLine("Not MCE remote page and usage.");
+                        Debug.WriteLine("Unknown HID message.");
                         return;
                     }
 
