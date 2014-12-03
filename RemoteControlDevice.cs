@@ -331,15 +331,15 @@ namespace Devices.RemoteControl
                 if (this.ButtonPressed != null)
                 {
                     RemoteControlButton button=RemoteControlButton.Unknown;
-                    if (aUsage== (ushort)ConsumerControl.AppCtrlProperties)
+                    if (aUsage == (ushort)ConsumerControl.AppCtrlProperties || aUsage == (ushort)ConsumerControl.MceProperties)
                     {
                         button = RemoteControlButton.MoreInfo;
                     }
-                    else if (aUsage==(ushort)ConsumerControl.AppCtrlPrint)
+                    else if (aUsage == (ushort)ConsumerControl.AppCtrlPrint)
                     {
                         button = RemoteControlButton.Print;
                     }
-                    else if (aUsage==(ushort)ConsumerControl.MediaSelectProgramGuide)
+                    else if (aUsage == (ushort)ConsumerControl.MediaSelectProgramGuide || aUsage == (ushort)ConsumerControl.MceProgramGuide)
                     {
                         button = RemoteControlButton.Guide;
                     }
