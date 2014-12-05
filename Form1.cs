@@ -122,12 +122,14 @@ namespace RemoteControlSample
 			base.WndProc(ref message);
 		}
 
-		private void _remote_ButtonPressed(object sender, RemoteControlEventArgs e)
+		private bool _remote_ButtonPressed(object sender, RemoteControlEventArgs e)
 		{
+            bool processed = false;
 			_timer.Enabled = false;
             if (e.Button != RemoteControlButton.Unknown)
             {
                 label1.Text = e.Button.ToString();
+                processed = true;
             }
             else if (e.MceButton != Hid.UsageTables.MceButton.Null)
             {
@@ -139,6 +141,14 @@ namespace RemoteControlSample
                     //Also display HP button name
                     label1.Text += " / HP:" + ((Hid.UsageTables.HpMceButton)e.MceButton).ToString();
                 }
+
+                processed = true;
+            }
+            else if (e.ConsumerControl != Hid.UsageTables.ConsumerControl.Null)
+            {
+                //Display consumer control name
+                label1.Text = e.ConsumerControl.ToString();
+                processed = true;
             }
             else
             {
@@ -146,6 +156,7 @@ namespace RemoteControlSample
             }
 			label2.Text = e.Device.ToString();
 			_timer.Enabled = true;
+            return processed;
 		}
 
 		private void _timer_Tick(object sender, EventArgs e)

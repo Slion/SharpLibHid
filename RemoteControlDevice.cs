@@ -80,19 +80,38 @@ namespace Devices.RemoteControl
         RemoteControlButton _rcb;
 		InputDevice _device;
         MceButton iMceButton;
+        ConsumerControl iConsumerControl;
 
         public RemoteControlEventArgs(RemoteControlButton rcb, InputDevice device)
 		{
-            iMceButton = MceButton.Null;
+            SetNullButtons();
+            //
 			_rcb = rcb;
-			_device = device;
+			_device = device;            
 		}
+
+        public RemoteControlEventArgs(ConsumerControl aConsumerControl, InputDevice device)
+        {
+            SetNullButtons();
+            //
+            iConsumerControl = aConsumerControl;            
+            _device = device;
+        }
+
 
         public RemoteControlEventArgs(MceButton mce, InputDevice device)
         {
-            iMceButton = mce;
-            _rcb = RemoteControlButton.Unknown;
+            SetNullButtons();
+            //
+            iMceButton = mce;            
             _device = device;
+        }
+
+        private void SetNullButtons()
+        {
+            iConsumerControl = ConsumerControl.Null;
+            iMceButton = MceButton.Null;
+            _rcb = RemoteControlButton.Unknown;
         }
 
 		public RemoteControlEventArgs()
@@ -114,6 +133,12 @@ namespace Devices.RemoteControl
             set { iMceButton = value; }
         }
 
+        public ConsumerControl ConsumerControl
+        {
+            get { return iConsumerControl; }
+            set { iConsumerControl = value; }
+        }
+
 		public InputDevice Device
 		{
 			get { return _device;  }
@@ -126,10 +151,15 @@ namespace Devices.RemoteControl
 
 	public sealed class RemoteControlDevice
 	{
-		public delegate void RemoteControlDeviceEventHandler(object sender, RemoteControlEventArgs e);
+		public delegate bool RemoteControlDeviceEventHandler(object sender, RemoteControlEventArgs e);
 		public event RemoteControlDeviceEventHandler ButtonPressed;
 
-        public delegate void HidUsageHandler(ushort aUsage);
+        /// <summary>
+        /// Return true if the usage was processed.
+        /// </summary>
+        /// <param name="aUsage"></param>
+        /// <returns></returns>
+        public delegate bool HidUsageHandler(ushort aUsage);
         
 
 		//-------------------------------------------------------------
@@ -178,11 +208,12 @@ namespace Devices.RemoteControl
                     ProcessKeyDown(message.WParam);
 					break;
                 case Const.WM_APPCOMMAND:
-					ProcessAppCommand(message.LParam);
+					//ProcessAppCommand(message.LParam);
 					break;
                 case Const.WM_INPUT:
-					ProcessInputCommand(ref message);
+                    //Returning zero means we processed that message.
                     message.Result = new IntPtr(0);
+					ProcessInputCommand(ref message);
 					break;
 			}
 
@@ -318,37 +349,26 @@ namespace Devices.RemoteControl
         /// 
         /// </summary>
         /// <param name="aUsage"></param>
-        private void HidConsumerDeviceHandler(ushort aUsage)
+        private bool HidConsumerDeviceHandler(ushort aUsage)
         {
             if (aUsage == 0)
             {
                 //Just skip those
-                return;
+                return false;
             }
 
             if (Enum.IsDefined(typeof(ConsumerControl), aUsage) && aUsage != 0) //Our button is a known consumer control
             {
                 if (this.ButtonPressed != null)
                 {
-                    RemoteControlButton button=RemoteControlButton.Unknown;
-                    if (aUsage == (ushort)ConsumerControl.AppCtrlProperties)
-                    {
-                        button = RemoteControlButton.MoreInfo;
-                    }
-                    else if (aUsage == (ushort)ConsumerControl.AppCtrlPrint)
-                    {
-                        button = RemoteControlButton.Print;
-                    }
-                    else if (aUsage == (ushort)ConsumerControl.MediaSelectProgramGuide)
-                    {
-                        button = RemoteControlButton.Guide;
-                    }
-                    this.ButtonPressed(this, new RemoteControlEventArgs(button, InputDevice.OEM));
+                    return this.ButtonPressed(this, new RemoteControlEventArgs((ConsumerControl)aUsage, InputDevice.OEM));
                 }
+                return false;
             }
             else
             {
                 Debug.WriteLine("Unknown Consumer Control!");
+                return false;
             }
         }
 
@@ -356,12 +376,12 @@ namespace Devices.RemoteControl
         /// 
         /// </summary>
         /// <param name="aUsage"></param>
-        private void HidMceRemoteHandler(ushort aUsage)
+        private bool HidMceRemoteHandler(ushort aUsage)
         {
             if (aUsage == 0)
             {
                 //Just skip those
-                return;
+                return false;
             }
 
 
@@ -369,14 +389,15 @@ namespace Devices.RemoteControl
             {
                 if (this.ButtonPressed != null)
                 {
-                    this.ButtonPressed(this, new RemoteControlEventArgs((MceButton)aUsage, InputDevice.OEM));
+                    return this.ButtonPressed(this, new RemoteControlEventArgs((MceButton)aUsage, InputDevice.OEM));                    
                 }
+                return false;
             }
             else
             {
                 Debug.WriteLine("Unknown MCE button!");
+                return false;
             }
-
         }
 
 
