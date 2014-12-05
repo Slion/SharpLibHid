@@ -395,8 +395,10 @@ namespace Devices.RemoteControl
                 Debug.WriteLine("================BACKGROUND");
             }
 
-            //Declare a pointer
+            //Declare some pointers
             IntPtr rawInputBuffer = IntPtr.Zero;
+            //My understanding is that this is basically our HID descriptor
+            IntPtr preParsedData = IntPtr.Zero;
 
             try
             {
@@ -420,6 +422,9 @@ namespace Devices.RemoteControl
                     Debug.WriteLine("WM_INPUT source device is HID.");
                     //Get Usage Page and Usage
                     Debug.WriteLine("Usage Page: 0x" + deviceInfo.hid.usUsagePage.ToString("X4") + " Usage ID: 0x" + deviceInfo.hid.usUsage.ToString("X4"));
+
+
+                    preParsedData = RawInput.GetPreParsedData(rawInput.header.hDevice);
 
                     //
                     HidUsageHandler usagePageHandler=null;
@@ -449,7 +454,7 @@ namespace Devices.RemoteControl
 
 
                     //Allocate a buffer for one HID input
-                    byte[] hidInput = new byte[rawInput.hid.dwSizeHid];
+                    byte[] hidInputReport = new byte[rawInput.hid.dwSizeHid];
 
                     //For each HID input in our raw input
                     for (int i = 0; i < rawInput.hid.dwCount; i++)
@@ -464,11 +469,11 @@ namespace Devices.RemoteControl
                         }
 
                         //Copy HID input into our buffer
-                        Marshal.Copy(new IntPtr(hidInputOffset), hidInput, 0, rawInput.hid.dwSizeHid);
+                        Marshal.Copy(new IntPtr(hidInputOffset), hidInputReport, 0, (int)rawInput.hid.dwSizeHid);
 
                         //Print HID raw input in our debug output
                         string hidDump = "HID " + rawInput.hid.dwCount + "/" + rawInput.hid.dwSizeHid + ":";
-                        foreach (byte b in hidInput)
+                        foreach (byte b in hidInputReport)
                         {
                             hidDump += b.ToString("X2");
                         }
@@ -476,18 +481,39 @@ namespace Devices.RemoteControl
                         
                         ushort usage = 0;
                         //hidInput[0] //Not sure what's the meaning of the code at offset 0
-                        if (hidInput.Length == 2)
+                        if (hidInputReport.Length == 2)
                         {
                             //Single byte code
-                            usage = hidInput[1]; //Get button code
+                            usage = hidInputReport[1]; //Get button code
                         }
-                        else if (hidInput.Length > 2) //Defensive
+                        else if (hidInputReport.Length > 2) //Defensive
                         {
                             //Assuming double bytes code
-                            usage = (ushort)((hidInput[2] << 8) + hidInput[1]);
+                            usage = (ushort)((hidInputReport[2] << 8) + hidInputReport[1]);
                         }
 
                         Debug.WriteLine("Usage: 0x" + usage.ToString("X4"));
+
+                        //Proper parsing now
+                        //byte[] report = new byte[input.data.hid.dwSizeHid];
+                        //Marshal.Copy(IntPtr.Add(rawInput, HID_INPUT_DATA_OFFSET), report, 0, report.Length);
+                        uint usageCount = rawInput.hid.dwCount;
+                        Win32.USAGE_AND_PAGE[] usages = new Win32.USAGE_AND_PAGE[usageCount];
+                        Win32.HidStatus status = Win32.Function.HidP_GetUsagesEx(Win32.HIDP_REPORT_TYPE.HidP_Input, 0, usages, ref usageCount, preParsedData, hidInputReport, (uint)hidInputReport.Length);
+                        if (status != Win32.HidStatus.HIDP_STATUS_SUCCESS)
+                        {
+                            Debug.WriteLine("Could not parse HID data!");
+                            //this.LogError("Twinhan HID remote: failed to get raw input HID usages, device = {0}, status = {1}", device.Name, status);
+                            //Dump.DumpBinary(rawInput, (int)input.header.dwSize);
+                            //return false;
+                        }
+                        else
+                        {
+                            Debug.WriteLine("UsagePage: 0x" + usages[0].UsagePage.ToString("X4"));
+                            Debug.WriteLine("Usage: 0x" + usages[0].Usage.ToString("X4"));
+                        }
+
+
 
                         //Call on our Usage Page handler
                         usagePageHandler(usage);
@@ -510,6 +536,7 @@ namespace Devices.RemoteControl
             {
                 //Always executed when leaving our try block
                 Marshal.FreeHGlobal(rawInputBuffer);
+                Marshal.FreeHGlobal(preParsedData);
             }
 		}
 
