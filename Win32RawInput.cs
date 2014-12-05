@@ -219,9 +219,9 @@ namespace Win32
     internal struct RAWHID
     {
         [MarshalAs(UnmanagedType.U4)]
-        public int dwSizeHid;
+        public uint dwSizeHid;
         [MarshalAs(UnmanagedType.U4)]
-        public int dwCount;
+        public uint dwCount;
         //
         //BYTE  bRawData[1];
     }
