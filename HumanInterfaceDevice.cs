@@ -247,16 +247,6 @@ namespace Hid
         public enum ConsumerControl: ushort
         {
             /// <summary>
-            /// Alternative code for properties.
-            /// Also supported by Windows Media Center.
-            /// </summary>
-            MceProperties = 0x000A,
-            /// <summary>
-            /// Alternative code for program guide.
-            /// Also supported by Windows Media Center.
-            /// </summary>
-            MceProgramGuide = 0x0012,
-            /// <summary>
             /// Sent by MCE remotes.
             /// </summary>
             MediaSelectProgramGuide = 0x008D,
