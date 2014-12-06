@@ -68,7 +68,7 @@ namespace Win32
                 uint deviceInfoSize = (uint)Marshal.SizeOf(typeof(RID_DEVICE_INFO));
                 deviceInfoBuffer = Marshal.AllocHGlobal((int)deviceInfoSize);
 
-                int res = Win32.Function.GetRawInputDeviceInfo(hDevice, Const.RIDI_DEVICEINFO, deviceInfoBuffer, ref deviceInfoSize);
+                int res = Win32.Function.GetRawInputDeviceInfoW(hDevice, Const.RIDI_DEVICEINFO, deviceInfoBuffer, ref deviceInfoSize);
                 if (res <= 0)
                 {
                     Debug.WriteLine("WM_INPUT could not read device info: " + Marshal.GetLastWin32Error().ToString());
@@ -101,7 +101,7 @@ namespace Win32
         public static IntPtr GetPreParsedData(IntPtr hDevice)
         {
             uint ppDataSize = 256;
-            int result = Win32.Function.GetRawInputDeviceInfo(hDevice, Win32.Const.RIDI_PREPARSEDDATA, IntPtr.Zero, ref ppDataSize);
+            int result = Win32.Function.GetRawInputDeviceInfoW(hDevice, Win32.Const.RIDI_PREPARSEDDATA, IntPtr.Zero, ref ppDataSize);
             if (result != 0)
             {
                 Debug.WriteLine("Failed to get raw input pre-parsed data size" + result + Marshal.GetLastWin32Error());
@@ -109,13 +109,44 @@ namespace Win32
             }
 
             IntPtr ppData = Marshal.AllocHGlobal((int)ppDataSize);
-            result = Win32.Function.GetRawInputDeviceInfo(hDevice, Win32.Const.RIDI_PREPARSEDDATA, ppData, ref ppDataSize);
+            result = Win32.Function.GetRawInputDeviceInfoW(hDevice, Win32.Const.RIDI_PREPARSEDDATA, ppData, ref ppDataSize);
             if (result <= 0)
             {
                 Debug.WriteLine("Failed to get raw input pre-parsed data" + result + Marshal.GetLastWin32Error());
                 return IntPtr.Zero;
             }
             return ppData;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="device"></param>
+        /// <returns></returns>
+        public static string GetDeviceName(IntPtr device)
+        {
+            uint deviceNameSize = 256;
+            int result = Win32.Function.GetRawInputDeviceInfoW(device, Win32.Const.RIDI_DEVICENAME, IntPtr.Zero, ref deviceNameSize);
+            if (result != 0)
+            {
+                return string.Empty;
+            }
+
+            IntPtr deviceName = Marshal.AllocHGlobal((int)deviceNameSize * 2);  // size is the character count not byte count
+            try
+            {
+                result = Win32.Function.GetRawInputDeviceInfoW(device, Win32.Const.RIDI_DEVICENAME, deviceName, ref deviceNameSize);
+                if (result > 0)
+                {
+                    return Marshal.PtrToStringUni(deviceName, result - 1); // -1 for NULL termination
+                }
+
+                return string.Empty;
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(deviceName);
+            }
         }
 
 
