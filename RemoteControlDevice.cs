@@ -172,7 +172,7 @@ namespace Devices.RemoteControl
 			// remote device. See http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwmt/html/remote_control.asp
 			// for the vendor defined usage page.
 
-			RAWINPUTDEVICE[] rid = new RAWINPUTDEVICE[3];
+			RAWINPUTDEVICE[] rid = new RAWINPUTDEVICE[5];
 
             int i = 0;
 			rid[i].usUsagePage = (ushort)Hid.UsagePage.MceRemote;
@@ -192,17 +192,17 @@ namespace Devices.RemoteControl
             rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             rid[i].hwndTarget = aHWND;
 
-            //i++;
-            //rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControl;
-            //rid[i].usUsage = (ushort)Hid.UsageIdGenericDesktop.SystemControl;
-            //rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
-            //rid[i].hwndTarget = aHWND;
+            i++;
+            rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControl;
+            rid[i].usUsage = (ushort)Hid.UsageIdGenericDesktop.SystemControl;
+            rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+            rid[i].hwndTarget = aHWND;
 
-            //i++;
-            //rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControl;
-            //rid[i].usUsage = (ushort)Hid.UsageIdGenericDesktop.Keyboard;
-            //rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
-            //rid[i].hwndTarget = aHWND;
+            i++;
+            rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControl;
+            rid[i].usUsage = (ushort)Hid.UsageIdGenericDesktop.Keyboard;
+            rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+            rid[i].hwndTarget = aHWND;
 
             //i++;
             //rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControl;
@@ -251,13 +251,22 @@ namespace Devices.RemoteControl
 			{
 				case (int) Keys.Escape:
 					rcb = RemoteControlButton.Clear;
-					break;
+                    break;
+                case (int)Keys.Up:
+                    rcb = RemoteControlButton.Up;
+                    break;
 				case (int) Keys.Down:
 					rcb = RemoteControlButton.Down;
 					break;
 				case (int) Keys.Left:
 					rcb = RemoteControlButton.Left;
-					break;
+                    break;
+                case (int)Keys.Right:
+                    rcb = RemoteControlButton.Right;
+                    break;
+                case (int)Keys.Enter:
+                    rcb = RemoteControlButton.Enter;
+                    break;
 				case (int) Keys.D0:
 					rcb = RemoteControlButton.Digit0;
 					break;
@@ -287,20 +296,14 @@ namespace Devices.RemoteControl
 					break;
 				case (int) Keys.D9:
 					rcb = RemoteControlButton.Digit9;
-					break;
-				case (int) Keys.Enter:
-					rcb = RemoteControlButton.Enter;
-					break;
-				case (int) Keys.Right:
-					rcb = RemoteControlButton.Right;
-					break;
-				case (int) Keys.Up:
-					rcb = RemoteControlButton.Up;
-					break;
+                    break;
 			}
 
-			if (this.ButtonPressed != null && rcb != RemoteControlButton.Unknown)
+            if (this.ButtonPressed != null && rcb != RemoteControlButton.Unknown)
+            {
+                Debug.WriteLine("KeyDown: " + rcb.ToString());
                 this.ButtonPressed(this, new RemoteControlEventArgs(rcb, InputDevice.Key));
+            }
 		}
 
 
@@ -395,6 +398,9 @@ namespace Devices.RemoteControl
                 {
                     return;
                 }
+
+                //
+                Debug.WriteLine(RawInput.GetDeviceName(rawInput.header.hDevice));
                
 
                 if (rawInput.header.dwType == Const.RIM_TYPEHID)  //Check that our raw input is HID                        
@@ -488,7 +494,12 @@ namespace Devices.RemoteControl
                 {
                     Debug.WriteLine("WM_INPUT source device is Keyboard.");
                     // do keyboard handling...
-
+                    Debug.WriteLine("Type: " + deviceInfo.keyboard.dwType.ToString());
+                    Debug.WriteLine("SubType: " + deviceInfo.keyboard.dwSubType.ToString());
+                    Debug.WriteLine("Mode: " + deviceInfo.keyboard.dwKeyboardMode.ToString());
+                    Debug.WriteLine("Number of function keys: " + deviceInfo.keyboard.dwNumberOfFunctionKeys.ToString());
+                    Debug.WriteLine("Number of indicators: " + deviceInfo.keyboard.dwNumberOfIndicators.ToString());
+                    Debug.WriteLine("Number of keys total: " + deviceInfo.keyboard.dwNumberOfKeysTotal.ToString());                   
                 }
             }
             finally
