@@ -207,9 +207,6 @@ namespace Devices.RemoteControl
 				case Const.WM_KEYDOWN:
                     ProcessKeyDown(message.WParam);
 					break;
-                case Const.WM_APPCOMMAND:
-					//ProcessAppCommand(message.LParam);
-					break;
                 case Const.WM_INPUT:
                     //Returning zero means we processed that message.
                     message.Result = new IntPtr(0);
@@ -281,69 +278,9 @@ namespace Devices.RemoteControl
 			}
 
 			if (this.ButtonPressed != null && rcb != RemoteControlButton.Unknown)
-				this.ButtonPressed(this, new RemoteControlEventArgs(rcb, GetDevice(wParam)));
+                this.ButtonPressed(this, new RemoteControlEventArgs(rcb, InputDevice.Key));
 		}
 
-
-		private void ProcessAppCommand(IntPtr lParam)
-		{
-			RemoteControlButton rcb = RemoteControlButton.Unknown;
-
-            int cmd = Macro.GET_APPCOMMAND_LPARAM(lParam);
-                //(int) (((ushort) (param >> 16)) & ~Const.FAPPCOMMAND_MASK);
-
-			switch (cmd)
-			{
-                case Const.APPCOMMAND_BROWSER_BACKWARD:
-					rcb = RemoteControlButton.Back;
-					break;
-                case Const.APPCOMMAND_MEDIA_CHANNEL_DOWN:
-					rcb = RemoteControlButton.ChannelDown;
-					break;
-                case Const.APPCOMMAND_MEDIA_CHANNEL_UP:
-					rcb = RemoteControlButton.ChannelUp;
-					break;
-                case Const.APPCOMMAND_MEDIA_FAST_FORWARD:
-					rcb = RemoteControlButton.FastForward;
-					break;
-                case Const.APPCOMMAND_VOLUME_MUTE:
-					rcb = RemoteControlButton.VolumeMute;
-					break;
-                case Const.APPCOMMAND_MEDIA_PAUSE:
-					rcb = RemoteControlButton.Pause;
-					break;
-                case Const.APPCOMMAND_MEDIA_PLAY:
-					rcb = RemoteControlButton.Play;
-					break;
-                case Const.APPCOMMAND_MEDIA_PLAY_PAUSE:
-                    rcb = RemoteControlButton.PlayPause;
-                    break;
-                case Const.APPCOMMAND_MEDIA_RECORD:
-					rcb = RemoteControlButton.Record;
-					break;
-                case Const.APPCOMMAND_MEDIA_PREVIOUSTRACK:
-					rcb = RemoteControlButton.PreviousTrack;
-					break;
-                case Const.APPCOMMAND_MEDIA_REWIND:
-					rcb = RemoteControlButton.Rewind;
-					break;
-                case Const.APPCOMMAND_MEDIA_NEXTTRACK:
-					rcb = RemoteControlButton.NextTrack;
-					break;
-                case Const.APPCOMMAND_MEDIA_STOP:
-					rcb = RemoteControlButton.Stop;
-					break;
-                case Const.APPCOMMAND_VOLUME_DOWN:
-					rcb = RemoteControlButton.VolumeDown;
-					break;
-                case Const.APPCOMMAND_VOLUME_UP:
-					rcb = RemoteControlButton.VolumeUp;
-					break;
-			}
-
-			if (this.ButtonPressed != null && rcb != RemoteControlButton.Unknown)
-                this.ButtonPressed(this, new RemoteControlEventArgs(rcb, GetDevice(lParam)));
-		}
 
         /// <summary>
         /// 
@@ -538,27 +475,6 @@ namespace Devices.RemoteControl
                 Marshal.FreeHGlobal(rawInputBuffer);
                 Marshal.FreeHGlobal(preParsedData);
             }
-		}
-
-
-		private InputDevice GetDevice(IntPtr lParam)
-		{
-			InputDevice inputDevice;
-
-            switch (Macro.GET_DEVICE_LPARAM(lParam))
-			{
-				case Const.FAPPCOMMAND_OEM:
-					inputDevice = InputDevice.OEM;
-					break;
-				case Const.FAPPCOMMAND_MOUSE:
-					inputDevice = InputDevice.Mouse;
-					break;
-				default:
-					inputDevice = InputDevice.Key;
-					break;
-			}
-
-			return inputDevice;
 		}
 	}
 }
