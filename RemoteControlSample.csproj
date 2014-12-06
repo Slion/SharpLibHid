@@ -132,6 +132,7 @@
     <Compile Include="RemoteControlDevice.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Win32CreateFile.cs" />
     <Compile Include="Win32Hid.cs" />
     <Compile Include="Win32RawInput.cs" />
     <Content Include="App.ico" />

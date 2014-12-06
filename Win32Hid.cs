@@ -12,7 +12,10 @@ namespace Win32
         public static extern HidStatus HidP_GetUsagesEx(HIDP_REPORT_TYPE ReportType, ushort LinkCollection, [Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] USAGE_AND_PAGE[] ButtonList, ref uint UsageLength, IntPtr PreparsedData, [MarshalAs(UnmanagedType.LPArray)] byte[] Report, uint ReportLength);
 
         [DllImport("hid.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern Boolean HidD_GetManufacturerString(/*SafeFileHandle*/ IntPtr HidDeviceObject, StringBuilder Buffer, Int32 BufferLength);
+        public static extern Boolean HidD_GetManufacturerString(SafeFileHandle HidDeviceObject, StringBuilder Buffer, Int32 BufferLength);
+
+        [DllImport("hid.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern Boolean HidD_GetProductString(SafeFileHandle HidDeviceObject, StringBuilder Buffer, Int32 BufferLength);
 
     }
 

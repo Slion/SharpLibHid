@@ -3,9 +3,11 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Text;
+using Microsoft.Win32.SafeHandles;
 
 using Hid.UsageTables;
 using Win32;
+
 
 
 namespace Devices.RemoteControl
@@ -395,16 +397,6 @@ namespace Devices.RemoteControl
                     return;
                 }
 
-                /*
-                //TODO: This needs create file from the device name/path
-                //Get device manufacturer
-                StringBuilder manufacturerString = new StringBuilder(256);
-                bool returnStatus = Win32.Function.HidD_GetManufacturerString(rawInput.header.hDevice, manufacturerString, manufacturerString.Capacity);
-                if (returnStatus)
-                {
-                    Debug.WriteLine("Manufacturer name is {0}", manufacturerString.ToString());
-                }
-                */
 
 
                 //Fetch device info
@@ -414,9 +406,47 @@ namespace Devices.RemoteControl
                     return;
                 }
 
-                //
-                Debug.WriteLine(RawInput.GetDeviceName(rawInput.header.hDevice));
+                //Debug
+                string deviceName = RawInput.GetDeviceName(rawInput.header.hDevice);
+                Debug.WriteLine("Device name: " + deviceName);
+                
+                //Open our device from the device name/path
+                SafeFileHandle handle=Win32.Function.CreateFile(deviceName,
+                    Win32.FileAccess.NONE,
+                    Win32.FileShare.FILE_SHARE_READ|Win32.FileShare.FILE_SHARE_WRITE,
+                    IntPtr.Zero,
+                    Win32.CreationDisposition.OPEN_EXISTING,
+                    Win32.FileFlagsAttributes.FILE_FLAG_OVERLAPPED,
+                    IntPtr.Zero
+                    );
+
+                if (handle.IsInvalid)
+                {
+                    Debug.WriteLine("Failed to CreateFile from device name " + Marshal.GetLastWin32Error().ToString());
+                }
+                else
+                {
+                    //Get manufacturer string
+                    StringBuilder manufacturerString = new StringBuilder(256);
+                    bool returnStatus = Win32.Function.HidD_GetManufacturerString(handle, manufacturerString, manufacturerString.Capacity);
+                    if (returnStatus)
+                    {
+                        Debug.WriteLine("Manufacturer: " + manufacturerString.ToString());
+                    }
+
+                    //Get product string
+                    StringBuilder productString = new StringBuilder(256);
+                    returnStatus = Win32.Function.HidD_GetProductString(handle, productString, productString.Capacity);
+                    if (returnStatus)
+                    {
+                        Debug.WriteLine("Product: " + productString.ToString());
+                    }
+
+                    handle.Close();
+
+                }
                
+
 
                 if (rawInput.header.dwType == Const.RIM_TYPEHID)  //Check that our raw input is HID                        
                 {
