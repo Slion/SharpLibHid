@@ -127,9 +127,10 @@
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="HidDevice.cs" />
     <Compile Include="HidEvent.cs" />
+    <Compile Include="HidHandler.cs" />
     <Compile Include="HidUsageTables.cs" />
-    <Compile Include="HidUtil.cs" />
     <Compile Include="RawInput.cs" />
     <Compile Include="RemoteControlDevice.cs">
       <SubType>Code</SubType>

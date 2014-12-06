@@ -166,6 +166,8 @@ namespace Devices.RemoteControl
         /// <returns></returns>
         public delegate bool HidUsageHandler(ushort aUsage);
 
+        Hid.HidHandler iHidHandler;
+
 
         //-------------------------------------------------------------
         // constructors
@@ -216,10 +218,12 @@ namespace Devices.RemoteControl
             //rid[i].hwndTarget = aHWND;
 
 
-            if (!Function.RegisterRawInputDevices(rid, (uint)rid.Length, (uint)Marshal.SizeOf(rid[0])))
+            iHidHandler = new Hid.HidHandler(rid);
+            if (!iHidHandler.IsRegistered)
             {
-                throw new ApplicationException("Failed to register raw input devices: " + Marshal.GetLastWin32Error().ToString());
+                Debug.WriteLine("Failed to register raw input devices: " + Marshal.GetLastWin32Error().ToString());
             }
+            iHidHandler.OnHidEvent += HandleHidEvent;
         }
 
 
@@ -367,31 +371,35 @@ namespace Devices.RemoteControl
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         private void ProcessInputCommand(ref Message message)
         {
             //We received a WM_INPUT message
             Debug.WriteLine("================WM_INPUT================");
 
-            Hid.HidEvent hidEvent = new Hid.HidEvent(message);
-            hidEvent.DebugWrite();
+            iHidHandler.ProcessInput(message);
 
-            if (!hidEvent.IsValid || !hidEvent.IsGeneric)
-            {
-                Debug.WriteLine("Skipping HID message.");
-                return;
-            }
+        }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="aSender"></param>
+        /// <param name="aHidEvent"></param>
+        void HandleHidEvent(object aSender, Hid.HidEvent aHidEvent)
+        {
             HidUsageHandler usagePageHandler = null;
 
             //Check if this an MCE remote HID message
-            if (hidEvent.UsagePage == (ushort)Hid.UsagePage.MceRemote && hidEvent.UsageCollection == (ushort)Hid.UsageIdMce.MceRemote)
+            if (aHidEvent.UsagePage == (ushort)Hid.UsagePage.MceRemote && aHidEvent.UsageCollection == (ushort)Hid.UsageIdMce.MceRemote)
             {
                 usagePageHandler = HidMceRemoteHandler;
             }
             //Check if this is a consumer control HID message
-            else if (hidEvent.UsagePage == (ushort)Hid.UsagePage.Consumer && hidEvent.UsageCollection == (ushort)Hid.UsageCollectionConsumer.ConsumerControl)
+            else if (aHidEvent.UsagePage == (ushort)Hid.UsagePage.Consumer && aHidEvent.UsageCollection == (ushort)Hid.UsageCollectionConsumer.ConsumerControl)
             {
                 usagePageHandler = HidConsumerDeviceHandler;
             }
@@ -402,7 +410,7 @@ namespace Devices.RemoteControl
                 return;
             }
 
-            foreach (ushort usage in hidEvent.Usages)
+            foreach (ushort usage in aHidEvent.Usages)
             {
                 usagePageHandler(usage);
             }

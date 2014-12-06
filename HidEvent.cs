@@ -21,6 +21,8 @@ namespace Hid
         public bool IsMouse { get; private set; }
         public bool IsKeyboard { get; private set; }
         public bool IsGeneric { get; private set; }
+        public bool IsButtonDown { get { return Usages.Count == 1 && Usages[0] != 0; } }
+        public bool IsButtonUp { get { return Usages.Count == 1 && Usages[0] == 0; } }
 
         public HidDevice Device { get; private set; }
 
