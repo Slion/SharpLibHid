@@ -187,31 +187,31 @@ namespace Devices.RemoteControl
 
             i++;
             rid[i].usUsagePage = (ushort)Hid.UsagePage.Consumer;
-            rid[i].usUsage = (ushort)Hid.UsageIdConsumer.ConsumerControl;
+            rid[i].usUsage = (ushort)Hid.UsageCollectionConsumer.ConsumerControl;
             rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             rid[i].hwndTarget = aHWND;
 
             i++;
             rid[i].usUsagePage = (ushort)Hid.UsagePage.Consumer;
-            rid[i].usUsage = (ushort)Hid.UsageIdConsumer.Selection;
+            rid[i].usUsage = (ushort)Hid.UsageCollectionConsumer.Selection;
             rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             rid[i].hwndTarget = aHWND;
 
             i++;
-            rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControl;
-            rid[i].usUsage = (ushort)Hid.UsageIdGenericDesktop.SystemControl;
+            rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControls;
+            rid[i].usUsage = (ushort)Hid.UsageCollectionGenericDesktop.SystemControl;
             rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             rid[i].hwndTarget = aHWND;
 
             //i++;
-            //rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControl;
-            //rid[i].usUsage = (ushort)Hid.UsageIdGenericDesktop.Keyboard;
+            //rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControls;
+            //rid[i].usUsage = (ushort)Hid.UsageCollectionGenericDesktop.Keyboard;
             //rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             //rid[i].hwndTarget = aHWND;
 
             //i++;
-            //rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControl;
-            //rid[i].usUsage = (ushort)Hid.UsageIdGenericDesktop.Mouse;
+            //rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControls;
+            //rid[i].usUsage = (ushort)Hid.UsageCollectionGenericDesktop.Mouse;
             //rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             //rid[i].hwndTarget = aHWND;
 
@@ -391,7 +391,7 @@ namespace Devices.RemoteControl
                 usagePageHandler = HidMceRemoteHandler;
             }
             //Check if this is a consumer control HID message
-            else if (hidEvent.UsagePage == (ushort)Hid.UsagePage.Consumer && hidEvent.UsageCollection == (ushort)Hid.UsageIdConsumer.ConsumerControl)
+            else if (hidEvent.UsagePage == (ushort)Hid.UsagePage.Consumer && hidEvent.UsageCollection == (ushort)Hid.UsageCollectionConsumer.ConsumerControl)
             {
                 usagePageHandler = HidConsumerDeviceHandler;
             }

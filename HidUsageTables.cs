@@ -12,12 +12,12 @@ namespace Hid
     public enum UsagePage : ushort
     {
         Undefined = 0,
-        GenericDesktopControl,
-        SimulationControl,
-        VirtualRealityControl,
-        SportControl,
-        GameControl,
-        GenericDeviceControl,
+        GenericDesktopControls,
+        SimulationControls,
+        VirtualRealityControls,
+        SportControls,
+        GameControls,
+        GenericDeviceControls,
         Keyboard,
         LightEmittingDiode,
         Button,
@@ -48,7 +48,7 @@ namespace Hid
         TerraTecRemote = 0xffcc
     }
 
-    public enum UsageIdGenericDesktop : ushort
+    public enum UsageCollectionGenericDesktop : ushort
     {      
         Pointer = 0x01,
         Mouse = 0x02,
@@ -61,7 +61,7 @@ namespace Hid
         SystemControl = 0x80
     }
 
-    public enum UsageIdConsumer : ushort
+    public enum UsageCollectionConsumer : ushort
     {
         ConsumerControl = 0x01,
         NumericKeyPad = 0x02,
@@ -69,7 +69,25 @@ namespace Hid
         Microphone = 0x04,
         Headphone = 0x05,
         GraphicEqualizer = 0x06,
+        FunctionButtons = 0x36,
         Selection = 0x80,
+        MediaSelection = 0x0087,
+        SelectDisc = 0x00BA,
+        PlaybackSpeed = 0x00F1,
+        Proximity = 0x0109,
+        SpeakerSystem = 0x0160,
+        ChannelLeft = 0x0161,
+        ChannelRight = 0x0162,
+        ChannelCenter = 0x0163,
+        ChannelFront = 0x0164,
+        ChannelCenterFront = 0x0165,
+        ChannelSide = 0x0166,
+        ChannelSurrond = 0x0167,
+        ChannelLowFrequencyEnhancement = 0x0168,
+        ChannelTop = 0x0169,
+        ChannelUnknown = 0x016A,
+        ApplicationLaunchButtons = 0x016A,
+        GenericGuiApplicationControls = 0x0200,
     }
 
     
@@ -270,7 +288,6 @@ namespace Hid
             Null = 0x0000,           
             //           
             Channel = 0x0086,
-            MediaSelection = 0x0087,
             MediaSelectComputer = 0x0088,
             MediaSelectTV = 0x0089,
             MediaSelectWWW = 0x008A,
@@ -304,8 +321,7 @@ namespace Hid
             ScanPreviousTrack = 0x00B6,
             Stop = 0x00B7,
             Eject = 0x00B8,
-            RandomPlay = 0x00B9,
-            SelectDisc = 0x00BA,
+            RandomPlay = 0x00B9,            
             EnterDisc = 0x00BB,
             Repeat = 0x00BC,
             Tracking = 0x00BD,
@@ -343,7 +359,7 @@ namespace Hid
             VolumeDecrement = 0x00EA,
 
             //Generic GUI Application Controls
-            GenericGUIApplicationControls = 0x0200,
+            //GenericGUIApplicationControls = 0x0200,
             AppCtrlNew = 0x0201,
             AppCtrlOpen = 0x0202,
             AppCtrlClose = 0x0203,
