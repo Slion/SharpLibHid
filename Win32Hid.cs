@@ -1,5 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
+using System.Text;
 
 namespace Win32
 {
@@ -8,6 +10,10 @@ namespace Win32
     {
         [DllImport("hid.dll", CharSet = CharSet.Unicode)]
         public static extern HidStatus HidP_GetUsagesEx(HIDP_REPORT_TYPE ReportType, ushort LinkCollection, [Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] USAGE_AND_PAGE[] ButtonList, ref uint UsageLength, IntPtr PreparsedData, [MarshalAs(UnmanagedType.LPArray)] byte[] Report, uint ReportLength);
+
+        [DllImport("hid.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern Boolean HidD_GetManufacturerString(/*SafeFileHandle*/ IntPtr HidDeviceObject, StringBuilder Buffer, Int32 BufferLength);
+
     }
 
 

@@ -2,8 +2,11 @@ using System;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Text;
+
 using Hid.UsageTables;
 using Win32;
+
 
 namespace Devices.RemoteControl
 {
@@ -392,6 +395,18 @@ namespace Devices.RemoteControl
                     return;
                 }
 
+                /*
+                //TODO: This needs create file from the device name/path
+                //Get device manufacturer
+                StringBuilder manufacturerString = new StringBuilder(256);
+                bool returnStatus = Win32.Function.HidD_GetManufacturerString(rawInput.header.hDevice, manufacturerString, manufacturerString.Capacity);
+                if (returnStatus)
+                {
+                    Debug.WriteLine("Manufacturer name is {0}", manufacturerString.ToString());
+                }
+                */
+
+
                 //Fetch device info
                 RID_DEVICE_INFO deviceInfo = new RID_DEVICE_INFO();
                 if (!RawInput.GetDeviceInfo(rawInput.header.hDevice, ref deviceInfo))
@@ -499,7 +514,7 @@ namespace Devices.RemoteControl
                     Debug.WriteLine("Mode: " + deviceInfo.keyboard.dwKeyboardMode.ToString());
                     Debug.WriteLine("Number of function keys: " + deviceInfo.keyboard.dwNumberOfFunctionKeys.ToString());
                     Debug.WriteLine("Number of indicators: " + deviceInfo.keyboard.dwNumberOfIndicators.ToString());
-                    Debug.WriteLine("Number of keys total: " + deviceInfo.keyboard.dwNumberOfKeysTotal.ToString());                   
+                    Debug.WriteLine("Number of keys total: " + deviceInfo.keyboard.dwNumberOfKeysTotal.ToString());
                 }
             }
             finally
