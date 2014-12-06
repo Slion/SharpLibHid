@@ -127,6 +127,7 @@
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="HidUtil.cs" />
     <Compile Include="HumanInterfaceDevice.cs" />
     <Compile Include="RawInput.cs" />
     <Compile Include="RemoteControlDevice.cs">

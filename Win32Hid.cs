@@ -17,6 +17,8 @@ namespace Win32
         [DllImport("hid.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern Boolean HidD_GetProductString(SafeFileHandle HidDeviceObject, StringBuilder Buffer, Int32 BufferLength);
 
+        [DllImport("hid.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern Boolean HidD_GetAttributes(SafeFileHandle HidDeviceObject, ref HIDD_ATTRIBUTES Attributes);
     }
 
 
@@ -73,6 +75,15 @@ namespace Win32
         public ushort Usage;
         public ushort UsagePage;
     };
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct HIDD_ATTRIBUTES
+    {
+        public uint Size;
+        public ushort VendorID;
+        public ushort ProductID;
+        public ushort VersionNumber;
+    }
 
 
 }
