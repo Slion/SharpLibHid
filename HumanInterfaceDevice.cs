@@ -389,7 +389,6 @@ namespace Hid
             AppCtrlTileVertically = 0x023B,
             AppCtrlFormat = 0x023C,
             AppCtrlEdit = 0x023D,
-
         }
     }
 }

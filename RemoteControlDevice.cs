@@ -385,7 +385,7 @@ namespace Devices.RemoteControl
 
             //Declare some pointers
             IntPtr rawInputBuffer = IntPtr.Zero;
-            //My understanding is that this is basically our HID descriptor
+            //My understanding is that this is basically our HID descriptor 
             IntPtr preParsedData = IntPtr.Zero;
 
             try
@@ -406,45 +406,10 @@ namespace Devices.RemoteControl
                     return;
                 }
 
-                //Debug
-                string deviceName = RawInput.GetDeviceName(rawInput.header.hDevice);
-                Debug.WriteLine("Device name: " + deviceName);
+                //Get various information about this HID device
+                Hid.HidDevice device = new Hid.HidDevice(rawInput.header.hDevice);
+                device.DebugWrite();
                 
-                //Open our device from the device name/path
-                SafeFileHandle handle=Win32.Function.CreateFile(deviceName,
-                    Win32.FileAccess.NONE,
-                    Win32.FileShare.FILE_SHARE_READ|Win32.FileShare.FILE_SHARE_WRITE,
-                    IntPtr.Zero,
-                    Win32.CreationDisposition.OPEN_EXISTING,
-                    Win32.FileFlagsAttributes.FILE_FLAG_OVERLAPPED,
-                    IntPtr.Zero
-                    );
-
-                if (handle.IsInvalid)
-                {
-                    Debug.WriteLine("Failed to CreateFile from device name " + Marshal.GetLastWin32Error().ToString());
-                }
-                else
-                {
-                    //Get manufacturer string
-                    StringBuilder manufacturerString = new StringBuilder(256);
-                    bool returnStatus = Win32.Function.HidD_GetManufacturerString(handle, manufacturerString, manufacturerString.Capacity);
-                    if (returnStatus)
-                    {
-                        Debug.WriteLine("Manufacturer: " + manufacturerString.ToString());
-                    }
-
-                    //Get product string
-                    StringBuilder productString = new StringBuilder(256);
-                    returnStatus = Win32.Function.HidD_GetProductString(handle, productString, productString.Capacity);
-                    if (returnStatus)
-                    {
-                        Debug.WriteLine("Product: " + productString.ToString());
-                    }
-
-                    handle.Close();
-
-                }
                
 
 
