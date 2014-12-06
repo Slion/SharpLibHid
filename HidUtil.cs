@@ -20,9 +20,9 @@ namespace Hid
         public ushort Version { get; private set; }
 
         /// <summary>
-        /// 
+        /// Class constructor will fetch this object properties from HID sub system.
         /// </summary>
-        /// <param name="hRawInputDevice"></param>
+        /// <param name="hRawInputDevice">Device Handle as provided by RAWINPUTHEADER.hDevice, typically accessed as rawinput.header.hDevice</param>
         public HidDevice(IntPtr hRawInputDevice)
         {
             //Fetch various information defining the given HID device
