@@ -48,13 +48,34 @@ namespace Hid
         TerraTecRemote = 0xffcc
     }
 
-    /// <summary>
-/// 
-/// </summary>
-    public enum UsageId: ushort
+    public enum UsageIdGenericDesktop : ushort
+    {      
+        Pointer = 0x01,
+        Mouse = 0x02,
+        Joystick = 0x04,
+        GamePad = 0x05,
+        Keyboard = 0x06,
+        KeyPad = 0x07,
+        MultiAxisController = 0x08,
+        TabletPCSystemControls = 0x09,
+        SystemControl = 0x80
+    }
+
+    public enum UsageIdConsumer : ushort
     {
-        MceRemoteUsage = 0x88,
-        ConsumerControl = 0x01
+        ConsumerControl = 0x01,
+        NumericKeyPad = 0x02,
+        ProgrammableButtons = 0x03,
+        Microphone = 0x04,
+        Headphone = 0x05,
+        GraphicEqualizer = 0x06,
+        Selection = 0x80,
+    }
+
+    
+    public enum UsageIdMce: ushort
+    {
+        MceRemote = 0x88        
     }
 
 
