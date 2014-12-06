@@ -174,20 +174,42 @@ namespace Devices.RemoteControl
 
 			RAWINPUTDEVICE[] rid = new RAWINPUTDEVICE[3];
 
-			rid[0].usUsagePage = 0xFFBC;
-			rid[0].usUsage = 0x88;
-            rid[0].dwFlags = Const.RIDEV_EXINPUTSINK;
-            rid[0].hwndTarget = aHWND;
+            int i = 0;
+			rid[i].usUsagePage = (ushort)Hid.UsagePage.MceRemote;
+            rid[i].usUsage = (ushort)Hid.UsageIdMce.MceRemote;
+            rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+            rid[i].hwndTarget = aHWND;
 
-			rid[1].usUsagePage = 0x0C;
-			rid[1].usUsage = 0x01;
-            rid[1].dwFlags = Const.RIDEV_EXINPUTSINK;
-            rid[1].hwndTarget = aHWND;
+            i++;
+            rid[i].usUsagePage = (ushort)Hid.UsagePage.Consumer;
+            rid[i].usUsage = (ushort)Hid.UsageIdConsumer.ConsumerControl;
+            rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+            rid[i].hwndTarget = aHWND;
 
-			rid[2].usUsagePage = 0x0C;
-			rid[2].usUsage = 0x80;
-            rid[2].dwFlags = Const.RIDEV_EXINPUTSINK;
-            rid[2].hwndTarget = aHWND;
+            i++;
+            rid[i].usUsagePage = (ushort)Hid.UsagePage.Consumer;
+            rid[i].usUsage = (ushort)Hid.UsageIdConsumer.Selection;
+            rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+            rid[i].hwndTarget = aHWND;
+
+            //i++;
+            //rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControl;
+            //rid[i].usUsage = (ushort)Hid.UsageIdGenericDesktop.SystemControl;
+            //rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+            //rid[i].hwndTarget = aHWND;
+
+            //i++;
+            //rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControl;
+            //rid[i].usUsage = (ushort)Hid.UsageIdGenericDesktop.Keyboard;
+            //rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+            //rid[i].hwndTarget = aHWND;
+
+            //i++;
+            //rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControl;
+            //rid[i].usUsage = (ushort)Hid.UsageIdGenericDesktop.Mouse;
+            //rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+            //rid[i].hwndTarget = aHWND;
+
 
 			if (!Function.RegisterRawInputDevices(rid,(uint) rid.Length,(uint) Marshal.SizeOf(rid[0])))
 			{
@@ -388,12 +410,12 @@ namespace Devices.RemoteControl
                     HidUsageHandler usagePageHandler=null;
 
                     //Check if this an MCE remote HID message
-                    if (deviceInfo.hid.usUsagePage == (ushort)Hid.UsagePage.MceRemote && deviceInfo.hid.usUsage == (ushort)Hid.UsageId.MceRemoteUsage)
+                    if (deviceInfo.hid.usUsagePage == (ushort)Hid.UsagePage.MceRemote && deviceInfo.hid.usUsage == (ushort)Hid.UsageIdMce.MceRemote)
                     {                        
                         usagePageHandler = HidMceRemoteHandler;
                     }
                     //Check if this is a consumer control HID message
-                    else if (deviceInfo.hid.usUsagePage == (ushort)Hid.UsagePage.Consumer && deviceInfo.hid.usUsage == (ushort)Hid.UsageId.ConsumerControl)
+                    else if (deviceInfo.hid.usUsagePage == (ushort)Hid.UsagePage.Consumer && deviceInfo.hid.usUsage == (ushort)Hid.UsageIdConsumer.ConsumerControl)
                     {
                         usagePageHandler = HidConsumerDeviceHandler;
                     }
