@@ -84,7 +84,7 @@ namespace Devices.RemoteControl
     {
         RemoteControlButton _rcb;
         InputDevice _device;
-        MceButton iMceButton;
+        WindowsMediaCenterRemoteControl iMceButton;
         ConsumerControl iConsumerControl;
 
         public RemoteControlEventArgs(RemoteControlButton rcb, InputDevice device)
@@ -104,7 +104,7 @@ namespace Devices.RemoteControl
         }
 
 
-        public RemoteControlEventArgs(MceButton mce, InputDevice device)
+        public RemoteControlEventArgs(WindowsMediaCenterRemoteControl mce, InputDevice device)
         {
             SetNullButtons();
             //
@@ -115,13 +115,13 @@ namespace Devices.RemoteControl
         private void SetNullButtons()
         {
             iConsumerControl = ConsumerControl.Null;
-            iMceButton = MceButton.Null;
+            iMceButton = WindowsMediaCenterRemoteControl.Null;
             _rcb = RemoteControlButton.Unknown;
         }
 
         public RemoteControlEventArgs()
         {
-            iMceButton = MceButton.Null;
+            iMceButton = WindowsMediaCenterRemoteControl.Null;
             _rcb = RemoteControlButton.Unknown;
             _device = InputDevice.Key;
         }
@@ -132,7 +132,7 @@ namespace Devices.RemoteControl
             set { _rcb = value; }
         }
 
-        public MceButton MceButton
+        public WindowsMediaCenterRemoteControl MceButton
         {
             get { return iMceButton; }
             set { iMceButton = value; }
@@ -182,8 +182,8 @@ namespace Devices.RemoteControl
             RAWINPUTDEVICE[] rid = new RAWINPUTDEVICE[4];
 
             int i = 0;
-            rid[i].usUsagePage = (ushort)Hid.UsagePage.MceRemote;
-            rid[i].usUsage = (ushort)Hid.UsageIdMce.MceRemote;
+            rid[i].usUsagePage = (ushort)Hid.UsagePage.WindowsMediaCenterRemoteControl;
+            rid[i].usUsage = (ushort)Hid.UsageCollectionWindowsMediaCenter.WindowsMediaCenterRemoteControl;
             rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             rid[i].hwndTarget = aHWND;
 
@@ -356,11 +356,11 @@ namespace Devices.RemoteControl
             }
 
 
-            if (Enum.IsDefined(typeof(MceButton), aUsage) && aUsage != 0) //Our button is a known MCE button
+            if (Enum.IsDefined(typeof(WindowsMediaCenterRemoteControl), aUsage) && aUsage != 0) //Our button is a known MCE button
             {
                 if (this.ButtonPressed != null)
                 {
-                    return this.ButtonPressed(this, new RemoteControlEventArgs((MceButton)aUsage, InputDevice.OEM));
+                    return this.ButtonPressed(this, new RemoteControlEventArgs((WindowsMediaCenterRemoteControl)aUsage, InputDevice.OEM));
                 }
                 return false;
             }
@@ -394,7 +394,7 @@ namespace Devices.RemoteControl
             HidUsageHandler usagePageHandler = null;
 
             //Check if this an MCE remote HID message
-            if (aHidEvent.UsagePage == (ushort)Hid.UsagePage.MceRemote && aHidEvent.UsageCollection == (ushort)Hid.UsageIdMce.MceRemote)
+            if (aHidEvent.UsagePage == (ushort)Hid.UsagePage.WindowsMediaCenterRemoteControl && aHidEvent.UsageCollection == (ushort)Hid.UsageCollectionWindowsMediaCenter.WindowsMediaCenterRemoteControl)
             {
                 usagePageHandler = HidMceRemoteHandler;
             }
