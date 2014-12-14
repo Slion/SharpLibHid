@@ -44,7 +44,7 @@ namespace Hid
         CameraControl,
         Arcade,
         // http://msdn.microsoft.com/en-us/library/windows/desktop/bb417079.aspx
-        MceRemote = 0xffbc,
+        WindowsMediaCenterRemoteControl = 0xffbc,
         TerraTecRemote = 0xffcc
     }
 
@@ -91,9 +91,9 @@ namespace Hid
     }
 
     
-    public enum UsageIdMce: ushort
+    public enum UsageCollectionWindowsMediaCenter: ushort
     {
-        MceRemote = 0x88        
+        WindowsMediaCenterRemoteControl = 0x88        
     }
 
 
@@ -103,7 +103,7 @@ namespace Hid
         /// <summary>
         ///
         /// </summary>
-        public enum MceButton: ushort
+        public enum WindowsMediaCenterRemoteControl: ushort
         {
             /// <summary>
             /// Not defined by the Microsoft specs.
@@ -243,7 +243,7 @@ namespace Hid
             /// <para />
             /// According to HP specs it displays visual imagery that is synchronized to the sound of your music tracks.
             /// </summary>
-            Visualization = MceButton.Ext0,
+            Visualization = WindowsMediaCenterRemoteControl.Ext0,
             /// <summary>
             /// Plays a slide show of all the pictures on your hard disk drive.
             /// <para />
@@ -255,7 +255,7 @@ namespace Hid
             /// <para />
             /// According to HP specs it plays a slide show of all the pictures on your hard disk drive.
             /// </summary>
-            SlideShow = MceButton.Ext1,
+            SlideShow = WindowsMediaCenterRemoteControl.Ext1,
             /// <summary>
             /// Eject optical drive.
             /// <para />
@@ -266,7 +266,7 @@ namespace Hid
             /// Notably sent by the 'Eject' button of HP Windows Media Center Remote (TSGH-IR08).
             /// Also interpreted as 'Eject' action by SoundGraph iMON Manager in MCE mode (OrigenAE VF310).
             /// </summary>
-            Eject = MceButton.Ext2,
+            Eject = WindowsMediaCenterRemoteControl.Ext2,
             /// <summary>
             /// Not sure what this should do.
             /// <para />
@@ -276,7 +276,7 @@ namespace Hid
             /// <para />
             /// Notably sent by the 'Input selection' button of HP Windows Media Center Remote (TSGH-IR08).
             /// </summary>
-            InputSelection = MceButton.Ext3,
+            InputSelection = WindowsMediaCenterRemoteControl.Ext3,
         }
 
         /// <summary>

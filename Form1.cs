@@ -131,7 +131,7 @@ namespace RemoteControlSample
                 label1.Text = e.Button.ToString();
                 processed = true;
             }
-            else if (e.MceButton != Hid.UsageTables.MceButton.Null)
+            else if (e.MceButton != Hid.UsageTables.WindowsMediaCenterRemoteControl.Null)
             {
                 //Display MCE button name
                 label1.Text = e.MceButton.ToString();
