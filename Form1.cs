@@ -136,10 +136,10 @@ namespace RemoteControlSample
                 //Display MCE button name
                 label1.Text = e.MceButton.ToString();
                 //Check if this is an HP extension
-                if (Enum.IsDefined(typeof(Hid.UsageTables.HpMceButton), (ushort)e.MceButton))
+                if (Enum.IsDefined(typeof(Hid.UsageTables.HpWindowsMediaCenterRemoteControl), (ushort)e.MceButton))
                 {
                     //Also display HP button name
-                    label1.Text += " / HP:" + ((Hid.UsageTables.HpMceButton)e.MceButton).ToString();
+                    label1.Text += " / HP:" + ((Hid.UsageTables.HpWindowsMediaCenterRemoteControl)e.MceButton).ToString();
                 }
 
                 processed = true;

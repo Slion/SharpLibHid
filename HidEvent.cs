@@ -28,6 +28,7 @@ namespace Hid
 
         public ushort UsagePage { get; private set; }
         public ushort UsageCollection { get; private set; }
+        public uint UsageId { get { return ((uint)UsagePage << 16 | (uint)UsageCollection); } }
         public List<ushort> Usages { get; private set; }
 
 
