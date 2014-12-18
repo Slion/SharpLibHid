@@ -230,7 +230,7 @@ namespace Hid
         /// <summary>
         /// Those codes come from experimenting with HP remotes.
         /// </summary>
-        public enum HpMceButton: ushort
+        public enum HpWindowsMediaCenterRemoteControl : ushort
         {
             /// <summary>
             /// Displays visual imagery that is synchronized to the sound of your music tracks.
@@ -266,7 +266,7 @@ namespace Hid
             /// Notably sent by the 'Eject' button of HP Windows Media Center Remote (TSGH-IR08).
             /// Also interpreted as 'Eject' action by SoundGraph iMON Manager in MCE mode (OrigenAE VF310).
             /// </summary>
-            Eject = WindowsMediaCenterRemoteControl.Ext2,
+            HpEject = WindowsMediaCenterRemoteControl.Ext2,
             /// <summary>
             /// Not sure what this should do.
             /// <para />
