@@ -1,0 +1,341 @@
+00  Unassigned   
+01  Consumer Control  CA  15.1 
+02  Numeric Key Pad  NAry  15.2 
+03  Programmable Buttons  NAry  15.14 
+04  Microphone  CA  15.1 
+05  Headphone  CA  15.1 
+06  Graphic Equalizer  CA  15.1 
+07-1F  Reserved   
+20  +10  OSC  15.2 
+21  +100  OSC  15.2 
+22  AM/PM  OSC  15.2 
+23-3F  Reserved   
+30  Power  OOC  15.3 
+31  Reset  OSC  15.3 
+32  Sleep  OSC  15.3 
+33  Sleep After  OSC  15.3 
+34  Sleep Mode  RTC  15.3 
+35  Illumination  OOC  15.3 
+36  Function Buttons  NAry  15.3 
+37-3F  Reserved   
+40  Menu  OOC  15.4 
+41  Menu Pick  OSC  15.4 
+42  Menu Up  OSC  15.4 
+43  Menu Down  OSC  15.4 
+44  Menu Left  OSC  15.4 
+45  Menu Right  OSC  15.4 
+46  Menu Escape  OSC  15.4 
+47  Menu Value Increase  OSC  15.4 
+48  Menu Value Decrease  OSC  15.4 
+49-5F  Reserved   
+60  Data On Screen  OOC  15.5 
+61  Closed Caption  OOC  15.5 
+62  Closed Caption Select  OSC  15.5 
+63  VCR/TV  OOC  15.5 
+64  Broadcast Mode  OSC  15.5 
+65  Snapshot  OSC  15.5 
+66  Still  OSC  15.5 
+67-7F  Reserved   
+80  Selection  NAry  15.6 
+81  Assign Selection  OSC  15.6 
+82  Mode Step  OSC  15.6 
+83  Recall Last  OSC  15.6 
+84  Enter Channel  OSC  15.6 
+85  Order Movie  OSC  15.6 
+86  Channel  LC  15.6 
+87  Media Selection  NAry  15.6 
+88  Media Select Computer  Sel  15.6 
+89  Media Select TV  Sel  15.6 
+8A  Media Select WWW  Sel  15.6 
+8B  Media Select DVD  Sel  15.6 
+8C  Media Select Telephone  Sel  15.6 
+8D  Media Select Program Guide  Sel  15.6 
+8E  Media Select Video Phone  Sel  15.6 
+8F  Media Select Games  Sel  15.6 
+90  Media Select Messages  Sel  15.6 
+91  Media Select CD  Sel  15.6 
+92  Media Select VCR  Sel  15.6 
+93  Media Select Tuner  Sel  15.6 
+94  Quit  OSC  15.6 
+95  Help  OOC  15.6 
+96  Media Select Tape  Sel  15.6 
+97  Media Select Cable  Sel  15.6 
+98  Media Select Satellite  Sel  15.6 
+99  Media Select Security  Sel  15.6 
+9A  Media Select Home  Sel  15.6 
+9B  Media Select Call  Sel  15.6 
+9C  Channel Increment  OSC  15.6 
+9D  Channel Decrement  OSC  15.6 
+9E  Media Select SAP  Sel  15.6 
+9F  Reserved   
+A0  VCR Plus  OSC  15.6 
+A1  Once  OSC  15.6 
+A2  Daily  OSC  15.6
+A3  Weekly  OSC  15.6 
+A4  Monthly  OSC  15.6 
+A5-AF  Reserved   
+B0  Play  OOC  15.7 
+B1  Pause  OOC  15.7 
+B2  Record  OOC  15.7 
+B3  Fast Forward  OOC  15.7 
+B4  Rewind  OOC  15.7 
+B5  Scan Next Track  OSC  15.7 
+B6  Scan Previous Track  OSC  15.7 
+B7  Stop  OSC  15.7 
+B8  Eject  OSC  15.7 
+B9  Random Play  OOC  15.7 
+BA  Select Disc  NAry  15.7 
+BB  Enter Disc  MC  15.7 
+BC  Repeat  OSC  15.7 
+BD  Tracking  LC  15.7 
+BE  Track Normal  OSC  15.7 
+BF  Slow Tracking  LC  15.7 
+C0  Frame Forward  RTC  15.7 
+C1  Frame Back  RTC  15.7 
+C2  Mark  OSC  15.8 
+C3  Clear Mark  OSC  15.8 
+C4  Repeat From Mark  OOC  15.8 
+C5  Return To Mark  OSC  15.8 
+C6  Search Mark Forward  OSC  15.8 
+C7  Search Mark Backwards  OSC  15.8 
+C8  Counter Reset  OSC  15.8 
+C9  Show Counter  OSC  15.8 
+CA  Tracking Increment  RTC  15.7 
+CB  Tracking Decrement  RTC  15.7 
+CC  Stop/Eject  OSC  15.7 
+CD  Play/Pause  OSC  15.7 
+CE  Play/Skip  OSC  15.7 
+CF-DF  Reserved   
+E0  Volume  LC  15.9.1 
+E1  Balance  LC  15.9.2 
+E2  Mute  OOC  15.9.1 
+E3  Bass  LC  15.9.3 
+E4  Treble  LC  15.9.4 
+E5  Bass Boost  OOC  15.9.3 
+E6  Surround Mode  OSC  15.9.5 
+E7  Loudness  OOC  15.9.5 
+E8  MPX  OOC  15.9.5 
+E9  Volume Increment  RTC  15.9.1 
+EA  Volume Decrement  RTC  15.9.1 
+EB-EF  Reserved   
+F0  Speed Select  OSC  15.10 
+F1  Playback Speed  NAry  15.10 
+F2  Standard Play  Sel  15.10 
+F3  Long Play  Sel  15.10 
+F4  Extended Play  Sel  15.10 
+F5  Slow  OSC  15.10 
+F6-FF  Reserved   
+100  Fan Enable  OOC  15.11 
+101  Fan Speed  LC  15.11 
+102  Light Enable  OOC  15.11 
+103  Light Illumination Level  LC  15.11 
+104  Climate Control Enable  OOC  15.11 
+105  Room Temperature  LC  15.11 
+106  Security Enable  OOC  15.11 
+107  Fire Alarm  OSC  15.11 
+108  Police Alarm  OSC  15.11 
+109  Proximity  LC  15.11 
+10A Motion  OSC  15.11 
+10B Duress Alarm  OSC  15.11 
+10C Holdup Alarm  OSC  15.11 
+10D Medical Alarm  OSC  15.11 
+10E-14F Reserved    150  Balance Right  RTC  15.9.2 
+151  Balance Left  RTC  15.9.2 
+152  Bass Increment  RTC  15.9.3 
+153  Bass Decrement  RTC  15.9.3 
+154  Treble Increment  RTC  15.9.4 
+155  Treble Decrement  RTC  15.9.4 
+156-15F  Reserved   
+160  Speaker System  CL  15.12.1 
+161  Channel Left  CL  15.12.1 
+162  Channel Right  CL  15.12.1 
+163  Channel Center  CL  15.12.1 
+164  Channel Front  CL  15.12.1 
+165  Channel Center Front  CL  15.12.1 
+166  Channel Side  CL  15.12.1 
+167  Channel Surround  CL  15.12.1 
+168  Channel Low Frequency Enhancement  CL  15.12.1 
+169  Channel Top  CL  15.12.1 
+16A  Channel Unknown  CL  15.12.1 
+16B-16F  Reserved   
+170  Sub-channel  LC  15.13 
+171  Sub-channel Increment  OSC  15.13 
+172  Sub-channel Decrement  OSC  15.13 
+173  Alternate Audio Increment  OSC  15.13 
+174  Alternate Audio Decrement  OSC  15.13 
+175-17F  Reserved   
+180  Application Launch Buttons  NAry  15.15 
+181  AL Launch Button Configuration Tool Sel  15.15 
+182  AL Programmable Button Configuration Sel  15.15 
+183  AL Consumer Control Configuration Sel  15.15 
+184  AL Word Processor  Sel  15.15 
+185  AL Text Editor  Sel  15.15 
+186  AL Spreadsheet  Sel  15.15 
+187  AL Graphics Editor  Sel  15.15 
+188  AL Presentation App  Sel  15.15 
+189  AL Database App  Sel  15.15 
+18A  AL Email Reader  Sel  15.15 
+18B  AL Newsreader  Sel  15.15 
+18C  AL Voicemail  Sel  15.15 
+18D  AL Contacts/Address Book  Sel  15.15 
+18E  AL Calendar/Schedule  Sel  15.15 
+18F  AL Task/Project Manager  Sel  15.15 
+190  AL Log/Journal/Timecard  Sel  15.15 
+191  AL Checkbook/Finance  Sel  15.15 
+192  AL Calculator  Sel  15.15 
+193  AL A/V Capture/Playback  Sel  15.15 
+194  AL Local Machine Browser  Sel  15.15 
+195  AL LAN/WAN Browser  Sel  15.15 
+196  AL Internet Browser  Sel  15.15 
+197  AL Remote Networking/ISP Connect Sel  15.15 
+198  AL Network Conference  Sel  15.15 
+199  AL Network Chat  Sel  15.15 
+19A  AL Telephony/Dialer  Sel  15.15 
+19B  AL Logon  Sel  15.15 
+19C  AL Logoff  Sel  15.15 
+19D  AL Logon/Logoff  Sel  15.15 
+19E  AL Terminal Lock/Screensaver  Sel  15.15 
+19F  AL Control Panel  Sel  15.15 
+1A0  AL Command Line Processor/Run Sel  15.15 
+1A1  AL Process/Task Manager  Sel  15.15 
+1A2  AL Select Task/Application  Sel  15.15 
+1A3  AL Next Task/Application  Sel  15.15 
+1A4  AL Previous Task/Application  Sel  15.15 
+1A5  AL Preemptive Halt Task/Application Sel  15.15 
+1A6  AL Integrated Help Center  Sel  15.15 
+1A7 AL Documents  Sel  15.15 
+1A8 AL Thesaurus  Sel  15.15 
+1A9 AL Dictionary  Sel  15.15 
+1AA AL Desktop  Sel  15.15 
+1AB  AL Spell Check  Sel  15.15 
+1AC  AL Grammar Check  Sel  15.15 
+1AD  AL Wireless Status  Sel  15.15 
+1AE  AL Keyboard Layout  Sel  15.15 
+1AF  AL Virus Protection  Sel  15.15 
+1B0 AL Encryption  Sel  15.15 
+1B1  AL Screen Saver  Sel  15.15 
+1B2 AL Alarms  Sel  15.15 
+1B3 AL Clock  Sel  15.15 
+1B4  AL File Browser  Sel  15.15 
+1B5  AL Power Status  Sel  15.15 
+1B6  AL Image Browser  Sel  15.15 
+1B7  AL Audio Browser  Sel  15.15 
+1B8  AL Movie Browser  Sel  15.15 
+1B9  AL Digital Rights Manager  Sel  15.15
+1BA  AL Digital Wallet  Sel  15.15 
+1BB Reserved 
+1BC  AL Instant Messaging  Sel  15.15 
+1BD  AL OEM Features/ Tips/Tutorial Browser Sel  15.15 
+1BE  AL OEM Help  Sel  15.15 
+1BF  AL Online Community  Sel  15.15 
+1C0  AL Entertainment Content Browser Sel  15.15 
+1C1  AL Online Shopping Browser  Sel  15.15 
+1C2 AL SmartCard Information/Help Sel  15.15 
+1C3  AL Market Monitor/Finance Browser Sel  15.15 
+1C4  AL Customized Corporate News Browser Sel  15.15 
+1C5  AL Online Activity Browser  Sel  15.15 
+1C6  AL Research/Search Browser  Sel  15.15 
+1C7  AL Audio Player  Sel  15.15 
+1C8-1FF Reserved
+200  Generic GUI Application Controls Nary  15.16 
+201  AC New  Sel  15.16 
+202  AC Open  Sel  15.16 
+203  AC Close  Sel  15.16 
+204  AC Exit  Sel  15.16 
+205  AC Maximize  Sel  15.16 
+206  AC Minimize  Sel  15.16 
+207  AC Save  Sel  15.16 
+208  AC Print  Sel  15.16 
+209  AC Properties  Sel  15.16 
+21A  AC Undo  Sel  15.16 
+21B  AC Copy  Sel  15.16 
+21C  AC Cut  Sel  15.16 
+21D  AC Paste  Sel  15.16 
+21E  AC Select All  Sel  15.16 
+21F  AC Find  Sel  15.16 
+220  AC Find and Replace  Sel  15.16 
+221  AC Search  Sel  15.16 
+222  AC Go To  Sel  15.16 
+223  AC Home  Sel  15.16 
+224  AC Back  Sel  15.16
+225  AC Forward  Sel  15.16 
+226  AC Stop  Sel  15.16 
+227  AC Refresh  Sel  15.16 
+228  AC Previous Link  Sel  15.16 
+229  AC Next Link  Sel  15.16 
+22A  AC Bookmarks  Sel  15.16 
+22B  AC History  Sel  15.16 
+22C  AC Subscriptions  Sel  15.16 
+22D  AC Zoom In  Sel  15.16 
+22E  AC Zoom Out  Sel  15.16 
+22F  AC Zoom  LC  15.16 
+230  AC Full Screen View  Sel  15.16 
+231  AC Normal View  Sel  15.16 
+232  AC View Toggle  Sel  15.16 
+233  AC Scroll Up  Sel  15.16 
+234  AC Scroll Down  Sel  15.16 
+235  AC Scroll  LC  15.16 
+236  AC Pan Left  Sel  15.16 
+237  AC Pan Right  Sel  15.16 
+238  AC Pan  LC  15.16 
+239  AC New Window  Sel  15.16 
+23A  AC Tile Horizontally  Sel  15.16 
+23B  AC Tile Vertically  Sel  15.16 
+23C  AC Format  Sel  15.16 
+23D AC Edit  Sel  15.14 
+23E AC Bold  Sel  15.16 
+23F AC Italics  Sel  15.16 
+240 AC Underline  Sel  15.16 
+241 AC Strikethrough  Sel  15.16 
+242 AC Subscript  Sel  15.16 
+243 AC Superscript  Sel  15.16 
+244  AC All Caps  Sel  15.16 
+245 AC Rotate  Sel  15.16 
+246 AC Resize  Sel  15.16 
+247  AC Flip horizontal  Sel  15.16 
+248  AC Flip Vertical  Sel  15.16 
+249  AC Mirror Horizontal  Sel  15.16 
+24A  AC Mirror Vertical  Sel  15.16 
+24B  AC Font Select  Sel  15.16 
+24C  AC Font Color  Sel  15.16 
+24D  AC Font Size  Sel  15.16 
+24E  AC Justify Left  Sel  15.16 
+24F  AC Justify Center H  Sel  15.16 
+250  AC Justify Right  Sel  15.16 
+251  AC Justify Block H  Sel  15.16 
+252  AC Justify Top  Sel  15.16 
+253  AC Justify Center V  Sel  15.16 
+254  AC Justify Bottom  Sel  15.16 
+255  AC Justify Block V  Sel  15.16 
+256  AC Indent Decrease  Sel  15.16 
+257  AC Indent Increase  Sel  15.16 
+258 AC Numbered List  Sel  15.16 
+259  AC Restart Numbering  Sel  15.16 
+25A  AC Bulleted List  Sel  15.16 
+25B AC Promote  Sel  15.16 
+25C AC Demote  Sel  15.16 
+25D AC Yes  Sel  15.16 
+25E AC No  Sel  15.16 
+25F AC Cancel  Sel  15.16 
+260 AC Catalog  Sel  15.16 
+261 AC Buy/Checkout  Sel  15.16 
+262  AC Add to Cart  Sel  15.16 
+263 AC Expand  Sel  15.16 
+264  AC Expand All  Sel  15.16 
+265 AC Collapse  Sel  15.16 
+266  AC Collapse All  Sel  15.16 
+267  AC Print Preview  Sel  15.16 
+268  AC Paste Special  Sel  15.16 
+269  AC Insert Mode  Sel  15.16 
+26A AC Delete  Sel  15.16 
+26B AC Lock  Sel  15.16 
+26C AC Unlock  Sel  15.16 
+26D AC Protect  Sel  15.16 
+26E AC Unprotect  Sel  15.16 
+26F  AC Attach Comment  Sel  15.16 
+270  AC Delete Comment  Sel  15.16 
+271  AC View Comment  Sel  15.16 
+272  AC Select Word  Sel  15.16 
+273  AC Select Sentence  Sel  15.16 
+29C  AC Distribute Vertically  Sel  15.16 
+29D-FFFF Reserved 
