@@ -91,7 +91,7 @@ namespace Hid
     }
 
 
-    public enum UsageCollectionWindowsMediaCenter: ushort
+    public enum UsageCollectionWindowsMediaCenter : ushort
     {
         WindowsMediaCenterRemoteControl = 0x88
     }
@@ -103,31 +103,32 @@ namespace Hid
         /// <summary>
         ///
         /// </summary>
-        public enum WindowsMediaCenterRemoteControl: ushort
+        public enum WindowsMediaCenterRemoteControl : ushort
         {
             /// <summary>
             /// Not defined by the Microsoft specs.
             /// </summary>
-            Null                    =   0x00,
-            GreenStart              =   0x0D,
-            ClosedCaptioning        =   0x2B,
-            Teletext                =   0x5A,
-            TeletextRed             =   0x5B,
-            TeletextGreen           =   0x5C,
-            TeletextYellow          =   0x5D,
-            TeletextBlue            =   0x5E,
-            LiveTv                  =   0x25,
-            Music                   =   0x47,
-            RecordedTv              =   0x48,
-            Pictures                =   0x49,
-            Videos                  =   0x4A,
-            FmRadio                 =   0x50,
-            Extras                  =   0x3C,
-            ExtrasApp               =   0x3D,
-            DvdMenu                 =   0x24,
-            DvdAngle                =   0x4B,
-            DvdAudio                =   0x4C,
-            DvdSubtitle             =   0x4D,
+            Null = 0x00,
+            GreenStart = 0x0D,
+            ClosedCaptioning = 0x2B,
+            Teletext = 0x5A,
+            TeletextRed = 0x5B,
+            TeletextGreen = 0x5C,
+            TeletextYellow = 0x5D,
+            TeletextBlue = 0x5E,
+            LiveTv = 0x25,
+            Tv = 0x46,
+            Music = 0x47,
+            RecordedTv = 0x48,
+            Pictures = 0x49,
+            Videos = 0x4A,
+            FmRadio = 0x50,
+            Extras = 0x3C,
+            ExtrasApp = 0x3D,
+            DvdMenu = 0x24,
+            DvdAngle = 0x4B,
+            DvdAudio = 0x4C,
+            DvdSubtitle = 0x4D,
             /// <summary>
             /// First press action: Ejects a DVD drive.
             /// <para />
@@ -135,8 +136,8 @@ namespace Hid
             /// <para />
             /// Notably issued by XBOX360 remote as defined in irplus - Remote Control - Android application.
             /// </summary>
-            Eject                   =   0x28,
-            DvdTopMenu              =   0x43,
+            Eject = 0x28,
+            DvdTopMenu = 0x43,
             /// <summary>
             /// First press action: Generates EXTn HID message in the Media Center Vendor Specific
             /// Collection (page 0xFFBC, usage 0x88).
@@ -149,7 +150,7 @@ namespace Hid
             /// <para />
             /// According to HP specs it displays visual imagery that is synchronized to the sound of your music tracks.
             /// </summary>
-            Ext0                    =   0x32,
+            Ext0 = 0x32,
             /// <summary>
             /// First press action: Generates EXTn HID message in the Media Center Vendor Specific
             /// Collection (page 0xFFBC, usage 0x88).
@@ -162,7 +163,7 @@ namespace Hid
             /// <para />
             /// According to HP specs it plays a slide show of all the pictures on your hard disk drive.
             /// </summary>
-            Ext1                    =   0x33,
+            Ext1 = 0x33,
             /// <summary>
             /// First press action: Generates EXTn HID message in the Media Center Vendor Specific
             /// Collection (page 0xFFBC, usage 0x88).
@@ -174,7 +175,7 @@ namespace Hid
             /// Notably sent by the 'Eject' button of HP Windows Media Center Remote (TSGH-IR08).
             /// Also interpreted as 'Eject' action by SoundGraph iMON Manager in MCE mode (OrigenAE VF310).
             /// </summary>
-            Ext2                    =   0x34,
+            Ext2 = 0x34,
             /// <summary>
             /// First press action: Generates EXTn HID message in the Media Center Vendor Specific
             /// Collection (page 0xFFBC, usage 0x88).
@@ -185,21 +186,21 @@ namespace Hid
             /// <para />
             /// Notably sent by the 'Input selection' button of HP Windows Media Center Remote (TSGH-IR08).
             /// </summary>
-            Ext3                    =   0x35,
-            Ext4                    =   0x36,
-            Ext5                    =   0x37,
-            Ext6                    =   0x38,
-            Ext7                    =   0x39,
-            Ext8                    =   0x3A,
-            Ext9                    =   0x80,
-            Ext10                   =   0x81,
-            Ext11                   =   0x6F,
-            Zoom                    =   0x27,
-            ChannelInput            =   0x42,
-            SubAudio                =   0x2D,
-            Channel10               =   0x3E,
-            Channel11               =   0x3F,
-            Channel12               =   0x40,
+            Ext3 = 0x35,
+            Ext4 = 0x36,
+            Ext5 = 0x37,
+            Ext6 = 0x38,
+            Ext7 = 0x39,
+            Ext8 = 0x3A,
+            Ext9 = 0x80,
+            Ext10 = 0x81,
+            Ext11 = 0x6F,
+            Zoom = 0x27,
+            ChannelInput = 0x42,
+            SubAudio = 0x2D,
+            Channel10 = 0x3E,
+            Channel11 = 0x3F,
+            Channel12 = 0x40,
             /// <summary>
             /// First press action: Generates OEM2 HID message in the Media Center Vendor Specific
             /// Collection. This button is intended to control the front panel display of home entertainment
@@ -212,7 +213,7 @@ namespace Hid
             /// <para />
             /// Notably issued by XBOX360 remote as defined in irplus - Remote Control - Android application.
             /// </summary>
-            Display                 =   0x4F,
+            Display = 0x4F,
             /// <summary>
             /// First press action: To be determined.
             /// <para />
@@ -220,11 +221,11 @@ namespace Hid
             /// <para />
             /// Auto-repeat: No
             /// </summary>
-            Kiosk                   =   0x6A,
-            NetworkSelection        =   0x2C,
-            BlueRayTool             =   0x78,
-            ChannelInfo             =   0x41,
-            VideoSelection          =   0x61
+            Kiosk = 0x6A,
+            NetworkSelection = 0x2C,
+            BlueRayTool = 0x78,
+            ChannelInfo = 0x41,
+            VideoSelection = 0x61
         }
 
         /// <summary>
@@ -285,8 +286,7 @@ namespace Hid
         /// </summary>
         public enum ConsumerControl : ushort
         {
-            Null = 0x0000,
-            //
+            Null = 0x00,
             ConsumerControl = 0x01,
             NumericKeyPad = 0x02,
             ProgrammableButtons = 0x03,
@@ -610,6 +610,46 @@ namespace Hid
             AppCtrlViewComment = 0x271,
             AppCtrlSelectWord = 0x272,
             AppCtrlSelectSentence = 0x273,
+            AppCtrlSelectParagraph = 0x274,
+            AppCtrlSelectColumn = 0x275,
+            AppCtrlSelectRow = 0x276,
+            AppCtrlSelectTable = 0x277,
+            AppCtrlSelectObject = 0x278,
+            AppCtrlRedoRepeat = 0x279,
+            AppCtrlSort = 0x27A,
+            AppCtrlSortAscending = 0x27B,
+            AppCtrlSortDescending = 0x27C,
+            AppCtrlFilter = 0x27D,
+            AppCtrlSetClock = 0x27E,
+            AppCtrlViewClock = 0x27F,
+            AppCtrlSelectTimeZone = 0x280,
+            AppCtrlEditTimeZones = 0x281,
+            AppCtrlSetAlarm = 0x282,
+            AppCtrlClearAlarm = 0x283,
+            AppCtrlSnoozeAlarm = 0x284,
+            AppCtrlResetAlarm = 0x285,
+            AppCtrlSynchronize = 0x286,
+            AppCtrlSendReceive = 0x287,
+            AppCtrlSendTo = 0x288,
+            AppCtrlReply = 0x289,
+            AppCtrlReplyAll = 0x28A,
+            AppCtrlForwardMsg = 0x28B,
+            AppCtrlSend = 0x28C,
+            AppCtrlAttachFile = 0x28D,
+            AppCtrlUpload = 0x28E,
+            AppCtrlDownloadSaveTargetAs = 0x28F,
+            AppCtrlSetBorders = 0x290,
+            AppCtrlInsertRow = 0x291,
+            AppCtrlInsertColumn = 0x292,
+            AppCtrlInsertFile = 0x293,
+            AppCtrlInsertPicture = 0x294,
+            AppCtrlInsertObject = 0x295,
+            AppCtrlInsertSymbol = 0x296,
+            AppCtrlSaveAndClose = 0x297,
+            AppCtrlRename = 0x298,
+            AppCtrlMerge = 0x299,
+            AppCtrlSplit = 0x29A,
+            AppCtrlDistributeHorizontally = 0x29B,
             AppCtrlDistributeVertically = 0x29C
         }
 
@@ -693,6 +733,7 @@ namespace Hid
         /// </summary>
         enum SimulationControl : ushort
         {
+            Null = 0x00,
             FlightSimulationDevice = 0x01,
             AutomobileSimulationDevice = 0x02,
             TankSimulationDevice = 0x03,
@@ -751,6 +792,7 @@ namespace Hid
         /// </summary>
         enum GameControl : ushort
         {
+            Null = 0x00,
             GameController3D = 0x01,
             PinballDevice = 0x02,
             GunDevice = 0x03,
@@ -786,6 +828,7 @@ namespace Hid
         /// </summary>
         enum TelephonyDevice : ushort
         {
+            Null = 0x00,
             Phone = 0x01,
             AnsweringMachine = 0x02,
             MessageControls = 0x03,
@@ -852,6 +895,5 @@ namespace Hid
             PhoneKeyC = 0xBE,
             PhoneKeyD = 0xBF
         }
-
     }
 }
