@@ -139,7 +139,8 @@ F6-FF  Reserved
 10B Duress Alarm  OSC  15.11 
 10C Holdup Alarm  OSC  15.11 
 10D Medical Alarm  OSC  15.11 
-10E-14F Reserved    150  Balance Right  RTC  15.9.2 
+10E-14F Reserved    
+150  Balance Right  RTC  15.9.2 
 151  Balance Left  RTC  15.9.2 
 152  Bass Increment  RTC  15.9.3 
 153  Bass Decrement  RTC  15.9.3 
