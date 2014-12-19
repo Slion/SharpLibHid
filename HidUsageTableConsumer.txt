@@ -338,5 +338,45 @@ F6-FF  Reserved
 271  AC View Comment  Sel  15.16 
 272  AC Select Word  Sel  15.16 
 273  AC Select Sentence  Sel  15.16 
+274 AC Select Paragraph Sel 15.16
+275 AC Select Column Sel 15.16
+276 AC Select Row Sel 15.16
+277 AC Select Table Sel 15.16
+278 AC Select Object Sel 15.16
+279 AC Redo/Repeat Sel 15.16
+27A AC Sort Sel 15.16
+27B AC Sort Ascending Sel 15.16
+27C AC Sort Descending Sel 15.16
+27D AC Filter Sel 15.16
+27E AC Set Clock Sel 15.16
+27F AC View Clock Sel 15.16
+280 AC Select Time Zone Sel 15.16
+281 AC Edit Time Zones Sel 15.16
+282 AC Set Alarm Sel 15.16
+283 AC Clear Alarm Sel 15.16
+284 AC Snooze Alarm Sel 15.16
+285 AC Reset Alarm Sel 15.16
+286 AC Synchronize Sel 15.16
+287 AC Send/Receive Sel 15.16
+288 AC Send To Sel 15.16
+289 AC Reply Sel 15.16
+28A AC Reply All Sel 15.16
+28B AC Forward Msg Sel 15.16
+28C AC Send Sel 15.16
+28D AC Attach File Sel 15.16
+28E AC Upload Sel 15.16
+28F AC Download Save Target As Sel 15.16
+290 AC Set Borders Sel 15.16
+291 AC Insert Row Sel 15.16
+292 AC Insert Column Sel 15.16
+293 AC Insert File Sel 15.16
+294 AC Insert Picture Sel 15.16
+295 AC Insert Object Sel 15.16
+296 AC Insert Symbol Sel 15.16
+297 AC Save and Close Sel 15.16
+298 AC Rename Sel 15.16
+299 AC Merge Sel 15.16
+29A AC Split Sel 15.16
+29B AC Distribute Horizontally Sel 15.16
 29C  AC Distribute Vertically  Sel  15.16 
 29D-FFFF Reserved 
