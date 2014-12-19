@@ -27,8 +27,8 @@ my %hash = ();
 my $count=0;
 foreach my $line(@lines)
 	{
-	#if ($line=~ /^\#\s*define\s+(.+?)\s+([a-fA-FxX\d]+?)\s*$/)	
-	if ($line=~ /^([a-fA-FxX\d]+)(.+)\s+\w+\s+15\..*$/)	
+	#if ($line=~ /^([a-fA-FxX\d]+)(.+)\s+\w+\s+15\..*$/)	
+	if ($line=~ /^([a-fA-FxX\d]+)(.+)\s+\w+\s+\d+\..*$/)
 		{
 		my $string=$2;
 		my $value=$1;
