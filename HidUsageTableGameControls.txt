@@ -1,0 +1,31 @@
+00 Undefined   
+01  3D Game Controller  CA  8.1 
+02  Pinball Device  CA  8.2 
+03  Gun Device  CA  8.3 
+04-1F Reserved 
+20  Point of View  CP  8.1 
+21 Turn Right/Left  DV  8.1 
+22  Pitch Forward/Backward  DV  8.1 
+23  Roll Right/Left  DV  8.1 
+24 Move Right/Left  DV  8.1 
+25 Move Forward/Backward DV  8.1 
+26 Move Up/Down  DV  8.1 
+27 Lean Right/Left  DV  8.1 
+28 Lean Forward/Backward DV  8.1 
+29  Height of POV  DV  8.1 
+2A Flipper  MC  8.2 
+2B Secondary Flipper  MC  8.2 
+2C Bump  MC  8.2 
+2D New Game  OSC  8.2 
+2E Shoot Ball  OSC  8.2 
+2F Player  OSC  8.2 
+30 Gun Bolt  OOC  8.3 
+31 Gun Clip  OOC  8.3 
+32  Gun Selector  NAry  8.3 
+33  Gun Single Shot  Sel  8.3 
+34 Gun Burst  Sel  8.3 
+35 Gun Automatic  Sel  8.3 
+36 Gun Safety  OOC  8.3 
+37  Gamepad Fire/Jump  CL  8.4.1 
+39  Gamepad Trigger  CL  8.4.1 
+3A-FFFF Reserved 

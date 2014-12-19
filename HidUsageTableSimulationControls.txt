@@ -1,0 +1,55 @@
+00 Undefined   
+01  Flight Simulation Device  CA  5.2 
+02  Automobile Simulation Device  CA  5.3 
+03  Tank Simulation Device  CA  5.4 
+04  Spaceship Simulation Device  CA  5.2 
+05  Submarine Simulation Device  CA  5.5 
+06  Sailing Simulation Device  CA  5.5 
+07  Motorcycle Simulation Device  CA  5.6 
+08  Sports Simulation Device  CA  5.1 
+09  Airplane Simulation Device  CA  5.2 
+0A  Helicopter Simulation Device  CA  5.2 
+0B  Magic Carpet Simulation Device CA  5.7 
+0C  Bicycle Simulation Device  CA  5.6 
+0D – 1F  Reserved   
+20  Flight Control Stick  CA  5.2 
+21  Flight Stick  CA  5.2 
+22  Cyclic Control  CP  5.2 
+23  Cyclic Trim  CP  5.2 
+24  Flight Yoke  CA  5.2 
+25  Track Control  CP  5.4 
+26 –AF  Reserved   
+B0 Aileron  DV  5.2 
+B1 Aileron Trim  DV  5.2 
+B2 Anti-Torque Control  DV  5.2 
+B3 Autopilot Enable  OOC  5.2 
+B4 Chaff Release  OSC  5.2 
+B5 Collective Control  DV  5.2 
+B6 Dive Brake  DV  5.2 
+B7 Electronic Countermeasures OOC  5.2 
+B8 Elevator  DV  5.2 
+B9 Elevator Trim  DV  5.2 
+BA Rudder  DV  5.2 
+BB Throttle  DV  5.2 
+BC Flight Communications OOC  5.2 
+BD Flare Release  OSC  5.2 
+BE Landing Gear  OOC  5.2 
+BF Toe Brake  DV  5.2 
+C0 Trigger  MC  5.2 
+C1 Weapons Arm  OOC  5.2 
+C2 Weapons Select  OSC  5.2 
+C3 Wing Flaps  DV  5.2 
+C4 Accelerator  DV  5.3 
+C5 Brake  DV  5.3 
+C6 Clutch  DV  5.3 
+C7 Shifter  DV  5.3 
+C8 Steering  DV  5.3 
+C9 Turret Direction  DV  5.4 
+CA Barrel Elevation  DV  5.4 
+CB Dive Plane  DV  5.5 
+CC Ballast  DV  5.5 
+CD Bicycle Crank  DV  5.6 
+CE Handle Bars  DV  5.6 
+CF Front Brake  DV  5.6 
+D0 Rear Brake  DV  5.6 
+D1-FFFF Reserved 

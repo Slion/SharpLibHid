@@ -1,0 +1,72 @@
+00  Unassigned   
+01  Phone  CA  14.1 
+02  Answering Machine  CA  14.1 
+03  Message Controls  CL  14.1 
+04  Handset  CL  14.1 
+05  Headset  CL  14.1 
+06  Telephony Key Pad  NAry  14.2 
+07  Programmable Button  NAry  14.2 
+08-1F  Reserved   
+20  Hook Switch  OOC  14.3 
+21  Flash  MC  14.3 
+22  Feature  OSC  14.3 
+23  Hold  OOC  14.3 
+24  Redial  OSC  14.3 
+25  Transfer  OSC  14.3 
+26  Drop  OSC  14.3 
+27  Park  OOC  14.3 
+28  Forward Calls  OOC  14.3 
+29  Alternate Function  MC  14.3 
+2A  Line  OSC, NAry  14.3 
+2B  Speaker Phone  OOC  14.3 
+2C  Conference  OOC  14.3 
+2D  Ring Enable  OOC  14.3 
+2E  Ring Select  OSC  14.3 
+2F  Phone Mute  OOC  14.3 
+30  Caller ID  MC  14.3 
+31  Send  OOC  14.3 
+32-4F  Reserved   
+50  Speed Dial  OSC  14.4 
+51  Store Number  OSC  14.4 
+52  Recall Number  OSC  14.4 
+53  Phone Directory  OOC  14.4 
+54-6F  Reserved   
+70  Voice Mail  OOC  14.5 
+71  Screen Calls  OOC  14.5 
+72  Do Not Disturb  OOC  14.5 
+73  Message  OSC  14.5 
+74  Answer On/Off  OOC  14.5 
+75-8F  Reserved   
+90  Inside Dial Tone  MC  14.6 
+91  Outside Dial Tone  MC  14.6 
+92  Inside Ring Tone  MC  14.6 
+93  Outside Ring Tone  MC  14.6 
+94  Priority Ring Tone  MC  14.6 
+95  Inside Ringback  MC  14.6 
+96  Priority Ringback  MC  14.6 
+97  Line Busy Tone  MC  14.6 
+98  Reorder Tone  MC  14.6 
+99  Call Waiting Tone  MC  14.6 
+9A  Confirmation Tone 1  MC  14.6 
+9B  Confirmation Tone 2  MC  14.6 
+9C  Tones Off  OOC  14.6 
+9D  Outside Ringback  MC  14.6 
+9E  Ringer  OOC  14.6 
+9E-AF  Reserved   
+B0  Phone Key 0  Sel  14.2 
+B1  Phone Key 1  Sel  14.2 
+B2  Phone Key 2  Sel  14.2 
+B3  Phone Key 3  Sel  14.2 
+B4  Phone Key 4  Sel  14.2 
+B5  Phone Key 5  Sel  14.2 
+B6  Phone Key 6  Sel  14.2 
+B7  Phone Key 7  Sel  14.2 
+B8  Phone Key 8  Sel  14.2 
+B9  Phone Key 9  Sel  14.2 
+BA  Phone Key Star  Sel  14.2 
+BB  Phone Key Pound  Sel  14.2 
+BC  Phone Key A  Sel  14.2 
+BD  Phone Key B  Sel  14.2 
+BE  Phone Key C  Sel  14.2 
+BF  Phone Key D  Sel  14.2 
+C0-FFFF  Reserved  
