@@ -11,7 +11,7 @@ namespace RemoteControlSample
 	/// <summary>
 	/// Summary description for Form1.
 	/// </summary>
-	public class Form1 : System.Windows.Forms.Form
+	public class MainForm : System.Windows.Forms.Form
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -22,7 +22,7 @@ namespace RemoteControlSample
 		private System.Windows.Forms.Label label2;
 		private Timer _timer;
 
-		public Form1()
+		public MainForm()
 		{
 			//
 			// Required for Windows Form Designer support
@@ -103,7 +103,7 @@ namespace RemoteControlSample
 		[STAThread]
 		static void Main()
 		{
-			Application.Run(new Form1());
+			Application.Run(new MainForm());
 		}
 
 		private void Form1_Load(object sender, System.EventArgs e)
