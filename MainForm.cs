@@ -20,6 +20,8 @@ namespace RemoteControlSample
         private RemoteControlDevice _remote;
         private Label labelButtonName;
         private Label labelDeviceName;
+        private ListView listViewEvents;
+        private ColumnHeader columnHeaderEventName;
 		private Timer _timer;
 
 		public MainForm()
@@ -59,13 +61,15 @@ namespace RemoteControlSample
 		{
             this.labelButtonName = new System.Windows.Forms.Label();
             this.labelDeviceName = new System.Windows.Forms.Label();
+            this.listViewEvents = new System.Windows.Forms.ListView();
+            this.columnHeaderEventName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // labelButtonName
             // 
             this.labelButtonName.AutoSize = true;
             this.labelButtonName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelButtonName.Location = new System.Drawing.Point(257, 97);
+            this.labelButtonName.Location = new System.Drawing.Point(600, 32);
             this.labelButtonName.Name = "labelButtonName";
             this.labelButtonName.Size = new System.Drawing.Size(103, 20);
             this.labelButtonName.TabIndex = 0;
@@ -75,17 +79,39 @@ namespace RemoteControlSample
             // 
             this.labelDeviceName.AutoSize = true;
             this.labelDeviceName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelDeviceName.Location = new System.Drawing.Point(257, 67);
+            this.labelDeviceName.Location = new System.Drawing.Point(600, 12);
             this.labelDeviceName.Name = "labelDeviceName";
             this.labelDeviceName.Size = new System.Drawing.Size(103, 20);
             this.labelDeviceName.TabIndex = 1;
             this.labelDeviceName.Text = "Device Name";
             // 
+            // listViewEvents
+            // 
+            this.listViewEvents.Alignment = System.Windows.Forms.ListViewAlignment.Left;
+            this.listViewEvents.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.listViewEvents.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.listViewEvents.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderEventName});
+            this.listViewEvents.GridLines = true;
+            this.listViewEvents.Location = new System.Drawing.Point(12, 12);
+            this.listViewEvents.Name = "listViewEvents";
+            this.listViewEvents.Size = new System.Drawing.Size(582, 369);
+            this.listViewEvents.TabIndex = 2;
+            this.listViewEvents.UseCompatibleStateImageBehavior = false;
+            this.listViewEvents.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeaderEventName
+            // 
+            this.columnHeaderEventName.Text = "Event Name";
+            this.columnHeaderEventName.Width = 180;
+            // 
             // MainForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(784, 393);
+            this.ClientSize = new System.Drawing.Size(926, 393);
+            this.Controls.Add(this.listViewEvents);
             this.Controls.Add(this.labelDeviceName);
             this.Controls.Add(this.labelButtonName);
             this.Name = "MainForm";
@@ -143,11 +169,13 @@ namespace RemoteControlSample
                 }
 
                 processed = true;
+                listViewEvents.Items.Insert(0,labelButtonName.Text);
             }
             else if (e.ConsumerControl != Hid.UsageTables.ConsumerControl.Null)
             {
                 //Display consumer control name
                 labelButtonName.Text = e.ConsumerControl.ToString();
+                listViewEvents.Items.Insert(0, labelButtonName.Text);
                 processed = true;
             }
             else
