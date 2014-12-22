@@ -16,10 +16,10 @@ namespace RemoteControlSample
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		private System.ComponentModel.Container components = null;
-		private System.Windows.Forms.Label label1;
-		private RemoteControlDevice _remote;
-		private System.Windows.Forms.Label label2;
+        private System.ComponentModel.Container components = null;
+        private RemoteControlDevice _remote;
+        private Label labelButtonName;
+        private Label labelDeviceName;
 		private Timer _timer;
 
 		public MainForm()
@@ -57,42 +57,42 @@ namespace RemoteControlSample
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.label1 = new System.Windows.Forms.Label();
-			this.label2 = new System.Windows.Forms.Label();
-			this.SuspendLayout();
-			//
-			// label1
-			//
-			this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
-			this.label1.ForeColor = System.Drawing.Color.White;
-			this.label1.Location = new System.Drawing.Point(0, 0);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(736, 266);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "Ready...";
-			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			//
-			// label2
-			//
-			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
-			this.label2.Location = new System.Drawing.Point(72, 32);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(576, 23);
-			this.label2.TabIndex = 1;
-			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			//
-			// Form1
-			//
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.BackColor = System.Drawing.Color.LightSteelBlue;
-			this.ClientSize = new System.Drawing.Size(736, 266);
-			this.Controls.Add(this.label2);
-			this.Controls.Add(this.label1);
-			this.Name = "Form1";
-			this.Text = "Remote Control Sample";
-			this.Load += new System.EventHandler(this.Form1_Load);
-			this.ResumeLayout(false);
+            this.labelButtonName = new System.Windows.Forms.Label();
+            this.labelDeviceName = new System.Windows.Forms.Label();
+            this.SuspendLayout();
+            // 
+            // labelButtonName
+            // 
+            this.labelButtonName.AutoSize = true;
+            this.labelButtonName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelButtonName.Location = new System.Drawing.Point(257, 97);
+            this.labelButtonName.Name = "labelButtonName";
+            this.labelButtonName.Size = new System.Drawing.Size(103, 20);
+            this.labelButtonName.TabIndex = 0;
+            this.labelButtonName.Text = "Button Name";
+            // 
+            // labelDeviceName
+            // 
+            this.labelDeviceName.AutoSize = true;
+            this.labelDeviceName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelDeviceName.Location = new System.Drawing.Point(257, 67);
+            this.labelDeviceName.Name = "labelDeviceName";
+            this.labelDeviceName.Size = new System.Drawing.Size(103, 20);
+            this.labelDeviceName.TabIndex = 1;
+            this.labelDeviceName.Text = "Device Name";
+            // 
+            // MainForm
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.ClientSize = new System.Drawing.Size(784, 393);
+            this.Controls.Add(this.labelDeviceName);
+            this.Controls.Add(this.labelButtonName);
+            this.Name = "MainForm";
+            this.Text = "Remote Control Sample";
+            this.Load += new System.EventHandler(this.Form1_Load);
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
 		}
 		#endregion Windows Form Designer generated code
@@ -128,18 +128,18 @@ namespace RemoteControlSample
 			_timer.Enabled = false;
             if (e.Button != RemoteControlButton.Unknown)
             {
-                label1.Text = e.Button.ToString();
+                labelButtonName.Text = e.Button.ToString();
                 processed = true;
             }
             else if (e.MceButton != Hid.UsageTables.WindowsMediaCenterRemoteControl.Null)
             {
                 //Display MCE button name
-                label1.Text = e.MceButton.ToString();
+                labelButtonName.Text = e.MceButton.ToString();
                 //Check if this is an HP extension
                 if (Enum.IsDefined(typeof(Hid.UsageTables.HpWindowsMediaCenterRemoteControl), (ushort)e.MceButton))
                 {
                     //Also display HP button name
-                    label1.Text += " / HP:" + ((Hid.UsageTables.HpWindowsMediaCenterRemoteControl)e.MceButton).ToString();
+                    labelButtonName.Text += " / HP:" + ((Hid.UsageTables.HpWindowsMediaCenterRemoteControl)e.MceButton).ToString();
                 }
 
                 processed = true;
@@ -147,14 +147,14 @@ namespace RemoteControlSample
             else if (e.ConsumerControl != Hid.UsageTables.ConsumerControl.Null)
             {
                 //Display consumer control name
-                label1.Text = e.ConsumerControl.ToString();
+                labelButtonName.Text = e.ConsumerControl.ToString();
                 processed = true;
             }
             else
             {
-                label1.Text = "Unknown";
+                labelButtonName.Text = "Unknown";
             }
-			label2.Text = e.Device.ToString();
+			labelDeviceName.Text = e.Device.ToString();
 			_timer.Enabled = true;
             return processed;
 		}
@@ -162,7 +162,8 @@ namespace RemoteControlSample
 		private void _timer_Tick(object sender, EventArgs e)
 		{
 			_timer.Enabled = false;
-			label1.Text = "Ready...";
+			labelButtonName.Text = "Ready...";
 		}
+
 	}
 }
