@@ -124,13 +124,13 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="HidDevice.cs" />
     <Compile Include="HidEvent.cs" />
     <Compile Include="HidHandler.cs" />
     <Compile Include="HidUsageTables.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="RawInput.cs" />
     <Compile Include="RemoteControlDevice.cs">
       <SubType>Code</SubType>
@@ -139,9 +139,6 @@
     <Compile Include="Win32Hid.cs" />
     <Compile Include="Win32RawInput.cs" />
     <Content Include="App.ico" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -154,6 +151,11 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
