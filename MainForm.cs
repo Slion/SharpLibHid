@@ -26,6 +26,8 @@ namespace RemoteControlSample
         private ColumnHeader columnHeaderUsageCollection;
 		private Timer _timer;
 
+        public delegate void OnHidEventDelegate(object aSender, Hid.HidEvent aHidEvent);
+
 		public MainForm()
 		{
 			//
@@ -152,12 +154,22 @@ namespace RemoteControlSample
 		{
             _remote = new RemoteControlDevice(this.Handle);
             _remote.ButtonPressed += new Devices.RemoteControl.RemoteControlDevice.RemoteControlDeviceEventHandler(_remote_ButtonPressed);
-            _remote.iHidHandler.OnHidEvent += HandleHidEvent;             
+            _remote.iHidHandler.OnHidEvent += HandleHidEventThreadSafe;             
 		}
 
-        void HandleHidEvent(object aSender, Hid.HidEvent aHidEvent)
+        public void HandleHidEventThreadSafe(object aSender, Hid.HidEvent aHidEvent)
         {
-            listViewEvents.Items.Insert(0, aHidEvent.ListViewItem);
+            if (this.InvokeRequired)
+            {
+                //Not in the proper thread, invoke ourselves
+                OnHidEventDelegate d = new OnHidEventDelegate(HandleHidEventThreadSafe);
+                this.Invoke(d, new object[] { aSender, aHidEvent });
+            }
+            else
+            {
+                //We are in the proper thread
+                listViewEvents.Items.Insert(0, aHidEvent.ListViewItem);
+            }
         }
 
 		protected override void WndProc(ref Message message)
@@ -171,22 +183,24 @@ namespace RemoteControlSample
 
 		private bool _remote_ButtonPressed(object sender, RemoteControlEventArgs e)
 		{
+            //Set text from here was disabled because of threading issues
+            //That whole thing should be removed anyway
             bool processed = false;
 			_timer.Enabled = false;
             if (e.Button != RemoteControlButton.Unknown)
             {
-                labelButtonName.Text = e.Button.ToString();
+                //labelButtonName.Text = e.Button.ToString();
                 processed = true;
             }
             else if (e.MceButton != Hid.UsageTables.WindowsMediaCenterRemoteControl.Null)
             {
                 //Display MCE button name
-                labelButtonName.Text = e.MceButton.ToString();
+                //labelButtonName.Text = e.MceButton.ToString();
                 //Check if this is an HP extension
                 if (Enum.IsDefined(typeof(Hid.UsageTables.HpWindowsMediaCenterRemoteControl), (ushort)e.MceButton))
                 {
                     //Also display HP button name
-                    labelButtonName.Text += " / HP:" + ((Hid.UsageTables.HpWindowsMediaCenterRemoteControl)e.MceButton).ToString();
+                    //labelButtonName.Text += " / HP:" + ((Hid.UsageTables.HpWindowsMediaCenterRemoteControl)e.MceButton).ToString();
                 }
 
                 processed = true;                
@@ -194,14 +208,14 @@ namespace RemoteControlSample
             else if (e.ConsumerControl != Hid.UsageTables.ConsumerControl.Null)
             {
                 //Display consumer control name
-                labelButtonName.Text = e.ConsumerControl.ToString();
+                //labelButtonName.Text = e.ConsumerControl.ToString();
                 processed = true;
             }
             else
             {
-                labelButtonName.Text = "Unknown";
+                //labelButtonName.Text = "Unknown";
             }
-			labelDeviceName.Text = e.Device.ToString();
+			//labelDeviceName.Text = e.Device.ToString();
 			_timer.Enabled = true;
             return processed;
 		}
