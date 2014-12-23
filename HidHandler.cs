@@ -15,7 +15,7 @@ namespace Hid
     /// <summary>
     /// Our HID handler manages raw input registrations, processes WM_INPUT messages and broadcasts HID events in return.
     /// </summary>
-    class HidHandler
+    public class HidHandler
     {
         public delegate void HidEventHandler(object aSender, HidEvent aHidEvent);
         public event HidEventHandler OnHidEvent;

@@ -13,7 +13,7 @@ namespace Hid
     /// <summary>
     /// Represent a HID event.
     /// </summary>
-    class HidEvent
+    public class HidEvent
     {
         public bool IsValid { get; private set; }
         public bool IsForeground { get; private set; }
@@ -201,6 +201,30 @@ namespace Hid
             }
         }
 
+
+        public ListViewItem ListViewItem
+        {
+            get
+                {
+                //TODO: What to do with multiple usage
+                string usage="";
+                UsagePage usagePage=(UsagePage)UsagePage;
+                switch (usagePage)
+                {
+                    case Hid.UsagePage.Consumer:
+                        usage= ((Hid.UsageTables.ConsumerControl)Usages[0]).ToString();
+                        break;
+
+                    case Hid.UsagePage.WindowsMediaCenterRemoteControl:
+                        usage= ((Hid.UsageTables.WindowsMediaCenterRemoteControl)Usages[0]).ToString();
+                        break;
+                        
+                }
+
+                ListViewItem item = new ListViewItem(new[] { usage, UsagePage.ToString("X2"), UsageCollection.ToString("X2") });
+                return item;
+                }
+        }
 
 
 
