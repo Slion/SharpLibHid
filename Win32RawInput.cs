@@ -190,7 +190,7 @@ namespace Win32
 
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    internal struct RAWINPUTDEVICE
+    public struct RAWINPUTDEVICE
     {
         [MarshalAs(UnmanagedType.U2)]
         public ushort usUsagePage;
@@ -203,7 +203,7 @@ namespace Win32
 
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    internal struct RAWINPUTHEADER
+    public struct RAWINPUTHEADER
     {
         [MarshalAs(UnmanagedType.U4)]
         public int dwType;
@@ -216,7 +216,7 @@ namespace Win32
 
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    internal struct RAWHID
+    public struct RAWHID
     {
         [MarshalAs(UnmanagedType.U4)]
         public uint dwSizeHid;
@@ -228,7 +228,7 @@ namespace Win32
 
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    internal struct BUTTONSSTR
+    public struct BUTTONSSTR
     {
         [MarshalAs(UnmanagedType.U2)]
         public ushort usButtonFlags;
@@ -238,7 +238,7 @@ namespace Win32
 
 
     [StructLayout(LayoutKind.Explicit, Pack = 1)]
-    internal struct RAWMOUSE
+    public struct RAWMOUSE
     {
         [MarshalAs(UnmanagedType.U2)]
         [FieldOffset(0)]
@@ -263,7 +263,7 @@ namespace Win32
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    internal struct RAWKEYBOARD
+    public struct RAWKEYBOARD
     {
         [MarshalAs(UnmanagedType.U2)]
         public ushort MakeCode;
@@ -281,7 +281,7 @@ namespace Win32
 
 
     [StructLayout(LayoutKind.Explicit, Pack = 1)]
-    internal struct RAWINPUT
+    public struct RAWINPUT
     {
         [FieldOffset(0)]
         public RAWINPUTHEADER header;
@@ -295,7 +295,7 @@ namespace Win32
 
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    internal struct RID_DEVICE_INFO_MOUSE
+    public struct RID_DEVICE_INFO_MOUSE
     {
         public uint dwId;
         public uint dwNumberOfButtons;
@@ -305,7 +305,7 @@ namespace Win32
 
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    internal struct RID_DEVICE_INFO_KEYBOARD
+    public struct RID_DEVICE_INFO_KEYBOARD
     {
         public uint dwType;
         public uint dwSubType;
@@ -316,7 +316,7 @@ namespace Win32
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    internal struct RID_DEVICE_INFO_HID
+    public struct RID_DEVICE_INFO_HID
     {
         public uint dwVendorId;
         public uint dwProductId;
@@ -326,7 +326,7 @@ namespace Win32
     }
 
     [StructLayout(LayoutKind.Explicit, Pack = 1)]
-    internal struct RID_DEVICE_INFO
+    public struct RID_DEVICE_INFO
     {
         [FieldOffset(0)]
         public uint cbSize;

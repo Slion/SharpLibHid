@@ -166,7 +166,7 @@ namespace Devices.RemoteControl
         /// <returns></returns>
         public delegate bool HidUsageHandler(ushort aUsage);
 
-        Hid.HidHandler iHidHandler;
+        public Hid.HidHandler iHidHandler;
 
 
         //-------------------------------------------------------------

@@ -21,7 +21,9 @@ namespace RemoteControlSample
         private Label labelButtonName;
         private Label labelDeviceName;
         private ListView listViewEvents;
-        private ColumnHeader columnHeaderEventName;
+        private ColumnHeader columnHeaderUsage;
+        private ColumnHeader columnHeaderUsagePage;
+        private ColumnHeader columnHeaderUsageCollection;
 		private Timer _timer;
 
 		public MainForm()
@@ -62,7 +64,9 @@ namespace RemoteControlSample
             this.labelButtonName = new System.Windows.Forms.Label();
             this.labelDeviceName = new System.Windows.Forms.Label();
             this.listViewEvents = new System.Windows.Forms.ListView();
-            this.columnHeaderEventName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderUsage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderUsagePage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderUsageCollection = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // labelButtonName
@@ -92,7 +96,9 @@ namespace RemoteControlSample
             | System.Windows.Forms.AnchorStyles.Left)));
             this.listViewEvents.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.listViewEvents.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeaderEventName});
+            this.columnHeaderUsage,
+            this.columnHeaderUsagePage,
+            this.columnHeaderUsageCollection});
             this.listViewEvents.GridLines = true;
             this.listViewEvents.Location = new System.Drawing.Point(12, 12);
             this.listViewEvents.Name = "listViewEvents";
@@ -101,10 +107,20 @@ namespace RemoteControlSample
             this.listViewEvents.UseCompatibleStateImageBehavior = false;
             this.listViewEvents.View = System.Windows.Forms.View.Details;
             // 
-            // columnHeaderEventName
+            // columnHeaderUsage
             // 
-            this.columnHeaderEventName.Text = "Event Name";
-            this.columnHeaderEventName.Width = 180;
+            this.columnHeaderUsage.Text = "Usage";
+            this.columnHeaderUsage.Width = 180;
+            // 
+            // columnHeaderUsagePage
+            // 
+            this.columnHeaderUsagePage.Text = "Usage Page";
+            this.columnHeaderUsagePage.Width = 120;
+            // 
+            // columnHeaderUsageCollection
+            // 
+            this.columnHeaderUsageCollection.Text = "Usage Collection";
+            this.columnHeaderUsageCollection.Width = 120;
             // 
             // MainForm
             // 
@@ -136,8 +152,13 @@ namespace RemoteControlSample
 		{
             _remote = new RemoteControlDevice(this.Handle);
             _remote.ButtonPressed += new Devices.RemoteControl.RemoteControlDevice.RemoteControlDeviceEventHandler(_remote_ButtonPressed);
+            _remote.iHidHandler.OnHidEvent += HandleHidEvent;             
 		}
 
+        void HandleHidEvent(object aSender, Hid.HidEvent aHidEvent)
+        {
+            listViewEvents.Items.Insert(0, aHidEvent.ListViewItem);
+        }
 
 		protected override void WndProc(ref Message message)
 		{
@@ -168,14 +189,12 @@ namespace RemoteControlSample
                     labelButtonName.Text += " / HP:" + ((Hid.UsageTables.HpWindowsMediaCenterRemoteControl)e.MceButton).ToString();
                 }
 
-                processed = true;
-                listViewEvents.Items.Insert(0,labelButtonName.Text);
+                processed = true;                
             }
             else if (e.ConsumerControl != Hid.UsageTables.ConsumerControl.Null)
             {
                 //Display consumer control name
                 labelButtonName.Text = e.ConsumerControl.ToString();
-                listViewEvents.Items.Insert(0, labelButtonName.Text);
                 processed = true;
             }
             else

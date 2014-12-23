@@ -10,7 +10,7 @@ namespace Hid
     /// <summary>
     /// Represent a HID device.
     /// </summary>
-    class HidDevice
+    public class HidDevice
     {
         public string Name { get; private set; }
         public string Manufacturer { get; private set; }
