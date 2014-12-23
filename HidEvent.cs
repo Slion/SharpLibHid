@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.Win32.SafeHandles;
 using Win32;
 using System.Collections.Generic;
+using System.Timers;
 
 
 namespace Hid
@@ -13,7 +14,7 @@ namespace Hid
     /// <summary>
     /// Represent a HID event.
     /// </summary>
-    public class HidEvent
+    public class HidEvent: IDisposable
     {
         public bool IsValid { get; private set; }
         public bool IsForeground { get; private set; }
@@ -29,20 +30,33 @@ namespace Hid
         public ushort UsagePage { get; private set; }
         public ushort UsageCollection { get; private set; }
         public uint UsageId { get { return ((uint)UsagePage << 16 | (uint)UsageCollection); } }
-        public List<ushort> Usages { get; private set; }
+        public List<ushort> Usages { get; private set; }        
+        public delegate void HidEventRepeatDelegate(HidEvent aHidEvent);
+        public event HidEventRepeatDelegate OnHidEventRepeat;
 
+        private System.Timers.Timer Timer { get; set; }
+
+
+        public void Dispose()
+        {
+            Timer.Enabled = false;
+            Timer.Dispose();
+            Timer = null;
+        }
 
         /// <summary>
         /// Initialize an HidEvent from a WM_INPUT message
         /// </summary>
         /// <param name="hRawInputDevice">Device Handle as provided by RAWINPUTHEADER.hDevice, typically accessed as rawinput.header.hDevice</param>
-        public HidEvent(Message aMessage)
+        public HidEvent(Message aMessage, HidEventRepeatDelegate aRepeatDelegate)
         {
             IsValid = false;
             IsKeyboard = false;
             IsGeneric = false;
 
+            Timer = new System.Timers.Timer();
             Usages = new List<ushort>();
+            OnHidEventRepeat += aRepeatDelegate;
 
             if (aMessage.Msg != Const.WM_INPUT)
             {
@@ -175,6 +189,11 @@ namespace Hid
                 Marshal.FreeHGlobal(preParsedData);
             }
 
+            if (Usages[0]!=0)
+            {
+                StartRepeatTimer(SystemInformation.KeyboardDelay*250+250);
+            }
+            
             IsValid = true;
         }
 
@@ -226,7 +245,24 @@ namespace Hid
                 }
         }
 
+        public void StartRepeatTimer(double aInterval)
+        {
+            if (Timer == null)
+            {
+                return;
+            }
+            Timer.Enabled = false;
+            Timer.AutoReset = false;
+            Timer.Interval = aInterval;
+            Timer.Elapsed += (sender, e) => OnRepeatTimerElapsed(sender, e, this);            
+            Timer.Enabled = true;
+        }
 
+        private void OnRepeatTimerElapsed(object sender, ElapsedEventArgs e, HidEvent aHidEvent)
+        {
+            StartRepeatTimer(1000/(SystemInformation.KeyboardSpeed+2.5));            
+            OnHidEventRepeat(aHidEvent);
+        }
 
     }
 
