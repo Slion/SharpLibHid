@@ -37,17 +37,24 @@ namespace Hid
 
         private System.Timers.Timer Timer { get; set; }
 
+        //Compute repeat delay and speed based on system settings
+        //Those computations were taken from the Petzold here: ftp://ftp.charlespetzold.com/ProgWinForms/4%20Custom%20Controls/NumericScan/NumericScan/ClickmaticButton.cs
+        private int iRepeatDelay = 250 * (1 + SystemInformation.KeyboardDelay);
+        private int iRepeatSpeed = 405 - 12 * SystemInformation.KeyboardSpeed;
+
         /// <summary>
         /// Tells whether this event has already been disposed of.
         /// </summary>
         public bool IsStray { get { return Timer == null; } }
 
-
-
+        /// <summary>
+        /// We typically dispose of events as soon as we get the corresponding key up signal.
+        /// </summary>
         public void Dispose()
         {
             Timer.Enabled = false;
             Timer.Dispose();
+            //Mark this event as a stray
             Timer = null;
         }
 
@@ -199,7 +206,7 @@ namespace Hid
 
             if (Usages[0]!=0)
             {
-                StartRepeatTimer(SystemInformation.KeyboardDelay*250+250);
+                StartRepeatTimer(iRepeatDelay);
             }
             
             IsValid = true;
@@ -249,7 +256,7 @@ namespace Hid
                 return;
             }
             aHidEvent.IsRepeat = true;
-            StartRepeatTimer(1000/(SystemInformation.KeyboardSpeed+2.5));            
+            StartRepeatTimer(iRepeatSpeed);            
             OnHidEventRepeat(aHidEvent);
         }
 
