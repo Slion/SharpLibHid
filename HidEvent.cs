@@ -17,13 +17,14 @@ namespace Hid
     public class HidEvent: IDisposable
     {
         public bool IsValid { get; private set; }
-        public bool IsForeground { get; private set; }
+        public bool IsForeground { get; private set; }        
         public bool IsBackground { get{return !IsForeground;} }
         public bool IsMouse { get; private set; }
         public bool IsKeyboard { get; private set; }
         public bool IsGeneric { get; private set; }
         public bool IsButtonDown { get { return Usages.Count == 1 && Usages[0] != 0; } }
         public bool IsButtonUp { get { return Usages.Count == 1 && Usages[0] == 0; } }
+        public bool IsRepeat { get; private set; }
 
         public HidDevice Device { get; private set; }
 
@@ -35,6 +36,12 @@ namespace Hid
         public event HidEventRepeatDelegate OnHidEventRepeat;
 
         private System.Timers.Timer Timer { get; set; }
+
+        /// <summary>
+        /// Tells whether this event has already been disposed of.
+        /// </summary>
+        public bool IsStray { get { return Timer == null; } }
+
 
 
         public void Dispose()
@@ -50,6 +57,7 @@ namespace Hid
         /// <param name="hRawInputDevice">Device Handle as provided by RAWINPUTHEADER.hDevice, typically accessed as rawinput.header.hDevice</param>
         public HidEvent(Message aMessage, HidEventRepeatDelegate aRepeatDelegate)
         {
+            IsRepeat = false;
             IsValid = false;
             IsKeyboard = false;
             IsGeneric = false;
@@ -220,31 +228,6 @@ namespace Hid
             }
         }
 
-
-        public ListViewItem ListViewItem
-        {
-            get
-                {
-                //TODO: What to do with multiple usage
-                string usage="";
-                UsagePage usagePage=(UsagePage)UsagePage;
-                switch (usagePage)
-                {
-                    case Hid.UsagePage.Consumer:
-                        usage= ((Hid.UsageTables.ConsumerControl)Usages[0]).ToString();
-                        break;
-
-                    case Hid.UsagePage.WindowsMediaCenterRemoteControl:
-                        usage= ((Hid.UsageTables.WindowsMediaCenterRemoteControl)Usages[0]).ToString();
-                        break;
-                        
-                }
-
-                ListViewItem item = new ListViewItem(new[] { usage, UsagePage.ToString("X2"), UsageCollection.ToString("X2") });
-                return item;
-                }
-        }
-
         public void StartRepeatTimer(double aInterval)
         {
             if (Timer == null)
@@ -260,8 +243,35 @@ namespace Hid
 
         private void OnRepeatTimerElapsed(object sender, ElapsedEventArgs e, HidEvent aHidEvent)
         {
+            if (aHidEvent.IsStray)
+            {
+                //Skip events if canceled
+                return;
+            }
+            aHidEvent.IsRepeat = true;
             StartRepeatTimer(1000/(SystemInformation.KeyboardSpeed+2.5));            
             OnHidEventRepeat(aHidEvent);
+        }
+
+        public ListViewItem ToListViewItem()
+        {
+            //TODO: What to do with multiple usage
+            string usage = "";
+            UsagePage usagePage = (UsagePage)UsagePage;
+            switch (usagePage)
+            {
+                case Hid.UsagePage.Consumer:
+                    usage = ((Hid.UsageTables.ConsumerControl)Usages[0]).ToString();
+                    break;
+
+                case Hid.UsagePage.WindowsMediaCenterRemoteControl:
+                    usage = ((Hid.UsageTables.WindowsMediaCenterRemoteControl)Usages[0]).ToString();
+                    break;
+
+            }
+
+            ListViewItem item = new ListViewItem(new[] { usage, UsagePage.ToString("X2"), UsageCollection.ToString("X2"), IsRepeat.ToString() });
+            return item;
         }
 
     }

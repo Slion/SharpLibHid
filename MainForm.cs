@@ -24,6 +24,7 @@ namespace RemoteControlSample
         private ColumnHeader columnHeaderUsage;
         private ColumnHeader columnHeaderUsagePage;
         private ColumnHeader columnHeaderUsageCollection;
+        private ColumnHeader columnHeaderRepeat;
 		private Timer _timer;
 
         public delegate void OnHidEventDelegate(object aSender, Hid.HidEvent aHidEvent);
@@ -69,6 +70,7 @@ namespace RemoteControlSample
             this.columnHeaderUsage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderUsagePage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderUsageCollection = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderRepeat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // labelButtonName
@@ -100,7 +102,8 @@ namespace RemoteControlSample
             this.listViewEvents.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderUsage,
             this.columnHeaderUsagePage,
-            this.columnHeaderUsageCollection});
+            this.columnHeaderUsageCollection,
+            this.columnHeaderRepeat});
             this.listViewEvents.GridLines = true;
             this.listViewEvents.Location = new System.Drawing.Point(12, 12);
             this.listViewEvents.Name = "listViewEvents";
@@ -123,6 +126,10 @@ namespace RemoteControlSample
             // 
             this.columnHeaderUsageCollection.Text = "Usage Collection";
             this.columnHeaderUsageCollection.Width = 120;
+            // 
+            // columnHeaderRepeat
+            // 
+            this.columnHeaderRepeat.Text = "Repeat";
             // 
             // MainForm
             // 
@@ -159,6 +166,12 @@ namespace RemoteControlSample
 
         public void HandleHidEventThreadSafe(object aSender, Hid.HidEvent aHidEvent)
         {
+            if (aHidEvent.IsStray)
+            {
+                //Stray event just ignore it
+                return;
+            }
+
             if (this.InvokeRequired)
             {
                 //Not in the proper thread, invoke ourselves
@@ -168,7 +181,7 @@ namespace RemoteControlSample
             else
             {
                 //We are in the proper thread
-                listViewEvents.Items.Insert(0, aHidEvent.ListViewItem);
+                listViewEvents.Items.Insert(0, aHidEvent.ToListViewItem());
             }
         }
 
