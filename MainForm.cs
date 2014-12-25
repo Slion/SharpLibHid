@@ -25,6 +25,7 @@ namespace RemoteControlSample
         private ColumnHeader columnHeaderUsagePage;
         private ColumnHeader columnHeaderUsageCollection;
         private ColumnHeader columnHeaderRepeat;
+        private ColumnHeader columnHeaderTime;
 		private Timer _timer;
 
         public delegate void OnHidEventDelegate(object aSender, Hid.HidEvent aHidEvent);
@@ -71,6 +72,7 @@ namespace RemoteControlSample
             this.columnHeaderUsagePage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderUsageCollection = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderRepeat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // labelButtonName
@@ -103,7 +105,8 @@ namespace RemoteControlSample
             this.columnHeaderUsage,
             this.columnHeaderUsagePage,
             this.columnHeaderUsageCollection,
-            this.columnHeaderRepeat});
+            this.columnHeaderRepeat,
+            this.columnHeaderTime});
             this.listViewEvents.GridLines = true;
             this.listViewEvents.Location = new System.Drawing.Point(12, 12);
             this.listViewEvents.Name = "listViewEvents";
@@ -130,6 +133,11 @@ namespace RemoteControlSample
             // columnHeaderRepeat
             // 
             this.columnHeaderRepeat.Text = "Repeat";
+            // 
+            // columnHeaderTime
+            // 
+            this.columnHeaderTime.Text = "Time";
+            this.columnHeaderTime.Width = 76;
             // 
             // MainForm
             // 

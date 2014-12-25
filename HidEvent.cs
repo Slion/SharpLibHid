@@ -24,7 +24,8 @@ namespace Hid
         public bool IsGeneric { get; private set; }
         public bool IsButtonDown { get { return Usages.Count == 1 && Usages[0] != 0; } }
         public bool IsButtonUp { get { return Usages.Count == 1 && Usages[0] == 0; } }
-        public bool IsRepeat { get; private set; }
+        public bool IsRepeat { get { return RepeatCount != 0; } }
+        public uint RepeatCount { get; private set; }
 
         public HidDevice Device { get; private set; }
 
@@ -36,6 +37,8 @@ namespace Hid
         public event HidEventRepeatDelegate OnHidEventRepeat;
 
         private System.Timers.Timer Timer { get; set; }
+        public DateTime Time { get; private set; }
+        public DateTime OriginalTime { get; private set; }
 
         //Compute repeat delay and speed based on system settings
         //Those computations were taken from the Petzold here: ftp://ftp.charlespetzold.com/ProgWinForms/4%20Custom%20Controls/NumericScan/NumericScan/ClickmaticButton.cs
@@ -64,12 +67,16 @@ namespace Hid
         /// <param name="hRawInputDevice">Device Handle as provided by RAWINPUTHEADER.hDevice, typically accessed as rawinput.header.hDevice</param>
         public HidEvent(Message aMessage, HidEventRepeatDelegate aRepeatDelegate)
         {
-            IsRepeat = false;
+            RepeatCount = 0;
             IsValid = false;
             IsKeyboard = false;
             IsGeneric = false;
+            
 
+            Time = DateTime.Now;
+            OriginalTime = DateTime.Now;
             Timer = new System.Timers.Timer();
+            Timer.Elapsed += (sender, e) => OnRepeatTimerElapsed(sender, e, this);
             Usages = new List<ushort>();
             OnHidEventRepeat += aRepeatDelegate;
 
@@ -242,22 +249,31 @@ namespace Hid
                 return;
             }
             Timer.Enabled = false;
-            Timer.AutoReset = false;
-            Timer.Interval = aInterval;
-            Timer.Elapsed += (sender, e) => OnRepeatTimerElapsed(sender, e, this);            
-            Timer.Enabled = true;
+            //Initial delay do not use auto reset
+            //After our initial delay however we do setup our timer one more time using auto reset
+            Timer.AutoReset = (RepeatCount!=0);
+            Timer.Interval = aInterval;         
+            Timer.Enabled = true;            
         }
 
-        private void OnRepeatTimerElapsed(object sender, ElapsedEventArgs e, HidEvent aHidEvent)
+        static private void OnRepeatTimerElapsed(object sender, ElapsedEventArgs e, HidEvent aHidEvent)
         {
             if (aHidEvent.IsStray)
             {
                 //Skip events if canceled
                 return;
             }
-            aHidEvent.IsRepeat = true;
-            StartRepeatTimer(iRepeatSpeed);            
-            OnHidEventRepeat(aHidEvent);
+
+            aHidEvent.RepeatCount++;
+            aHidEvent.Time = DateTime.Now;
+            if (aHidEvent.RepeatCount==1)
+            {
+                //Re-Start our timer only after the initial delay 
+                aHidEvent.StartRepeatTimer(aHidEvent.iRepeatSpeed);
+            }
+
+            //Broadcast our repeat event
+            aHidEvent.OnHidEventRepeat(aHidEvent);
         }
 
         public ListViewItem ToListViewItem()
@@ -277,7 +293,7 @@ namespace Hid
 
             }
 
-            ListViewItem item = new ListViewItem(new[] { usage, UsagePage.ToString("X2"), UsageCollection.ToString("X2"), IsRepeat.ToString() });
+            ListViewItem item = new ListViewItem(new[] { usage, UsagePage.ToString("X2"), UsageCollection.ToString("X2"), RepeatCount.ToString(), Time.ToString("HH:mm:ss:fff") });
             return item;
         }
 
