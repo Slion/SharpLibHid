@@ -30,11 +30,6 @@ namespace Win32
             return (wParam.ToInt32() & 0xff);
         }
 
-        public static int GET_APPCOMMAND_LPARAM(IntPtr lParam)
-        {
-            return ((short)HIWORD(lParam.ToInt32()) & ~Const.FAPPCOMMAND_MASK);
-        }
-
         public static int GET_DEVICE_LPARAM(IntPtr lParam)
         {
             return ((ushort)(HIWORD(lParam.ToInt32()) & Const.FAPPCOMMAND_MASK));
@@ -67,7 +62,6 @@ namespace Win32
         /// Windows Messages
         /// </summary>
         public const int WM_KEYDOWN = 0x0100;
-        public const int WM_APPCOMMAND = 0x0319;
         public const int WM_INPUT = 0x00FF;
 
         /// <summary>
