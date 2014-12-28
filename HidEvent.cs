@@ -211,7 +211,7 @@ namespace Hid
                 Marshal.FreeHGlobal(preParsedData);
             }
 
-            if (Usages[0]!=0)
+            if (Usages.Count>0 && Usages[0] != 0)
             {
                 StartRepeatTimer(iRepeatDelay);
             }
