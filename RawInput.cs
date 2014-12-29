@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 
 
-namespace Win32
+namespace Win32.Utils
 {
     /// <summary>
     /// Provide some utility functions for raw input handling.
@@ -54,9 +54,8 @@ namespace Win32
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="aRawInputHandle"></param>
-        /// <param name="aUsagePage"></param>
-        /// <param name="aUsage"></param>
+        /// <param name="hDevice"></param>
+        /// <param name="deviceInfo"></param>
         /// <returns></returns>
         public static bool GetDeviceInfo(IntPtr hDevice, ref RID_DEVICE_INFO deviceInfo)
         {

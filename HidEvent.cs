@@ -104,14 +104,14 @@ namespace Hid
             {
                 //Fetch raw input
                 RAWINPUT rawInput = new RAWINPUT();
-                if (!RawInput.GetRawInputData(aMessage.LParam, ref rawInput, ref rawInputBuffer))
+                if (!Win32.Utils.RawInput.GetRawInputData(aMessage.LParam, ref rawInput, ref rawInputBuffer))
                 {
                     return;
                 }
 
                 //Fetch device info
                 RID_DEVICE_INFO deviceInfo = new RID_DEVICE_INFO();
-                if (!RawInput.GetDeviceInfo(rawInput.header.hDevice, ref deviceInfo))
+                if (!Win32.Utils.RawInput.GetDeviceInfo(rawInput.header.hDevice, ref deviceInfo))
                 {
                     return;
                 }
@@ -129,7 +129,7 @@ namespace Hid
                     UsagePage = deviceInfo.hid.usUsagePage;
                     UsageCollection = deviceInfo.hid.usUsage;
 
-                    preParsedData = RawInput.GetPreParsedData(rawInput.header.hDevice);
+                    preParsedData = Win32.Utils.RawInput.GetPreParsedData(rawInput.header.hDevice);
 
                     if (!(rawInput.hid.dwSizeHid > 1     //Make sure our HID msg size more than 1. In fact the first ushort is irrelevant to us for now
                         && rawInput.hid.dwCount > 0))    //Check that we have at least one HID msg
@@ -211,7 +211,8 @@ namespace Hid
                 Marshal.FreeHGlobal(preParsedData);
             }
 
-            if (Usages.Count>0 && Usages[0] != 0)
+            //
+            if (IsButtonDown)
             {
                 StartRepeatTimer(iRepeatDelay);
             }

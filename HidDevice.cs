@@ -26,7 +26,7 @@ namespace Hid
         public HidDevice(IntPtr hRawInputDevice)
         {
             //Fetch various information defining the given HID device
-            Name = Win32.RawInput.GetDeviceName(hRawInputDevice);            
+            Name = Win32.Utils.RawInput.GetDeviceName(hRawInputDevice);            
                 
             //Open our device from the device name/path
             SafeFileHandle handle=Win32.Function.CreateFile(Name,
