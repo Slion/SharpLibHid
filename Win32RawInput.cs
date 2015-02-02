@@ -178,10 +178,16 @@ namespace Win32
         public const int FAPPCOMMAND_MASK = 0xF000;
         public const int FAPPCOMMAND_MOUSE = 0x8000;
         public const int FAPPCOMMAND_KEY = 0;
-        public const int FAPPCOMMAND_OEM = 0x1000;
-
+		public const int FAPPCOMMAND_OEM = 0x1000;
     }
 
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct RAWINPUTDEVICELIST
+    {
+        public IntPtr hDevice;
+        public uint dwType;
+    }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct RAWINPUTDEVICE
