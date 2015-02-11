@@ -23,7 +23,7 @@ namespace Hid
         public bool IsKeyboard { get; private set; }
         public bool IsGeneric { get; private set; }
         public bool IsButtonDown { get { return Usages.Count == 1 && Usages[0] != 0; } }
-        public bool IsButtonUp { get { return Usages.Count == 1 && Usages[0] == 0; } }
+        public bool IsButtonUp { get { return Usages.Count == 0; } }
         public bool IsRepeat { get { return RepeatCount != 0; } }
         public uint RepeatCount { get; private set; }
 
@@ -32,8 +32,10 @@ namespace Hid
         public ushort UsagePage { get; private set; }
         public ushort UsageCollection { get; private set; }
         public uint UsageId { get { return ((uint)UsagePage << 16 | (uint)UsageCollection); } }
-        public List<ushort> Usages { get; private set; }        
-        public delegate void HidEventRepeatDelegate(HidEvent aHidEvent);
+        public List<ushort> Usages { get; private set; }
+		public byte[] InputReport { get; private set; }
+		//
+		public delegate void HidEventRepeatDelegate(HidEvent aHidEvent);
         public event HidEventRepeatDelegate OnHidEventRepeat;
 
         private System.Timers.Timer Timer { get; set; }
@@ -138,7 +140,7 @@ namespace Hid
                     }
 
                     //Allocate a buffer for one HID input
-                    byte[] hidInputReport = new byte[rawInput.hid.dwSizeHid];
+					InputReport = new byte[rawInput.hid.dwSizeHid];
 
                     Debug.WriteLine("Raw input contains " + rawInput.hid.dwCount + " HID input report(s)");
 
@@ -155,33 +157,46 @@ namespace Hid
                         }
 
                         //Copy HID input into our buffer
-                        Marshal.Copy(new IntPtr(hidInputOffset), hidInputReport, 0, (int)rawInput.hid.dwSizeHid);
+						Marshal.Copy(new IntPtr(hidInputOffset), InputReport, 0, (int)rawInput.hid.dwSizeHid);
 
                         //Print HID input report in our debug output
-                        string hidDump = "HID input report: ";
-                        foreach (byte b in hidInputReport)
-                        {
-                            hidDump += b.ToString("X2");
-                        }
-                        Debug.WriteLine(hidDump);
+                        //string hidDump = "HID input report: " + InputReportString();
+                        //Debug.WriteLine(hidDump);
 
-                        //Proper parsing now
-                        uint usageCount = 1; //Assuming a single usage per input report. Is that correct?
-                        Win32.USAGE_AND_PAGE[] usages = new Win32.USAGE_AND_PAGE[usageCount];
-                        Win32.HidStatus status = Win32.Function.HidP_GetUsagesEx(Win32.HIDP_REPORT_TYPE.HidP_Input, 0, usages, ref usageCount, preParsedData, hidInputReport, (uint)hidInputReport.Length);
-                        if (status != Win32.HidStatus.HIDP_STATUS_SUCCESS)
-                        {
-                            Debug.WriteLine("Could not parse HID data!");
-                        }
-                        else
-                        {
-                            //Debug.WriteLine("UsagePage: 0x" + usages[0].UsagePage.ToString("X4"));
-                            //Debug.WriteLine("Usage: 0x" + usages[0].Usage.ToString("X4"));
-                            //Add this usage to our list
-                            Usages.Add(usages[0].Usage);
-                        }
+                        //Do proper parsing of our HID report
+						//First query our usage count
+                        uint usageCount = 0; 
+                        Win32.USAGE_AND_PAGE[] usages = null;
+						Win32.HidStatus status = Win32.Function.HidP_GetUsagesEx(Win32.HIDP_REPORT_TYPE.HidP_Input, 0, usages, ref usageCount, preParsedData, InputReport, (uint)InputReport.Length);
+						if (status == Win32.HidStatus.HIDP_STATUS_BUFFER_TOO_SMALL)
+						{
+							//Allocate a large enough buffer 
+							usages = new Win32.USAGE_AND_PAGE[usageCount];
+							//...and fetch our usages
+							status = Win32.Function.HidP_GetUsagesEx(Win32.HIDP_REPORT_TYPE.HidP_Input, 0, usages, ref usageCount, preParsedData, InputReport, (uint)InputReport.Length);
+							if (status != Win32.HidStatus.HIDP_STATUS_SUCCESS)
+							{
+								Debug.WriteLine("Second pass could not parse HID data: " + status.ToString());
+							}
+						}
+						else if (status != Win32.HidStatus.HIDP_STATUS_SUCCESS) 
+						{
+							Debug.WriteLine("First pass could not parse HID data: " + status.ToString());
+						}
+
+						Debug.WriteLine("Usage count: " + usageCount.ToString());
+
+						if (usages != null)
+						{
+							foreach (USAGE_AND_PAGE up in usages)
+							{
+								//Debug.WriteLine("UsagePage: 0x" + usages[0].UsagePage.ToString("X4"));
+								//Debug.WriteLine("Usage: 0x" + usages[0].Usage.ToString("X4"));
+								//Add this usage to our list
+								Usages.Add(up.Usage);
+							}
+						}
                     }
-
                 }
                 else if (rawInput.header.dwType == Const.RIM_TYPEMOUSE)
                 {
@@ -214,33 +229,11 @@ namespace Hid
             //
             if (IsButtonDown)
             {
+				//TODO: Make this optional
                 StartRepeatTimer(iRepeatDelay);
             }
             
             IsValid = true;
-        }
-
-        /// <summary>
-        /// Print information about this device to our debug output.
-        /// </summary>
-        public void DebugWrite()
-        {
-            if (!IsValid)
-            {
-                Debug.WriteLine("==== Invalid HidEvent");
-                return;
-            }
-            Device.DebugWrite();
-            if (IsGeneric) Debug.WriteLine("==== Generic");
-            if (IsKeyboard) Debug.WriteLine("==== Keyboard");
-            if (IsMouse) Debug.WriteLine("==== Mouse");
-            Debug.WriteLine("==== Foreground: " + IsForeground.ToString());
-            Debug.WriteLine("==== UsagePage: 0x" + UsagePage.ToString("X4"));
-            Debug.WriteLine("==== UsageCollection: 0x" + UsageCollection.ToString("X4"));
-            foreach (ushort usage in Usages)
-            {
-                Debug.WriteLine("==== Usage: 0x" + usage.ToString("X4"));
-            }
         }
 
         public void StartRepeatTimer(double aInterval)
@@ -277,24 +270,79 @@ namespace Hid
             aHidEvent.OnHidEventRepeat(aHidEvent);
         }
 
+		/// <summary>
+		/// Print information about this device to our debug output.
+		/// </summary>
+		public void DebugWrite()
+		{
+			if (!IsValid)
+			{
+				Debug.WriteLine("==== Invalid HidEvent");
+				return;
+			}
+			Device.DebugWrite();
+			if (IsGeneric) Debug.WriteLine("==== Generic");
+			if (IsKeyboard) Debug.WriteLine("==== Keyboard");
+			if (IsMouse) Debug.WriteLine("==== Mouse");
+			Debug.WriteLine("==== Foreground: " + IsForeground.ToString());
+			Debug.WriteLine("==== UsagePage: 0x" + UsagePage.ToString("X4"));
+			Debug.WriteLine("==== UsageCollection: 0x" + UsageCollection.ToString("X4"));
+			Debug.WriteLine("==== InputReport: 0x" + InputReportString());
+			foreach (ushort usage in Usages)
+			{
+				Debug.WriteLine("==== Usage: 0x" + usage.ToString("X4"));
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		public string InputReportString()
+		{
+			string hidDump = "";
+			foreach (byte b in InputReport)
+			{
+				hidDump += b.ToString("X2");
+			}
+			return hidDump;
+		}
+
+
+		/// <summary>
+		/// Create a list view item describing this HidEvent
+		/// </summary>
+		/// <returns></returns>
         public ListViewItem ToListViewItem()
         {
-            //TODO: What to do with multiple usage
-            string usage = "";
-            UsagePage usagePage = (UsagePage)UsagePage;
-            switch (usagePage)
-            {
-                case Hid.UsagePage.Consumer:
-                    usage = ((Hid.UsageTables.ConsumerControl)Usages[0]).ToString();
-                    break;
+            string usageText = "";
 
-                case Hid.UsagePage.WindowsMediaCenterRemoteControl:
-                    usage = ((Hid.UsageTables.WindowsMediaCenterRemoteControl)Usages[0]).ToString();
-                    break;
+			foreach (ushort usage in Usages)
+			{
+				if (usageText != "")
+				{
+					//Add a separator
+					usageText += ", ";
+				}
 
-            }
+				UsagePage usagePage = (UsagePage)UsagePage;
+				switch (usagePage)
+				{
+					case Hid.UsagePage.Consumer:
+						usageText += ((Hid.UsageTables.ConsumerControl)usage).ToString();
+						break;
 
-            ListViewItem item = new ListViewItem(new[] { usage, UsagePage.ToString("X2"), UsageCollection.ToString("X2"), RepeatCount.ToString(), Time.ToString("HH:mm:ss:fff") });
+					case Hid.UsagePage.WindowsMediaCenterRemoteControl:
+						usageText += ((Hid.UsageTables.WindowsMediaCenterRemoteControl)usage).ToString();
+						break;
+
+					default:
+						usageText += usage.ToString("X2");
+						break;
+				}				
+			}
+
+			ListViewItem item = new ListViewItem(new[] { usageText, InputReportString(), UsagePage.ToString("X2"), UsageCollection.ToString("X2"), RepeatCount.ToString(), Time.ToString("HH:mm:ss:fff") });
             return item;
         }
 
