@@ -10,8 +10,6 @@ using System.Collections.Generic;
 
 namespace Hid
 {
-
-
     /// <summary>
     /// Our HID handler manages raw input registrations, processes WM_INPUT messages and broadcasts HID events in return.
     /// </summary>
@@ -42,7 +40,7 @@ namespace Hid
             }
 
             //
-            if (hidEvent.Usages[0] == 0)
+            if (hidEvent.IsButtonUp)
             {
                 //This is a key up event
                 //We need to discard any events belonging to the same page and collection

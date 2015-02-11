@@ -205,6 +205,12 @@ namespace Devices.RemoteControl
             rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             rid[i].hwndTarget = aHWND;
 
+			//i++;
+			rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControls;
+			rid[i].usUsage = (ushort)Hid.UsageCollectionGenericDesktop.GamePad;
+			rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+			rid[i].hwndTarget = aHWND;
+
             //i++;
             //rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControls;
             //rid[i].usUsage = (ushort)Hid.UsageCollectionGenericDesktop.Keyboard;
