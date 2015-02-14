@@ -109,13 +109,6 @@ namespace Hid
                     return;
                 }
 
-                //TODO: move this into our device class
-                //Fetch device info
-                RID_DEVICE_INFO deviceInfo = new RID_DEVICE_INFO();
-                if (!Win32.Utils.RawInput.GetDeviceInfo(rawInput.header.hDevice, ref deviceInfo))
-                {
-                    return;
-                }
 
                 //Get various information about this HID device
                 Device = new Hid.HidDevice(rawInput.header.hDevice);                
@@ -127,8 +120,8 @@ namespace Hid
                     Debug.WriteLine("WM_INPUT source device is HID.");
                     //Get Usage Page and Usage
                     //Debug.WriteLine("Usage Page: 0x" + deviceInfo.hid.usUsagePage.ToString("X4") + " Usage ID: 0x" + deviceInfo.hid.usUsage.ToString("X4"));
-                    UsagePage = deviceInfo.hid.usUsagePage;
-                    UsageCollection = deviceInfo.hid.usUsage;
+                    UsagePage = Device.Info.hid.usUsagePage;
+                    UsageCollection = Device.Info.hid.usUsage;
 
                     if (!(rawInput.hid.dwSizeHid > 1     //Make sure our HID msg size more than 1. In fact the first ushort is irrelevant to us for now
                         && rawInput.hid.dwCount > 0))    //Check that we have at least one HID msg
@@ -209,12 +202,12 @@ namespace Hid
 
                     Debug.WriteLine("WM_INPUT source device is Keyboard.");
                     // do keyboard handling...
-                    Debug.WriteLine("Type: " + deviceInfo.keyboard.dwType.ToString());
-                    Debug.WriteLine("SubType: " + deviceInfo.keyboard.dwSubType.ToString());
-                    Debug.WriteLine("Mode: " + deviceInfo.keyboard.dwKeyboardMode.ToString());
-                    Debug.WriteLine("Number of function keys: " + deviceInfo.keyboard.dwNumberOfFunctionKeys.ToString());
-                    Debug.WriteLine("Number of indicators: " + deviceInfo.keyboard.dwNumberOfIndicators.ToString());
-                    Debug.WriteLine("Number of keys total: " + deviceInfo.keyboard.dwNumberOfKeysTotal.ToString());
+                    Debug.WriteLine("Type: " + Device.Info.keyboard.dwType.ToString());
+                    Debug.WriteLine("SubType: " + Device.Info.keyboard.dwSubType.ToString());
+                    Debug.WriteLine("Mode: " + Device.Info.keyboard.dwKeyboardMode.ToString());
+                    Debug.WriteLine("Number of function keys: " + Device.Info.keyboard.dwNumberOfFunctionKeys.ToString());
+                    Debug.WriteLine("Number of indicators: " + Device.Info.keyboard.dwNumberOfIndicators.ToString());
+                    Debug.WriteLine("Number of keys total: " + Device.Info.keyboard.dwNumberOfKeysTotal.ToString());
                 }
             }
             finally
