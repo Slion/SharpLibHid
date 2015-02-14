@@ -19,6 +19,29 @@ namespace Win32
 
         [DllImport("hid.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern Boolean HidD_GetAttributes(SafeFileHandle HidDeviceObject, ref HIDD_ATTRIBUTES Attributes);
+
+		/// Return Type: NTSTATUS->LONG->int
+		///PreparsedData: PHIDP_PREPARSED_DATA->_HIDP_PREPARSED_DATA*
+		///Capabilities: PHIDP_CAPS->_HIDP_CAPS*
+		[DllImportAttribute("hid.dll", EntryPoint = "HidP_GetCaps", CallingConvention = CallingConvention.StdCall)]
+		public static extern int HidP_GetCaps(System.IntPtr PreparsedData, ref HIDP_CAPS Capabilities);
+
+		/// Return Type: NTSTATUS->LONG->int
+		///ReportType: HIDP_REPORT_TYPE->_HIDP_REPORT_TYPE
+		///ButtonCaps: PHIDP_BUTTON_CAPS->_HIDP_BUTTON_CAPS*
+		///ButtonCapsLength: PUSHORT->USHORT*
+		///PreparsedData: PHIDP_PREPARSED_DATA->_HIDP_PREPARSED_DATA*
+		[System.Runtime.InteropServices.DllImportAttribute("<Unknown>", EntryPoint = "HidP_GetButtonCaps", CallingConvention = System.Runtime.InteropServices.CallingConvention.StdCall)]
+		public static extern int HidP_GetButtonCaps(HIDP_REPORT_TYPE ReportType, ref HIDP_BUTTON_CAPS ButtonCaps, ref ushort ButtonCapsLength, System.IntPtr PreparsedData);
+
+		/// Return Type: NTSTATUS->LONG->int
+		///ReportType: HIDP_REPORT_TYPE->_HIDP_REPORT_TYPE
+		///ValueCaps: PHIDP_VALUE_CAPS->_HIDP_VALUE_CAPS*
+		///ValueCapsLength: PUSHORT->USHORT*
+		///PreparsedData: PHIDP_PREPARSED_DATA->_HIDP_PREPARSED_DATA*
+		[System.Runtime.InteropServices.DllImportAttribute("<Unknown>", EntryPoint = "HidP_GetValueCaps", CallingConvention = System.Runtime.InteropServices.CallingConvention.StdCall)]
+		public static extern int HidP_GetValueCaps(HIDP_REPORT_TYPE ReportType, ref HIDP_VALUE_CAPS ValueCaps, ref ushort ValueCapsLength, System.IntPtr PreparsedData);
+
     }
 
 
@@ -85,5 +108,333 @@ namespace Win32
         public ushort VersionNumber;
     }
 
+
+	[System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
+	public struct HIDP_CAPS
+	{
+
+		/// USAGE->USHORT->unsigned short
+		public ushort Usage;
+
+		/// USAGE->USHORT->unsigned short
+		public ushort UsagePage;
+
+		/// USHORT->unsigned short
+		public ushort InputReportByteLength;
+
+		/// USHORT->unsigned short
+		public ushort OutputReportByteLength;
+
+		/// USHORT->unsigned short
+		public ushort FeatureReportByteLength;
+
+		/// USHORT[17]
+		[System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 17, ArraySubType = System.Runtime.InteropServices.UnmanagedType.U2)]
+		public ushort[] Reserved;
+
+		/// USHORT->unsigned short
+		public ushort NumberLinkCollectionNodes;
+
+		/// USHORT->unsigned short
+		public ushort NumberInputButtonCaps;
+
+		/// USHORT->unsigned short
+		public ushort NumberInputValueCaps;
+
+		/// USHORT->unsigned short
+		public ushort NumberInputDataIndices;
+
+		/// USHORT->unsigned short
+		public ushort NumberOutputButtonCaps;
+
+		/// USHORT->unsigned short
+		public ushort NumberOutputValueCaps;
+
+		/// USHORT->unsigned short
+		public ushort NumberOutputDataIndices;
+
+		/// USHORT->unsigned short
+		public ushort NumberFeatureButtonCaps;
+
+		/// USHORT->unsigned short
+		public ushort NumberFeatureValueCaps;
+
+		/// USHORT->unsigned short
+		public ushort NumberFeatureDataIndices;
+	}
+
+	/// <summary>
+	/// Type created in place of an anonymous struct
+	/// </summary>
+	[System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
+	public struct HIDP_BUTTON_CAPS_RANGE
+	{
+
+		/// USAGE->USHORT->unsigned short
+		public ushort UsageMin;
+
+		/// USAGE->USHORT->unsigned short
+		public ushort UsageMax;
+
+		/// USHORT->unsigned short
+		public ushort StringMin;
+
+		/// USHORT->unsigned short
+		public ushort StringMax;
+
+		/// USHORT->unsigned short
+		public ushort DesignatorMin;
+
+		/// USHORT->unsigned short
+		public ushort DesignatorMax;
+
+		/// USHORT->unsigned short
+		public ushort DataIndexMin;
+
+		/// USHORT->unsigned short
+		public ushort DataIndexMax;
+	}
+
+	/// <summary>
+	/// Type created in place of an anonymous struct
+	/// </summary>
+	[System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
+	public struct HIDP_BUTTON_CAPS_NOT_RANGE
+	{
+
+		/// USAGE->USHORT->unsigned short
+		public ushort Usage;
+
+		/// USAGE->USHORT->unsigned short
+		public ushort Reserved1;
+
+		/// USHORT->unsigned short
+		public ushort StringIndex;
+
+		/// USHORT->unsigned short
+		public ushort Reserved2;
+
+		/// USHORT->unsigned short
+		public ushort DesignatorIndex;
+
+		/// USHORT->unsigned short
+		public ushort Reserved3;
+
+		/// USHORT->unsigned short
+		public ushort DataIndex;
+
+		/// USHORT->unsigned short
+		public ushort Reserved4;
+	}
+
+	[System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Explicit)]
+	public struct HIDP_BUTTON_CAPS_UNION
+	{
+
+		/// 
+		[System.Runtime.InteropServices.FieldOffsetAttribute(0)]
+		public HIDP_BUTTON_CAPS_RANGE Range;
+
+		/// 
+		[System.Runtime.InteropServices.FieldOffsetAttribute(0)]
+		public HIDP_BUTTON_CAPS_NOT_RANGE NotRange;
+	}
+
+	[System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
+	public struct HIDP_BUTTON_CAPS
+	{
+
+		/// USAGE->USHORT->unsigned short
+		public ushort UsagePage;
+
+		/// UCHAR->unsigned char
+		public byte ReportID;
+
+		/// BOOLEAN->BYTE->unsigned char
+		public byte IsAlias;
+
+		/// USHORT->unsigned short
+		public ushort BitField;
+
+		/// USHORT->unsigned short
+		public ushort LinkCollection;
+
+		/// USAGE->USHORT->unsigned short
+		public ushort LinkUsage;
+
+		/// USAGE->USHORT->unsigned short
+		public ushort LinkUsagePage;
+
+		/// BOOLEAN->BYTE->unsigned char
+		public byte IsRange;
+
+		/// BOOLEAN->BYTE->unsigned char
+		public byte IsStringRange;
+
+		/// BOOLEAN->BYTE->unsigned char
+		public byte IsDesignatorRange;
+
+		/// BOOLEAN->BYTE->unsigned char
+		public byte IsAbsolute;
+
+		/// ULONG[10]
+		[System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 10, ArraySubType = System.Runtime.InteropServices.UnmanagedType.U4)]
+		public uint[] Reserved;
+
+		/// TODO: get the proper field offset to make it nicer and get rid of union type
+		public HIDP_BUTTON_CAPS_UNION Union;
+	}
+
+	/// <summary>
+	/// Type created in place of an anonymous struct
+	/// </summary>
+	[System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
+	public struct HIDP_VALUE_CAPS_RANGE
+	{
+
+		/// USAGE->USHORT->unsigned short
+		public ushort UsageMin;
+
+		/// USAGE->USHORT->unsigned short
+		public ushort UsageMax;
+
+		/// USHORT->unsigned short
+		public ushort StringMin;
+
+		/// USHORT->unsigned short
+		public ushort StringMax;
+
+		/// USHORT->unsigned short
+		public ushort DesignatorMin;
+
+		/// USHORT->unsigned short
+		public ushort DesignatorMax;
+
+		/// USHORT->unsigned short
+		public ushort DataIndexMin;
+
+		/// USHORT->unsigned short
+		public ushort DataIndexMax;
+	}
+
+	/// <summary>
+	/// Type created in place of an anonymous struct
+	/// </summary>
+	[System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
+	public struct HIDP_VALUE_CAPS_NOT_RANGE
+	{
+
+		/// USAGE->USHORT->unsigned short
+		public ushort Usage;
+
+		/// USAGE->USHORT->unsigned short
+		public ushort Reserved1;
+
+		/// USHORT->unsigned short
+		public ushort StringIndex;
+
+		/// USHORT->unsigned short
+		public ushort Reserved2;
+
+		/// USHORT->unsigned short
+		public ushort DesignatorIndex;
+
+		/// USHORT->unsigned short
+		public ushort Reserved3;
+
+		/// USHORT->unsigned short
+		public ushort DataIndex;
+
+		/// USHORT->unsigned short
+		public ushort Reserved4;
+	}
+
+	[System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Explicit)]
+	public struct HIDP_VALUE_CAPS_UNION
+	{
+
+		/// 
+		[System.Runtime.InteropServices.FieldOffsetAttribute(0)]
+		public HIDP_VALUE_CAPS_RANGE Range;
+
+		/// 
+		[System.Runtime.InteropServices.FieldOffsetAttribute(0)]
+		public HIDP_VALUE_CAPS_NOT_RANGE NotRange;
+	}
+
+	[System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
+	public struct HIDP_VALUE_CAPS
+	{
+
+		/// USAGE->USHORT->unsigned short
+		public ushort UsagePage;
+
+		/// UCHAR->unsigned char
+		public byte ReportID;
+
+		/// BOOLEAN->BYTE->unsigned char
+		public byte IsAlias;
+
+		/// USHORT->unsigned short
+		public ushort BitField;
+
+		/// USHORT->unsigned short
+		public ushort LinkCollection;
+
+		/// USAGE->USHORT->unsigned short
+		public ushort LinkUsage;
+
+		/// USAGE->USHORT->unsigned short
+		public ushort LinkUsagePage;
+
+		/// BOOLEAN->BYTE->unsigned char
+		public byte IsRange;
+
+		/// BOOLEAN->BYTE->unsigned char
+		public byte IsStringRange;
+
+		/// BOOLEAN->BYTE->unsigned char
+		public byte IsDesignatorRange;
+
+		/// BOOLEAN->BYTE->unsigned char
+		public byte IsAbsolute;
+
+		/// BOOLEAN->BYTE->unsigned char
+		public byte HasNull;
+
+		/// UCHAR->unsigned char
+		public byte Reserved;
+
+		/// USHORT->unsigned short
+		public ushort BitSize;
+
+		/// USHORT->unsigned short
+		public ushort ReportCount;
+
+		/// USHORT[5]
+		[System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 5, ArraySubType = System.Runtime.InteropServices.UnmanagedType.U2)]
+		public ushort[] Reserved2;
+
+		/// ULONG->unsigned int
+		public uint UnitsExp;
+
+		/// ULONG->unsigned int
+		public uint Units;
+
+		/// LONG->int
+		public int LogicalMin;
+
+		/// LONG->int
+		public int LogicalMax;
+
+		/// LONG->int
+		public int PhysicalMin;
+
+		/// LONG->int
+		public int PhysicalMax;
+
+		/// 
+		public HIDP_VALUE_CAPS_UNION Union;
+	}
 
 }
