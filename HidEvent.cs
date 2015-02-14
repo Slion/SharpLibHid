@@ -99,8 +99,6 @@ namespace Hid
 
             //Declare some pointers
             IntPtr rawInputBuffer = IntPtr.Zero;
-            //My understanding is that this is basically our HID descriptor 
-            IntPtr preParsedData = IntPtr.Zero;
 
             try
             {
@@ -111,6 +109,7 @@ namespace Hid
                     return;
                 }
 
+                //TODO: move this into our device class
                 //Fetch device info
                 RID_DEVICE_INFO deviceInfo = new RID_DEVICE_INFO();
                 if (!Win32.Utils.RawInput.GetDeviceInfo(rawInput.header.hDevice, ref deviceInfo))
@@ -130,8 +129,6 @@ namespace Hid
                     //Debug.WriteLine("Usage Page: 0x" + deviceInfo.hid.usUsagePage.ToString("X4") + " Usage ID: 0x" + deviceInfo.hid.usUsage.ToString("X4"));
                     UsagePage = deviceInfo.hid.usUsagePage;
                     UsageCollection = deviceInfo.hid.usUsage;
-
-                    preParsedData = Win32.Utils.RawInput.GetPreParsedData(rawInput.header.hDevice);
 
                     if (!(rawInput.hid.dwSizeHid > 1     //Make sure our HID msg size more than 1. In fact the first ushort is irrelevant to us for now
                         && rawInput.hid.dwCount > 0))    //Check that we have at least one HID msg
@@ -167,13 +164,13 @@ namespace Hid
 						//First query our usage count
                         uint usageCount = 0; 
                         Win32.USAGE_AND_PAGE[] usages = null;
-						Win32.HidStatus status = Win32.Function.HidP_GetUsagesEx(Win32.HIDP_REPORT_TYPE.HidP_Input, 0, usages, ref usageCount, preParsedData, InputReport, (uint)InputReport.Length);
+						Win32.HidStatus status = Win32.Function.HidP_GetUsagesEx(Win32.HIDP_REPORT_TYPE.HidP_Input, 0, usages, ref usageCount, Device.PreParsedData, InputReport, (uint)InputReport.Length);
 						if (status == Win32.HidStatus.HIDP_STATUS_BUFFER_TOO_SMALL)
 						{
 							//Allocate a large enough buffer 
 							usages = new Win32.USAGE_AND_PAGE[usageCount];
 							//...and fetch our usages
-							status = Win32.Function.HidP_GetUsagesEx(Win32.HIDP_REPORT_TYPE.HidP_Input, 0, usages, ref usageCount, preParsedData, InputReport, (uint)InputReport.Length);
+                            status = Win32.Function.HidP_GetUsagesEx(Win32.HIDP_REPORT_TYPE.HidP_Input, 0, usages, ref usageCount, Device.PreParsedData, InputReport, (uint)InputReport.Length);
 							if (status != Win32.HidStatus.HIDP_STATUS_SUCCESS)
 							{
 								Debug.WriteLine("Second pass could not parse HID data: " + status.ToString());
@@ -186,6 +183,7 @@ namespace Hid
 
 						Debug.WriteLine("Usage count: " + usageCount.ToString());
 
+                        //Copy usages into this event
 						if (usages != null)
 						{
 							foreach (USAGE_AND_PAGE up in usages)
@@ -195,7 +193,7 @@ namespace Hid
 								//Add this usage to our list
 								Usages.Add(up.Usage);
 							}
-						}
+						}                       
                     }
                 }
                 else if (rawInput.header.dwType == Const.RIM_TYPEMOUSE)
@@ -223,7 +221,6 @@ namespace Hid
             {
                 //Always executed when leaving our try block
                 Marshal.FreeHGlobal(rawInputBuffer);
-                Marshal.FreeHGlobal(preParsedData);
             }
 
             //

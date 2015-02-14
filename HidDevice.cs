@@ -10,7 +10,7 @@ namespace Hid
     /// <summary>
     /// Represent a HID device.
     /// </summary>
-    public class HidDevice
+    public class HidDevice: IDisposable
     {
         public string Name { get; private set; }
         public string Manufacturer { get; private set; }
@@ -18,6 +18,7 @@ namespace Hid
         public ushort VendorId { get; private set; }
         public ushort ProductId { get; private set; }
         public ushort Version { get; private set; }
+        public IntPtr PreParsedData {get; private set;}
 
         /// <summary>
         /// Class constructor will fetch this object properties from HID sub system.
@@ -25,8 +26,12 @@ namespace Hid
         /// <param name="hRawInputDevice">Device Handle as provided by RAWINPUTHEADER.hDevice, typically accessed as rawinput.header.hDevice</param>
         public HidDevice(IntPtr hRawInputDevice)
         {
+            PreParsedData = IntPtr.Zero;
             //Fetch various information defining the given HID device
-            Name = Win32.Utils.RawInput.GetDeviceName(hRawInputDevice);            
+            Name = Win32.Utils.RawInput.GetDeviceName(hRawInputDevice);
+
+            //Get our HID descriptor pre-parsed data
+            PreParsedData = Win32.Utils.RawInput.GetPreParsedData(hRawInputDevice);
                 
             //Open our device from the device name/path
             SafeFileHandle handle=Win32.Function.CreateFile(Name,
@@ -71,6 +76,26 @@ namespace Hid
             }
         }
 
+
+        /// <summary>
+        /// Make sure dispose is called even if the user forgot about it.
+        /// </summary>
+        ~HidDevice()
+        {
+            Dispose();
+        }
+
+        /// <summary>
+        /// Dispose is just for unmanaged clean-up.
+        /// Make sure calling disposed multiple times does not crash.
+        /// See: http://stackoverflow.com/questions/538060/proper-use-of-the-idisposable-interface/538238#538238
+        /// </summary>
+        public void Dispose()
+        {
+            Marshal.FreeHGlobal(PreParsedData);
+            PreParsedData = IntPtr.Zero;
+        }
+
         /// <summary>
         /// Print information about this device to our debug output.
         /// </summary>
@@ -85,9 +110,6 @@ namespace Hid
             Debug.WriteLine("==== Version: " + Version.ToString());
             Debug.WriteLine("==============================================================================================================");
         }
-
-
-
 
     }
 
