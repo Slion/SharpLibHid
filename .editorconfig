@@ -7,6 +7,6 @@ end_of_line = crlf
 
 ; 4-column tab indentation
 [*.cs]
-indent_style = tab
+indent_style = space
 indent_size = 4
 
