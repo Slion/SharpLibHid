@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.Win32.SafeHandles;
+using Win32;
 
 namespace Hid
 {
@@ -19,6 +20,8 @@ namespace Hid
         public ushort ProductId { get; private set; }
         public ushort Version { get; private set; }
         public IntPtr PreParsedData {get; private set;}
+        public RID_DEVICE_INFO Info { get {return iInfo;} }
+        private RID_DEVICE_INFO iInfo;
 
         /// <summary>
         /// Class constructor will fetch this object properties from HID sub system.
@@ -32,6 +35,17 @@ namespace Hid
 
             //Get our HID descriptor pre-parsed data
             PreParsedData = Win32.Utils.RawInput.GetPreParsedData(hRawInputDevice);
+            if (PreParsedData == IntPtr.Zero)
+            {
+                throw new Exception("HidDevice: GetPreParsedData failed!");
+            }
+
+            //Fetch device info
+            iInfo = new RID_DEVICE_INFO();
+            if (!Win32.Utils.RawInput.GetDeviceInfo(hRawInputDevice, ref iInfo))
+            {
+                throw new Exception("HidDevice: GetDeviceInfo failed!");
+            }
                 
             //Open our device from the device name/path
             SafeFileHandle handle=Win32.Function.CreateFile(Name,
@@ -43,6 +57,7 @@ namespace Hid
                 IntPtr.Zero
                 );
 
+            //TODO: should we throw instead?
             if (handle.IsInvalid)
             {
                 Debug.WriteLine("Failed to CreateFile from device name " + Marshal.GetLastWin32Error().ToString());
