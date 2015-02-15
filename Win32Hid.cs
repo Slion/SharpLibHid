@@ -24,23 +24,23 @@ namespace Win32
         ///PreparsedData: PHIDP_PREPARSED_DATA->_HIDP_PREPARSED_DATA*
         ///Capabilities: PHIDP_CAPS->_HIDP_CAPS*
         [DllImportAttribute("hid.dll", EntryPoint = "HidP_GetCaps", CallingConvention = CallingConvention.StdCall)]
-        public static extern int HidP_GetCaps(System.IntPtr PreparsedData, ref HIDP_CAPS Capabilities);
+        public static extern HidStatus HidP_GetCaps(System.IntPtr PreparsedData, ref HIDP_CAPS Capabilities);
 
         /// Return Type: NTSTATUS->LONG->int
         ///ReportType: HIDP_REPORT_TYPE->_HIDP_REPORT_TYPE
         ///ButtonCaps: PHIDP_BUTTON_CAPS->_HIDP_BUTTON_CAPS*
         ///ButtonCapsLength: PUSHORT->USHORT*
         ///PreparsedData: PHIDP_PREPARSED_DATA->_HIDP_PREPARSED_DATA*
-        [System.Runtime.InteropServices.DllImportAttribute("<Unknown>", EntryPoint = "HidP_GetButtonCaps", CallingConvention = System.Runtime.InteropServices.CallingConvention.StdCall)]
-        public static extern int HidP_GetButtonCaps(HIDP_REPORT_TYPE ReportType, ref HIDP_BUTTON_CAPS ButtonCaps, ref ushort ButtonCapsLength, System.IntPtr PreparsedData);
+        [System.Runtime.InteropServices.DllImportAttribute("hid.dll", EntryPoint = "HidP_GetButtonCaps", CallingConvention = System.Runtime.InteropServices.CallingConvention.StdCall)]
+        public static extern HidStatus HidP_GetButtonCaps(HIDP_REPORT_TYPE ReportType, [Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] HIDP_BUTTON_CAPS[] ButtonCaps, ref ushort ButtonCapsLength, System.IntPtr PreparsedData);
 
         /// Return Type: NTSTATUS->LONG->int
         ///ReportType: HIDP_REPORT_TYPE->_HIDP_REPORT_TYPE
         ///ValueCaps: PHIDP_VALUE_CAPS->_HIDP_VALUE_CAPS*
         ///ValueCapsLength: PUSHORT->USHORT*
         ///PreparsedData: PHIDP_PREPARSED_DATA->_HIDP_PREPARSED_DATA*
-        [System.Runtime.InteropServices.DllImportAttribute("<Unknown>", EntryPoint = "HidP_GetValueCaps", CallingConvention = System.Runtime.InteropServices.CallingConvention.StdCall)]
-        public static extern int HidP_GetValueCaps(HIDP_REPORT_TYPE ReportType, ref HIDP_VALUE_CAPS ValueCaps, ref ushort ValueCapsLength, System.IntPtr PreparsedData);
+        [System.Runtime.InteropServices.DllImportAttribute("hid.dll", EntryPoint = "HidP_GetValueCaps", CallingConvention = System.Runtime.InteropServices.CallingConvention.StdCall)]
+        public static extern HidStatus HidP_GetValueCaps(HIDP_REPORT_TYPE ReportType, ref HIDP_VALUE_CAPS[] ValueCaps, ref ushort ValueCapsLength, System.IntPtr PreparsedData);
 
     }
 
