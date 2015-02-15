@@ -47,9 +47,6 @@ namespace Hid
         public HIDP_VALUE_CAPS[] InputValueCapabilities { get { return iInputValueCapabilities; } }
         private HIDP_VALUE_CAPS[] iInputValueCapabilities;
 
-        
-        
-
         /// <summary>
         /// Class constructor will fetch this object properties from HID sub system.
         /// </summary>
@@ -263,6 +260,30 @@ namespace Hid
             Marshal.FreeHGlobal(PreParsedData);
             PreParsedData = IntPtr.Zero;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="aCaps"></param>
+        /// <returns></returns>
+        public string InputValueCapabilityDescription(HIDP_VALUE_CAPS aCaps)
+        {
+            if (!aCaps.IsRange && Enum.IsDefined(typeof(UsagePage), Capabilities.UsagePage))
+            {
+                return "Input Value: " + Enum.GetName(Utils.UsageType((UsagePage)Capabilities.UsagePage), aCaps.NotRange.Usage);
+            }
+
+            return null;
+        }
+
+        public bool IsGamePad
+        {
+            get
+            {
+                return ((UsagePage)iCapabilities.UsagePage == UsagePage.GenericDesktopControls && (UsageCollectionGenericDesktop)iCapabilities.Usage == UsageCollectionGenericDesktop.GamePad);
+            }
+        }
+
 
         /// <summary>
         /// Print information about this device to our debug output.

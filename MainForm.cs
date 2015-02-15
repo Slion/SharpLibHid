@@ -166,5 +166,15 @@ namespace RemoteControlSample
 			listViewEvents.Items.Clear();
 		}
 
+        private void buttonTreeViewCollapseAll_Click(object sender, EventArgs e)
+        {
+            treeViewDevices.CollapseAll();            
+        }
+
+        private void buttonTreeViewExpandAll_Click(object sender, EventArgs e)
+        {
+            treeViewDevices.ExpandAll();
+        }
+
 	}
 }
