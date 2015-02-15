@@ -180,58 +180,16 @@ namespace Win32
             {
                 Hid.HidDevice hidDevice=new Hid.HidDevice(device.hDevice);
 
-                //Work out proper suffix for our device root node.
-                //That allows users to see in a glance what kind of device this is.
-                string suffix = "";
-                Type usageCollectionType=null; 
-                if (hidDevice.Info.dwType == RawInputDeviceType.RIM_TYPEHID)
-                {
-                    //Process usage page
-                    if (Enum.IsDefined(typeof(Hid.UsagePage), hidDevice.Info.hid.usUsagePage))
-                    {
-                        //We know this usage page, add its name
-                        Hid.UsagePage usagePage = (Hid.UsagePage)hidDevice.Info.hid.usUsagePage;
-                        suffix += " ( " + usagePage.ToString() + ", ";
-                        usageCollectionType = Hid.Utils.UsageCollectionType(usagePage);
-                    }
-                    else
-                    {
-                        //We don't know this usage page, add its value
-                        suffix += " ( 0x" + hidDevice.Info.hid.usUsagePage.ToString("X4") + ", ";
-                    }
-
-                    //Process usage collection
-                    //We don't know this usage page, add its value
-                    if (usageCollectionType == null || !Enum.IsDefined(usageCollectionType, hidDevice.Info.hid.usUsage))
-                    {
-                        //Show Hexa
-                        suffix += "0x" + hidDevice.Info.hid.usUsage.ToString("X4") + " )";
-                    }
-                    else
-                    {
-                        //We know this usage page, add its name
-                        suffix += Enum.GetName(usageCollectionType, hidDevice.Info.hid.usUsage) + " )";                        
-                    }
-                }
-                else if (hidDevice.Info.dwType == RawInputDeviceType.RIM_TYPEKEYBOARD)
-                {
-                    suffix = " - Keyboard";
-                }
-                else if (hidDevice.Info.dwType == RawInputDeviceType.RIM_TYPEMOUSE)
-                {
-                    suffix = " - Mouse";
-                }
-
                 TreeNode node = null;
                 if (hidDevice.Product != null && hidDevice.Product.Length > 1)
                 {
                     //Add the devices with a proper name at the top
-                    node = aTreeView.Nodes.Insert(0, hidDevice.Name, hidDevice.Product + suffix);
+                    node = aTreeView.Nodes.Insert(0, hidDevice.Name, hidDevice.FriendlyName);
                 }
                 else
                 {
                     //Add other once at the bottom
-                    node = aTreeView.Nodes.Add(hidDevice.Name, "0x" + hidDevice.ProductId.ToString("X4") + suffix);
+                    node = aTreeView.Nodes.Add(hidDevice.Name, "0x" + hidDevice.FriendlyName);
                 }
 
                 node.Nodes.Add("Manufacturer: " + hidDevice.Manufacturer);

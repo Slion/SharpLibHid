@@ -222,7 +222,7 @@ namespace Hid
             if (IsButtonDown)
             {
                 //TODO: Make this optional
-                StartRepeatTimer(iRepeatDelay);
+                //StartRepeatTimer(iRepeatDelay);
             }
 
             IsValid = true;

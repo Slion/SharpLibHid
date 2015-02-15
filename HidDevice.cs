@@ -14,7 +14,18 @@ namespace Hid
     /// </summary>
     public class HidDevice: IDisposable
     {
+        /// <summary>
+        /// Unique name of that HID device.
+        /// Notably used as input to CreateFile.
+        /// </summary>
         public string Name { get; private set; }
+
+        /// <summary>
+        /// Friendly name that people should be able to read.
+        /// </summary>
+        public string FriendlyName { get; private set; }
+
+        //
         public string Manufacturer { get; private set; }
         public string Product { get; private set; }
         public ushort VendorId { get; private set; }
@@ -127,6 +138,8 @@ namespace Hid
 
             handle.Close();
 
+            SetFriendlyName();
+
             //Get our HID descriptor pre-parsed data
             PreParsedData = Win32.RawInput.GetPreParsedData(hRawInputDevice);
 
@@ -168,6 +181,68 @@ namespace Hid
                 }
             }
 
+
+            
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void SetFriendlyName()
+        {
+            //Work out proper suffix for our device root node.
+            //That allows users to see in a glance what kind of device this is.
+            string suffix = "";
+            Type usageCollectionType = null;
+            if (Info.dwType == RawInputDeviceType.RIM_TYPEHID)
+            {
+                //Process usage page
+                if (Enum.IsDefined(typeof(Hid.UsagePage), Info.hid.usUsagePage))
+                {
+                    //We know this usage page, add its name
+                    Hid.UsagePage usagePage = (Hid.UsagePage)Info.hid.usUsagePage;
+                    suffix += " ( " + usagePage.ToString() + ", ";
+                    usageCollectionType = Hid.Utils.UsageCollectionType(usagePage);
+                }
+                else
+                {
+                    //We don't know this usage page, add its value
+                    suffix += " ( 0x" + Info.hid.usUsagePage.ToString("X4") + ", ";
+                }
+
+                //Process usage collection
+                //We don't know this usage page, add its value
+                if (usageCollectionType == null || !Enum.IsDefined(usageCollectionType, Info.hid.usUsage))
+                {
+                    //Show Hexa
+                    suffix += "0x" + Info.hid.usUsage.ToString("X4") + " )";
+                }
+                else
+                {
+                    //We know this usage page, add its name
+                    suffix += Enum.GetName(usageCollectionType, Info.hid.usUsage) + " )";
+                }
+            }
+            else if (Info.dwType == RawInputDeviceType.RIM_TYPEKEYBOARD)
+            {
+                suffix = " - Keyboard";
+            }
+            else if (Info.dwType == RawInputDeviceType.RIM_TYPEMOUSE)
+            {
+                suffix = " - Mouse";
+            }
+
+            if (Product != null && Product.Length > 1)
+            {
+                //Add the devices with a proper name at the top
+                FriendlyName = Product + suffix;
+            }
+            else
+            {
+                //Add other once at the bottom
+                FriendlyName = "0x" + ProductId.ToString("X4") + suffix;
+            }
 
         }
 
