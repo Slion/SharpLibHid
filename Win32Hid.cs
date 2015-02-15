@@ -227,62 +227,67 @@ namespace Win32
         public ushort Reserved4;
     }
 
-    [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Explicit)]
-    public struct HIDP_BUTTON_CAPS_UNION
-    {
-
-        /// 
-        [System.Runtime.InteropServices.FieldOffsetAttribute(0)]
-        public HIDP_BUTTON_CAPS_RANGE Range;
-
-        /// 
-        [System.Runtime.InteropServices.FieldOffsetAttribute(0)]
-        public HIDP_BUTTON_CAPS_NOT_RANGE NotRange;
-    }
-
-    [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    /// <summary>
+    /// 
+    /// </summary>
+    [StructLayoutAttribute(LayoutKind.Explicit, Pack = 1)]
     public struct HIDP_BUTTON_CAPS
     {
-
         /// USAGE->USHORT->unsigned short
+        [FieldOffset(0)]
         public ushort UsagePage;
 
         /// UCHAR->unsigned char
+        [FieldOffset(2)]
         public byte ReportID;
 
         /// BOOLEAN->BYTE->unsigned char
-        public byte IsAlias;
+        [FieldOffset(3)]
+        public bool IsAlias;
 
         /// USHORT->unsigned short
+        [FieldOffset(4)]
         public ushort BitField;
 
         /// USHORT->unsigned short
+        [FieldOffset(6)]
         public ushort LinkCollection;
 
         /// USAGE->USHORT->unsigned short
+        [FieldOffset(8)]
         public ushort LinkUsage;
 
         /// USAGE->USHORT->unsigned short
+        [FieldOffset(10)]
         public ushort LinkUsagePage;
 
         /// BOOLEAN->BYTE->unsigned char
-        public byte IsRange;
+        [FieldOffset(12)]
+        public bool IsRange;
 
         /// BOOLEAN->BYTE->unsigned char
-        public byte IsStringRange;
+        [FieldOffset(13)]
+        public bool IsStringRange;
 
         /// BOOLEAN->BYTE->unsigned char
-        public byte IsDesignatorRange;
+        [FieldOffset(14)]
+        public bool IsDesignatorRange;
 
         /// BOOLEAN->BYTE->unsigned char
-        public byte IsAbsolute;
+        [FieldOffset(15)]
+        public bool IsAbsolute;
 
         /// ULONG[10]
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 10, ArraySubType = System.Runtime.InteropServices.UnmanagedType.U4)]
+        [FieldOffset(16)]
+        [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = 10, ArraySubType = UnmanagedType.U4)]
         public uint[] Reserved;
 
-        /// TODO: get the proper field offset to make it nicer and get rid of union type
-        public HIDP_BUTTON_CAPS_UNION Union;
+        /// Union Range/NotRange
+        [FieldOffset(56)]
+        HIDP_BUTTON_CAPS_RANGE Range;
+
+        [FieldOffset(56)]
+        HIDP_BUTTON_CAPS_NOT_RANGE NotRange;       
     }
 
     /// <summary>
