@@ -36,7 +36,7 @@ namespace RemoteControlSample
             // 
             this.labelButtonName.AutoSize = true;
             this.labelButtonName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelButtonName.Location = new System.Drawing.Point(788, 150);
+            this.labelButtonName.Location = new System.Drawing.Point(785, 53);
             this.labelButtonName.Name = "labelButtonName";
             this.labelButtonName.Size = new System.Drawing.Size(103, 20);
             this.labelButtonName.TabIndex = 0;
@@ -46,7 +46,7 @@ namespace RemoteControlSample
             // 
             this.labelDeviceName.AutoSize = true;
             this.labelDeviceName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelDeviceName.Location = new System.Drawing.Point(788, 130);
+            this.labelDeviceName.Location = new System.Drawing.Point(785, 33);
             this.labelDeviceName.Name = "labelDeviceName";
             this.labelDeviceName.Size = new System.Drawing.Size(103, 20);
             this.labelDeviceName.TabIndex = 1;
@@ -54,7 +54,7 @@ namespace RemoteControlSample
             // 
             // buttonClear
             // 
-            this.buttonClear.Location = new System.Drawing.Point(816, 104);
+            this.buttonClear.Location = new System.Drawing.Point(813, 6);
             this.buttonClear.Name = "buttonClear";
             this.buttonClear.Size = new System.Drawing.Size(75, 23);
             this.buttonClear.TabIndex = 3;

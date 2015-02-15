@@ -48,6 +48,9 @@ namespace Hid
         TerraTecRemote = 0xffcc
     }
 
+    /// <summary>
+    /// Usage Collection for usage page GenericDesktopControls.
+    /// </summary>
     public enum UsageCollectionGenericDesktop : ushort
     {
         Pointer = 0x01,
@@ -61,6 +64,9 @@ namespace Hid
         SystemControl = 0x80
     }
 
+    /// <summary>
+    /// Usage Collection for usage page Consumer.
+    /// </summary>
     public enum UsageCollectionConsumer : ushort
     {
         ConsumerControl = 0x01,
