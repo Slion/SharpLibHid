@@ -29,65 +29,16 @@ namespace Hid
         /// <param name="hRawInputDevice">Device Handle as provided by RAWINPUTHEADER.hDevice, typically accessed as rawinput.header.hDevice</param>
         public HidDevice(IntPtr hRawInputDevice)
         {
-            PreParsedData = IntPtr.Zero;
-            //Fetch various information defining the given HID device
-            Name = Win32.Utils.RawInput.GetDeviceName(hRawInputDevice);
-
-            //Get our HID descriptor pre-parsed data
-            PreParsedData = Win32.Utils.RawInput.GetPreParsedData(hRawInputDevice);
-            if (PreParsedData == IntPtr.Zero)
+            //Try construct and rollback if needed
+            try
             {
-                throw new Exception("HidDevice: GetPreParsedData failed!");
+                Construct(hRawInputDevice);
             }
-
-            //Fetch device info
-            iInfo = new RID_DEVICE_INFO();
-            if (!Win32.Utils.RawInput.GetDeviceInfo(hRawInputDevice, ref iInfo))
+            catch (System.Exception ex)
             {
-                throw new Exception("HidDevice: GetDeviceInfo failed!");
-            }
-                
-            //Open our device from the device name/path
-            SafeFileHandle handle=Win32.Function.CreateFile(Name,
-                Win32.FileAccess.NONE,
-                Win32.FileShare.FILE_SHARE_READ|Win32.FileShare.FILE_SHARE_WRITE,
-                IntPtr.Zero,
-                Win32.CreationDisposition.OPEN_EXISTING,
-                Win32.FileFlagsAttributes.FILE_FLAG_OVERLAPPED,
-                IntPtr.Zero
-                );
-
-            //TODO: should we throw instead?
-            if (handle.IsInvalid)
-            {
-                Debug.WriteLine("Failed to CreateFile from device name " + Marshal.GetLastWin32Error().ToString());
-            }
-            else
-            {
-                //Get manufacturer string
-                StringBuilder manufacturerString = new StringBuilder(256);
-                if (Win32.Function.HidD_GetManufacturerString(handle, manufacturerString, manufacturerString.Capacity))
-                {
-                    Manufacturer = manufacturerString.ToString();                    
-                }
-
-                //Get product string
-                StringBuilder productString = new StringBuilder(256);
-                if (Win32.Function.HidD_GetProductString(handle, productString, productString.Capacity))
-                {
-                    Product = productString.ToString();                    
-                }
-
-                //Get attributes
-                Win32.HIDD_ATTRIBUTES attributes=new Win32.HIDD_ATTRIBUTES();
-                if (Win32.Function.HidD_GetAttributes(handle, ref attributes))
-                {
-                    VendorId = attributes.VendorID;
-                    ProductId = attributes.ProductID;
-                    Version = attributes.VersionNumber;
-                }
-
-                handle.Close();
+                //Just rollback and propagate
+                Dispose();
+                throw ex;
             }
         }
 
@@ -98,6 +49,72 @@ namespace Hid
         ~HidDevice()
         {
             Dispose();
+        }
+
+        /// <summary>
+        /// Private constructor.
+        /// </summary>
+        /// <param name="hRawInputDevice"></param>
+        private void Construct(IntPtr hRawInputDevice)
+        {
+            PreParsedData = IntPtr.Zero;
+            //Fetch various information defining the given HID device
+            Name = Win32.Utils.RawInput.GetDeviceName(hRawInputDevice);
+
+            //Get our HID descriptor pre-parsed data
+            PreParsedData = Win32.Utils.RawInput.GetPreParsedData(hRawInputDevice);
+            if (PreParsedData == IntPtr.Zero)
+            {
+                throw new Exception("HidDevice: GetPreParsedData failed: " + Marshal.GetLastWin32Error().ToString());
+            }
+
+            //Fetch device info
+            iInfo = new RID_DEVICE_INFO();
+            if (!Win32.Utils.RawInput.GetDeviceInfo(hRawInputDevice, ref iInfo))
+            {
+                throw new Exception("HidDevice: GetDeviceInfo failed: " + Marshal.GetLastWin32Error().ToString());
+            }
+
+            //Open our device from the device name/path
+            SafeFileHandle handle = Win32.Function.CreateFile(Name,
+                Win32.FileAccess.NONE,
+                Win32.FileShare.FILE_SHARE_READ | Win32.FileShare.FILE_SHARE_WRITE,
+                IntPtr.Zero,
+                Win32.CreationDisposition.OPEN_EXISTING,
+                Win32.FileFlagsAttributes.FILE_FLAG_OVERLAPPED,
+                IntPtr.Zero
+                );
+
+            //Check if CreateFile worked
+            if (handle.IsInvalid)
+            {
+                throw new Exception("HidDevice: CreateFile failed: " + Marshal.GetLastWin32Error().ToString());
+            }
+
+            //Get manufacturer string
+            StringBuilder manufacturerString = new StringBuilder(256);
+            if (Win32.Function.HidD_GetManufacturerString(handle, manufacturerString, manufacturerString.Capacity))
+            {
+                Manufacturer = manufacturerString.ToString();
+            }
+
+            //Get product string
+            StringBuilder productString = new StringBuilder(256);
+            if (Win32.Function.HidD_GetProductString(handle, productString, productString.Capacity))
+            {
+                Product = productString.ToString();
+            }
+
+            //Get attributes
+            Win32.HIDD_ATTRIBUTES attributes = new Win32.HIDD_ATTRIBUTES();
+            if (Win32.Function.HidD_GetAttributes(handle, ref attributes))
+            {
+                VendorId = attributes.VendorID;
+                ProductId = attributes.ProductID;
+                Version = attributes.VersionNumber;
+            }
+
+            handle.Close();
         }
 
         /// <summary>
