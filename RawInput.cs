@@ -183,6 +183,7 @@ namespace Win32
                 //Work out proper suffix for our device root node.
                 //That allows users to see in a glance what kind of device this is.
                 string suffix = "";
+                Type usageCollectionType=null; 
                 if (hidDevice.Info.dwType == RawInputDeviceType.RIM_TYPEHID)
                 {
                     //Process usage page
@@ -191,6 +192,7 @@ namespace Win32
                         //We know this usage page, add its name
                         Hid.UsagePage usagePage = (Hid.UsagePage)hidDevice.Info.hid.usUsagePage;
                         suffix += " ( " + usagePage.ToString() + ", ";
+                        usageCollectionType = Hid.Utils.UsageCollectionType(usagePage);
                     }
                     else
                     {
@@ -198,9 +200,18 @@ namespace Win32
                         suffix += " ( 0x" + hidDevice.Info.hid.usUsagePage.ToString("X4") + ", ";
                     }
 
-                    //Process usage
+                    //Process usage collection
                     //We don't know this usage page, add its value
-                    suffix += "0x" + hidDevice.Info.hid.usUsage.ToString("X4") + " )";
+                    if (usageCollectionType == null || !Enum.IsDefined(usageCollectionType, hidDevice.Info.hid.usUsage))
+                    {
+                        //Show Hexa
+                        suffix += "0x" + hidDevice.Info.hid.usUsage.ToString("X4") + " )";
+                    }
+                    else
+                    {
+                        //We know this usage page, add its name
+                        suffix += Enum.GetName(usageCollectionType, hidDevice.Info.hid.usUsage) + " )";                        
+                    }
                 }
                 else if (hidDevice.Info.dwType == RawInputDeviceType.RIM_TYPEKEYBOARD)
                 {
