@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Text;
 using Microsoft.Win32.SafeHandles;
 
-using Hid.UsageTables;
+using Hid.Usage;
 using Win32;
 
 
@@ -183,31 +183,31 @@ namespace Devices.RemoteControl
 
             int i = 0;
             rid[i].usUsagePage = (ushort)Hid.UsagePage.WindowsMediaCenterRemoteControl;
-            rid[i].usUsage = (ushort)Hid.UsageCollectionWindowsMediaCenter.WindowsMediaCenterRemoteControl;
+            rid[i].usUsage = (ushort)Hid.UsageCollection.WindowsMediaCenter.WindowsMediaCenterRemoteControl;
             rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             rid[i].hwndTarget = aHWND;
 
             i++;
             rid[i].usUsagePage = (ushort)Hid.UsagePage.Consumer;
-            rid[i].usUsage = (ushort)Hid.UsageCollectionConsumer.ConsumerControl;
+            rid[i].usUsage = (ushort)Hid.UsageCollection.Consumer.ConsumerControl;
             rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             rid[i].hwndTarget = aHWND;
 
             i++;
             rid[i].usUsagePage = (ushort)Hid.UsagePage.Consumer;
-            rid[i].usUsage = (ushort)Hid.UsageCollectionConsumer.Selection;
+            rid[i].usUsage = (ushort)Hid.UsageCollection.Consumer.Selection;
             rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             rid[i].hwndTarget = aHWND;
 
             i++;
             rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControls;
-            rid[i].usUsage = (ushort)Hid.UsageCollectionGenericDesktop.SystemControl;
+            rid[i].usUsage = (ushort)Hid.UsageCollection.GenericDesktop.SystemControl;
             rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             rid[i].hwndTarget = aHWND;
 
 			//i++;
 			rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControls;
-			rid[i].usUsage = (ushort)Hid.UsageCollectionGenericDesktop.GamePad;
+			rid[i].usUsage = (ushort)Hid.UsageCollection.GenericDesktop.GamePad;
 			rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
 			rid[i].hwndTarget = aHWND;
 
@@ -400,12 +400,12 @@ namespace Devices.RemoteControl
             HidUsageHandler usagePageHandler = null;
 
             //Check if this an MCE remote HID message
-            if (aHidEvent.UsagePage == (ushort)Hid.UsagePage.WindowsMediaCenterRemoteControl && aHidEvent.UsageCollection == (ushort)Hid.UsageCollectionWindowsMediaCenter.WindowsMediaCenterRemoteControl)
+            if (aHidEvent.UsagePage == (ushort)Hid.UsagePage.WindowsMediaCenterRemoteControl && aHidEvent.UsageCollection == (ushort)Hid.UsageCollection.WindowsMediaCenter.WindowsMediaCenterRemoteControl)
             {
                 usagePageHandler = HidMceRemoteHandler;
             }
             //Check if this is a consumer control HID message
-            else if (aHidEvent.UsagePage == (ushort)Hid.UsagePage.Consumer && aHidEvent.UsageCollection == (ushort)Hid.UsageCollectionConsumer.ConsumerControl)
+            else if (aHidEvent.UsagePage == (ushort)Hid.UsagePage.Consumer && aHidEvent.UsageCollection == (ushort)Hid.UsageCollection.Consumer.ConsumerControl)
             {
                 usagePageHandler = HidConsumerDeviceHandler;
             }

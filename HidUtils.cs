@@ -16,13 +16,13 @@ namespace Hid
             switch (aUsagePage)
             {
                 case UsagePage.GenericDesktopControls:
-                    return typeof(UsageCollectionGenericDesktop);
+                    return typeof(UsageCollection.GenericDesktop);
 
                 case UsagePage.Consumer:
-                    return typeof(UsageCollectionConsumer);
+                    return typeof(UsageCollection.Consumer);
 
                 case UsagePage.WindowsMediaCenterRemoteControl:
-                    return typeof(UsageCollectionWindowsMediaCenter);
+                    return typeof(UsageCollection.WindowsMediaCenter);
 
                 default:
                     return null;
@@ -39,22 +39,22 @@ namespace Hid
             switch (aUsagePage)
             {
                 case UsagePage.GenericDesktopControls:
-                    return typeof(UsageTables.GenericDesktop);
+                    return typeof(Usage.GenericDesktop);
 
                 case UsagePage.Consumer:
-                    return typeof(UsageTables.ConsumerControl);
+                    return typeof(Usage.ConsumerControl);
 
                 case UsagePage.WindowsMediaCenterRemoteControl:
-                    return typeof(UsageTables.WindowsMediaCenterRemoteControl);
+                    return typeof(Usage.WindowsMediaCenterRemoteControl);
 
                 case UsagePage.Telephony:
-                    return typeof(UsageTables.TelephonyDevice);
+                    return typeof(Usage.TelephonyDevice);
 
                 case UsagePage.SimulationControls:
-                    return typeof(UsageTables.SimulationControl);
+                    return typeof(Usage.SimulationControl);
 
                 case UsagePage.GameControls:
-                    return typeof(UsageTables.GameControl);
+                    return typeof(Usage.GameControl);
 
                 default:
                     return null;
