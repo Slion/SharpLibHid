@@ -10,6 +10,7 @@ namespace Hid
 {
     /// <summary>
     /// Represent a HID device.
+    /// Rename to RawInputDevice?
     /// </summary>
     public class HidDevice: IDisposable
     {
@@ -76,10 +77,10 @@ namespace Hid
             iInputValueCapabilities = null;
 
             //Fetch various information defining the given HID device
-            Name = Win32.Utils.RawInput.GetDeviceName(hRawInputDevice);
+            Name = Win32.RawInput.GetDeviceName(hRawInputDevice);
 
             //Get our HID descriptor pre-parsed data
-            PreParsedData = Win32.Utils.RawInput.GetPreParsedData(hRawInputDevice);
+            PreParsedData = Win32.RawInput.GetPreParsedData(hRawInputDevice);
             if (PreParsedData == IntPtr.Zero)
             {
                 throw new Exception("HidDevice: GetPreParsedData failed: " + Marshal.GetLastWin32Error().ToString());
@@ -87,7 +88,7 @@ namespace Hid
 
             //Fetch device info
             iInfo = new RID_DEVICE_INFO();
-            if (!Win32.Utils.RawInput.GetDeviceInfo(hRawInputDevice, ref iInfo))
+            if (!Win32.RawInput.GetDeviceInfo(hRawInputDevice, ref iInfo))
             {
                 throw new Exception("HidDevice: GetDeviceInfo failed: " + Marshal.GetLastWin32Error().ToString());
             }

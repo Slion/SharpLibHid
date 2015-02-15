@@ -106,7 +106,7 @@ namespace Hid
             {
                 //Fetch raw input
                 RAWINPUT rawInput = new RAWINPUT();
-                if (!Win32.Utils.RawInput.GetRawInputData(aMessage.LParam, ref rawInput, ref rawInputBuffer))
+                if (!Win32.RawInput.GetRawInputData(aMessage.LParam, ref rawInput, ref rawInputBuffer))
                 {
                     return;
                 }
@@ -115,7 +115,7 @@ namespace Hid
                 //Get various information about this HID device
                 Device = new Hid.HidDevice(rawInput.header.hDevice);
 
-                if (rawInput.header.dwType == Const.RIM_TYPEHID)  //Check that our raw input is HID                        
+                if (rawInput.header.dwType == Win32.RawInputDeviceType.RIM_TYPEHID)  //Check that our raw input is HID                        
                 {
                     IsGeneric = true;
 
@@ -191,14 +191,14 @@ namespace Hid
                         }
                     }
                 }
-                else if (rawInput.header.dwType == Const.RIM_TYPEMOUSE)
+                else if (rawInput.header.dwType == RawInputDeviceType.RIM_TYPEMOUSE)
                 {
                     IsMouse = true;
 
                     Debug.WriteLine("WM_INPUT source device is Mouse.");
                     // do mouse handling...
                 }
-                else if (rawInput.header.dwType == Const.RIM_TYPEKEYBOARD)
+                else if (rawInput.header.dwType == RawInputDeviceType.RIM_TYPEKEYBOARD)
                 {
                     IsKeyboard = true;
 
