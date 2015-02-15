@@ -40,7 +40,7 @@ namespace Win32
         ///ValueCapsLength: PUSHORT->USHORT*
         ///PreparsedData: PHIDP_PREPARSED_DATA->_HIDP_PREPARSED_DATA*
         [System.Runtime.InteropServices.DllImportAttribute("hid.dll", EntryPoint = "HidP_GetValueCaps", CallingConvention = System.Runtime.InteropServices.CallingConvention.StdCall)]
-        public static extern HidStatus HidP_GetValueCaps(HIDP_REPORT_TYPE ReportType, ref HIDP_VALUE_CAPS[] ValueCaps, ref ushort ValueCapsLength, System.IntPtr PreparsedData);
+        public static extern HidStatus HidP_GetValueCaps(HIDP_REPORT_TYPE ReportType, [Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] HIDP_VALUE_CAPS[] ValueCaps, ref ushort ValueCapsLength, System.IntPtr PreparsedData);
 
     }
 
