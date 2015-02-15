@@ -79,13 +79,6 @@ namespace Hid
             //Fetch various information defining the given HID device
             Name = Win32.RawInput.GetDeviceName(hRawInputDevice);
 
-            //Get our HID descriptor pre-parsed data
-            PreParsedData = Win32.RawInput.GetPreParsedData(hRawInputDevice);
-            if (PreParsedData == IntPtr.Zero)
-            {
-                throw new Exception("HidDevice: GetPreParsedData failed: " + Marshal.GetLastWin32Error().ToString());
-            }
-
             //Fetch device info
             iInfo = new RID_DEVICE_INFO();
             if (!Win32.RawInput.GetDeviceInfo(hRawInputDevice, ref iInfo))
@@ -133,6 +126,16 @@ namespace Hid
             }
 
             handle.Close();
+
+            //Get our HID descriptor pre-parsed data
+            PreParsedData = Win32.RawInput.GetPreParsedData(hRawInputDevice);
+
+            if (PreParsedData == IntPtr.Zero)
+            {
+                //We are done then.
+                //Some devices don't have pre-parsed data.
+                return;
+            }
 
             //Get capabilities
             HidStatus status = Win32.Function.HidP_GetCaps(PreParsedData, ref iCapabilities);

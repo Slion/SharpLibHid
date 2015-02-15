@@ -175,15 +175,66 @@ namespace Win32
                 return;
             }
 
-            //For each our device add an node to our treeview
+            //For each our device add a node to our treeview
             foreach (RAWINPUTDEVICELIST device in ridList)
             {
-                string name=GetDeviceName(device.hDevice);
-                aTreeView.Nodes.Add(name, name);
+                Hid.HidDevice hidDevice=new Hid.HidDevice(device.hDevice);
+
+                //Work out proper suffix for our device root node.
+                //That allows users to see in a glance what kind of device this is.
+                string suffix = "";
+                if (hidDevice.Info.dwType == RawInputDeviceType.RIM_TYPEHID)
+                {
+                    //Process usage page
+                    if (Enum.IsDefined(typeof(Hid.UsagePage), hidDevice.Info.hid.usUsagePage))
+                    {
+                        //We know this usage page, add its name
+                        Hid.UsagePage usagePage = (Hid.UsagePage)hidDevice.Info.hid.usUsagePage;
+                        suffix += " ( " + usagePage.ToString() + ", ";
+                    }
+                    else
+                    {
+                        //We don't know this usage page, add its value
+                        suffix += " ( 0x" + hidDevice.Info.hid.usUsagePage.ToString("X4") + ", ";
+                    }
+
+                    //Process usage
+                    //We don't know this usage page, add its value
+                    suffix += "0x" + hidDevice.Info.hid.usUsage.ToString("X4") + " )";
+                }
+                else if (hidDevice.Info.dwType == RawInputDeviceType.RIM_TYPEKEYBOARD)
+                {
+                    suffix = " - Keyboard";
+                }
+                else if (hidDevice.Info.dwType == RawInputDeviceType.RIM_TYPEMOUSE)
+                {
+                    suffix = " - Mouse";
+                }
+
+                TreeNode node = null;
+                if (hidDevice.Product != null && hidDevice.Product.Length > 1)
+                {
+                    //Add the devices with a proper name at the top
+                    node = aTreeView.Nodes.Insert(0, hidDevice.Name, hidDevice.Product + suffix);
+                }
+                else
+                {
+                    //Add other once at the bottom
+                    node = aTreeView.Nodes.Add(hidDevice.Name, "0x" + hidDevice.ProductId.ToString("X4") + suffix);
+                }
+
+                node.Nodes.Add("Manufacturer: " + hidDevice.Manufacturer);
+                node.Nodes.Add("Product ID: 0x" + hidDevice.ProductId.ToString("X4"));
+                node.Nodes.Add("Vendor ID: 0x" + hidDevice.VendorId.ToString("X4"));
+                node.Nodes.Add("Version: " + hidDevice.Version);
+                node.Nodes.Add(hidDevice.Info.dwType.ToString());
+                if (hidDevice.Info.dwType == RawInputDeviceType.RIM_TYPEHID)
+                {
+                    node.Nodes.Add("UsagePage / UsageCollection: 0x" + hidDevice.Info.hid.usUsagePage.ToString("X4") + " / 0x" + hidDevice.Info.hid.usUsage.ToString("X4"));
+                }
+
+                node.Nodes.Add(hidDevice.Name);
             }
-
-            //TreeNode node = null;
-
         }
 
     }
