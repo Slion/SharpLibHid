@@ -19,9 +19,18 @@ namespace Hid
         public ushort VendorId { get; private set; }
         public ushort ProductId { get; private set; }
         public ushort Version { get; private set; }
+        //Pre-parsed HID descriptor
         public IntPtr PreParsedData {get; private set;}
+        //Info
         public RID_DEVICE_INFO Info { get {return iInfo;} }
         private RID_DEVICE_INFO iInfo;
+        //Capabilities
+        public HIDP_CAPS Capabilities { get { return iCapabilities; } }
+        private HIDP_CAPS iCapabilities;
+        //Input Button Capabilities
+        public HIDP_BUTTON_CAPS[] InputButtonCapabilities { get { return iInputButtonCapabilities; } }
+        private HIDP_BUTTON_CAPS[] iInputButtonCapabilities;
+        
 
         /// <summary>
         /// Class constructor will fetch this object properties from HID sub system.
@@ -115,6 +124,24 @@ namespace Hid
             }
 
             handle.Close();
+
+            //Get capabilities
+            HidStatus status = Win32.Function.HidP_GetCaps(PreParsedData, ref iCapabilities);
+            if (status != HidStatus.HIDP_STATUS_SUCCESS)
+            {
+                throw new Exception("HidDevice: HidP_GetCaps failed: " + status.ToString());
+            }
+
+            //Get input button caps
+            iInputButtonCapabilities = new HIDP_BUTTON_CAPS[Capabilities.NumberInputButtonCaps];
+            ushort buttonCapabilitiesLength = Capabilities.NumberInputButtonCaps;
+            status = Win32.Function.HidP_GetButtonCaps(HIDP_REPORT_TYPE.HidP_Input, iInputButtonCapabilities, ref buttonCapabilitiesLength, PreParsedData);
+            if (status != HidStatus.HIDP_STATUS_SUCCESS || buttonCapabilitiesLength != Capabilities.NumberInputButtonCaps)
+            {
+                throw new Exception("HidDevice: HidP_GetButtonCaps failed: " + status.ToString());
+            }
+            
+
         }
 
         /// <summary>
