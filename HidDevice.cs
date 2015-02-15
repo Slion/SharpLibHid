@@ -30,6 +30,11 @@ namespace Hid
         //Input Button Capabilities
         public HIDP_BUTTON_CAPS[] InputButtonCapabilities { get { return iInputButtonCapabilities; } }
         private HIDP_BUTTON_CAPS[] iInputButtonCapabilities;
+        //Input Value Capabilities
+        public HIDP_VALUE_CAPS[] InputValueCapabilities { get { return iInputValueCapabilities; } }
+        private HIDP_VALUE_CAPS[] iInputValueCapabilities;
+
+        
         
 
         /// <summary>
@@ -67,6 +72,9 @@ namespace Hid
         private void Construct(IntPtr hRawInputDevice)
         {
             PreParsedData = IntPtr.Zero;
+            iInputButtonCapabilities = null;
+            iInputValueCapabilities = null;
+
             //Fetch various information defining the given HID device
             Name = Win32.Utils.RawInput.GetDeviceName(hRawInputDevice);
 
@@ -132,15 +140,30 @@ namespace Hid
                 throw new Exception("HidDevice: HidP_GetCaps failed: " + status.ToString());
             }
 
-            //Get input button caps
-            iInputButtonCapabilities = new HIDP_BUTTON_CAPS[Capabilities.NumberInputButtonCaps];
-            ushort buttonCapabilitiesLength = Capabilities.NumberInputButtonCaps;
-            status = Win32.Function.HidP_GetButtonCaps(HIDP_REPORT_TYPE.HidP_Input, iInputButtonCapabilities, ref buttonCapabilitiesLength, PreParsedData);
-            if (status != HidStatus.HIDP_STATUS_SUCCESS || buttonCapabilitiesLength != Capabilities.NumberInputButtonCaps)
+            //Get input button caps if needed
+            if (Capabilities.NumberInputButtonCaps > 0)
             {
-                throw new Exception("HidDevice: HidP_GetButtonCaps failed: " + status.ToString());
+                iInputButtonCapabilities = new HIDP_BUTTON_CAPS[Capabilities.NumberInputButtonCaps];
+                ushort buttonCapabilitiesLength = Capabilities.NumberInputButtonCaps;
+                status = Win32.Function.HidP_GetButtonCaps(HIDP_REPORT_TYPE.HidP_Input, iInputButtonCapabilities, ref buttonCapabilitiesLength, PreParsedData);
+                if (status != HidStatus.HIDP_STATUS_SUCCESS || buttonCapabilitiesLength != Capabilities.NumberInputButtonCaps)
+                {
+                    throw new Exception("HidDevice: HidP_GetButtonCaps failed: " + status.ToString());
+                }
             }
-            
+
+            //Get input value caps if needed
+            if (Capabilities.NumberInputValueCaps > 0)
+            {
+                iInputValueCapabilities = new HIDP_VALUE_CAPS[Capabilities.NumberInputValueCaps];
+                ushort valueCapabilitiesLength = Capabilities.NumberInputValueCaps;
+                status = Win32.Function.HidP_GetValueCaps(HIDP_REPORT_TYPE.HidP_Input, iInputValueCapabilities, ref valueCapabilitiesLength, PreParsedData);
+                if (status != HidStatus.HIDP_STATUS_SUCCESS || valueCapabilitiesLength != Capabilities.NumberInputValueCaps)
+                {
+                    throw new Exception("HidDevice: HidP_GetValueCaps failed: " + status.ToString());
+                }
+            }
+
 
         }
 
