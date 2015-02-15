@@ -13,7 +13,14 @@ namespace Win32
 		public extern static uint GetRawInputData(IntPtr hRawInput, uint uiCommand, IntPtr pData, ref uint pcbSize, uint cbSizeHeader);
 
    		[DllImport("User32.dll", SetLastError=true)]
-		public extern static int GetRawInputDeviceInfo(IntPtr hDevice, uint uiCommand, IntPtr pData, ref uint pcbSize);
+        public extern static int GetRawInputDeviceInfo(IntPtr hDevice, RawInputDeviceInfoType uiCommand, IntPtr pData, ref uint pcbSize);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern int GetRawInputDeviceList(
+            [In, Out] RAWINPUTDEVICELIST[] InputdeviceList,
+            [In, Out] ref uint puiNumDevices,
+            [In] uint cbSize);
+
     }
 
 
@@ -64,33 +71,8 @@ namespace Win32
         public const int WM_KEYDOWN = 0x0100;
         public const int WM_INPUT = 0x00FF;
 
-        /// <summary>
-        /// GetRawInputDeviceInfo pData points to a string that contains the device name.
-        /// </summary>
-        public const uint RIDI_DEVICENAME = 0x20000007;
-        /// <summary>
-        /// GetRawInputDeviceInfo For this uiCommand only, the value in pcbSize is the character count (not the byte count).
-        /// </summary>
-        public const uint RIDI_DEVICEINFO = 0x2000000b;
-        /// <summary>
-        /// GetRawInputDeviceInfo pData points to an RID_DEVICE_INFO structure.
-        /// </summary>
-        public const uint RIDI_PREPARSEDDATA = 0x20000005;
 
-
-        /// <summary>
-        /// Data comes from a mouse.
-        /// </summary>
-        public const uint RIM_TYPEMOUSE = 0;
-        /// <summary>
-        /// Data comes from a keyboard.
-        /// </summary>
-        public const uint RIM_TYPEKEYBOARD = 1;
-        /// <summary>
-        /// Data comes from an HID that is not a keyboard or a mouse.
-        /// </summary>
-        public const uint RIM_TYPEHID = 2;
-
+        //
         public const int RID_INPUT = 0x10000003;
         public const int RID_HEADER = 0x10000005;
 
@@ -181,12 +163,52 @@ namespace Win32
 		public const int FAPPCOMMAND_OEM = 0x1000;
     }
 
+    /// <summary>
+    /// Introduced this enum for consistency and easy of use.
+    /// Naming of the Win32 constants were preserved.
+    /// </summary>
+    public enum RawInputDeviceType : uint
+    {
+        /// <summary>
+        /// Data comes from a mouse.
+        /// </summary>
+        RIM_TYPEMOUSE = 0,
+        /// <summary>
+        /// Data comes from a keyboard.
+        /// </summary>
+        RIM_TYPEKEYBOARD = 1,
+        /// <summary>
+        /// Data comes from an HID that is not a keyboard or a mouse.
+        /// </summary>
+        RIM_TYPEHID = 2
+    }
+
+    /// <summary>
+    /// Introduced this enum for consistency and easy of use.
+    /// Naming of the Win32 constants were preserved.
+    /// </summary>
+    public enum RawInputDeviceInfoType : uint
+    {
+         /// <summary>
+        /// GetRawInputDeviceInfo pData points to a string that contains the device name.
+        /// </summary>
+        RIDI_DEVICENAME = 0x20000007,
+        /// <summary>
+        /// GetRawInputDeviceInfo For this uiCommand only, the value in pcbSize is the character count (not the byte count).
+        /// </summary>
+        RIDI_DEVICEINFO = 0x2000000b,
+        /// <summary>
+        /// GetRawInputDeviceInfo pData points to an RID_DEVICE_INFO structure.
+        /// </summary>
+        RIDI_PREPARSEDDATA = 0x20000005
+    }
+
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct RAWINPUTDEVICELIST
     {
         public IntPtr hDevice;
-        public uint dwType;
+        public RawInputDeviceType dwType;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -206,7 +228,7 @@ namespace Win32
     public struct RAWINPUTHEADER
     {
         [MarshalAs(UnmanagedType.U4)]
-        public int dwType;
+        public RawInputDeviceType dwType;
         [MarshalAs(UnmanagedType.U4)]
         public int dwSize;
         public IntPtr hDevice;
@@ -331,7 +353,8 @@ namespace Win32
         [FieldOffset(0)]
         public uint cbSize;
         [FieldOffset(4)]
-        public uint dwType;
+        [MarshalAsAttribute(UnmanagedType.U4)]
+        public RawInputDeviceType dwType;
         [FieldOffset(8)]
         public RID_DEVICE_INFO_MOUSE mouse;
         [FieldOffset(8)]

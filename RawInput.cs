@@ -1,9 +1,10 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 
-namespace Win32.Utils
+namespace Win32
 {
     /// <summary>
     /// Provide some utility functions for raw input handling.
@@ -67,7 +68,7 @@ namespace Win32.Utils
                 uint deviceInfoSize = (uint)Marshal.SizeOf(typeof(RID_DEVICE_INFO));
                 deviceInfoBuffer = Marshal.AllocHGlobal((int)deviceInfoSize);
 
-                int res = Win32.Function.GetRawInputDeviceInfo(hDevice, Const.RIDI_DEVICEINFO, deviceInfoBuffer, ref deviceInfoSize);
+                int res = Win32.Function.GetRawInputDeviceInfo(hDevice, Win32.RawInputDeviceInfoType.RIDI_DEVICEINFO, deviceInfoBuffer, ref deviceInfoSize);
                 if (res <= 0)
                 {
                     Debug.WriteLine("WM_INPUT could not read device info: " + Marshal.GetLastWin32Error().ToString());
@@ -99,8 +100,8 @@ namespace Win32.Utils
         /// <returns></returns>
         public static IntPtr GetPreParsedData(IntPtr hDevice)
         {
-            uint ppDataSize = 256;
-            int result = Win32.Function.GetRawInputDeviceInfo(hDevice, Win32.Const.RIDI_PREPARSEDDATA, IntPtr.Zero, ref ppDataSize);
+            uint ppDataSize = 0;
+            int result = Win32.Function.GetRawInputDeviceInfo(hDevice, RawInputDeviceInfoType.RIDI_PREPARSEDDATA, IntPtr.Zero, ref ppDataSize);
             if (result != 0)
             {
                 Debug.WriteLine("Failed to get raw input pre-parsed data size" + result + Marshal.GetLastWin32Error());
@@ -108,7 +109,7 @@ namespace Win32.Utils
             }
 
             IntPtr ppData = Marshal.AllocHGlobal((int)ppDataSize);
-            result = Win32.Function.GetRawInputDeviceInfo(hDevice, Win32.Const.RIDI_PREPARSEDDATA, ppData, ref ppDataSize);
+            result = Win32.Function.GetRawInputDeviceInfo(hDevice, RawInputDeviceInfoType.RIDI_PREPARSEDDATA, ppData, ref ppDataSize);
             if (result <= 0)
             {
                 Debug.WriteLine("Failed to get raw input pre-parsed data" + result + Marshal.GetLastWin32Error());
@@ -125,7 +126,7 @@ namespace Win32.Utils
         public static string GetDeviceName(IntPtr device)
         {
             uint deviceNameSize = 256;
-            int result = Win32.Function.GetRawInputDeviceInfo(device, Win32.Const.RIDI_DEVICENAME, IntPtr.Zero, ref deviceNameSize);
+            int result = Win32.Function.GetRawInputDeviceInfo(device, RawInputDeviceInfoType.RIDI_DEVICENAME, IntPtr.Zero, ref deviceNameSize);
             if (result != 0)
             {
                 return string.Empty;
@@ -134,7 +135,7 @@ namespace Win32.Utils
             IntPtr deviceName = Marshal.AllocHGlobal((int)deviceNameSize * 2);  // size is the character count not byte count
             try
             {
-                result = Win32.Function.GetRawInputDeviceInfo(device, Win32.Const.RIDI_DEVICENAME, deviceName, ref deviceNameSize);
+                result = Win32.Function.GetRawInputDeviceInfo(device, RawInputDeviceInfoType.RIDI_DEVICENAME, deviceName, ref deviceNameSize);
                 if (result > 0)
                 {
                     return Marshal.PtrToStringAnsi(deviceName, result - 1); // -1 for NULL termination
@@ -148,6 +149,42 @@ namespace Win32.Utils
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="aTreeView"></param>
+        public static void PopulateDeviceList(TreeView aTreeView)
+        {
+
+            //Get our list of devices
+            RAWINPUTDEVICELIST[] ridList = null;
+            uint deviceCount = 0;
+            int res = Win32.Function.GetRawInputDeviceList(ridList, ref deviceCount,(uint)Marshal.SizeOf(typeof(RAWINPUTDEVICELIST)));
+            if (res == -1)
+            {
+                //Just give up then
+                return;
+            }
+
+            ridList = new RAWINPUTDEVICELIST[deviceCount];
+            res = Win32.Function.GetRawInputDeviceList(ridList, ref deviceCount, (uint)Marshal.SizeOf(typeof(RAWINPUTDEVICELIST)));
+            if (res != deviceCount)
+            {
+                //Just give up then
+                return;
+            }
+
+            //For each our device add an node to our treeview
+            foreach (RAWINPUTDEVICELIST device in ridList)
+            {
+                string name=GetDeviceName(device.hDevice);
+                aTreeView.Nodes.Add(name, name);
+            }
+
+            //TreeNode node = null;
+
+        }
 
     }
 }
