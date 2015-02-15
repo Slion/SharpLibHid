@@ -28,5 +28,38 @@ namespace Hid
                     return null;
             }
         }
+
+        /// <summary>
+        /// Provide the type for the usage corresponding to the given usage page.
+        /// </summary>
+        /// <param name="aUsagePage"></param>
+        /// <returns></returns>
+        public static Type UsageType(UsagePage aUsagePage)
+        {
+            switch (aUsagePage)
+            {
+                case UsagePage.GenericDesktopControls:
+                    return typeof(UsageTables.GenericDesktop);
+
+                case UsagePage.Consumer:
+                    return typeof(UsageTables.ConsumerControl);
+
+                case UsagePage.WindowsMediaCenterRemoteControl:
+                    return typeof(UsageTables.WindowsMediaCenterRemoteControl);
+
+                case UsagePage.Telephony:
+                    return typeof(UsageTables.TelephonyDevice);
+
+                case UsagePage.SimulationControls:
+                    return typeof(UsageTables.SimulationControl);
+
+                case UsagePage.GameControls:
+                    return typeof(UsageTables.GameControl);
+
+                default:
+                    return null;
+            }
+        }
+
     }
 }

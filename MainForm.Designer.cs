@@ -27,6 +27,8 @@ namespace RemoteControlSample
             this.columnHeaderTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPageDevices = new System.Windows.Forms.TabPage();
             this.treeViewDevices = new System.Windows.Forms.TreeView();
+            this.buttonTreeViewCollapseAll = new System.Windows.Forms.Button();
+            this.buttonTreeViewExpandAll = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabPageMessages.SuspendLayout();
             this.tabPageDevices.SuspendLayout();
@@ -139,11 +141,13 @@ namespace RemoteControlSample
             // 
             // tabPageDevices
             // 
+            this.tabPageDevices.Controls.Add(this.buttonTreeViewExpandAll);
+            this.tabPageDevices.Controls.Add(this.buttonTreeViewCollapseAll);
             this.tabPageDevices.Controls.Add(this.treeViewDevices);
             this.tabPageDevices.Location = new System.Drawing.Point(4, 22);
             this.tabPageDevices.Name = "tabPageDevices";
             this.tabPageDevices.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageDevices.Size = new System.Drawing.Size(918, 512);
+            this.tabPageDevices.Size = new System.Drawing.Size(894, 488);
             this.tabPageDevices.TabIndex = 1;
             this.tabPageDevices.Text = "Devices";
             this.tabPageDevices.UseVisualStyleBackColor = true;
@@ -154,8 +158,28 @@ namespace RemoteControlSample
             | System.Windows.Forms.AnchorStyles.Left)));
             this.treeViewDevices.Location = new System.Drawing.Point(8, 6);
             this.treeViewDevices.Name = "treeViewDevices";
-            this.treeViewDevices.Size = new System.Drawing.Size(713, 498);
+            this.treeViewDevices.Size = new System.Drawing.Size(713, 474);
             this.treeViewDevices.TabIndex = 0;
+            // 
+            // buttonTreeViewCollapseAll
+            // 
+            this.buttonTreeViewCollapseAll.Location = new System.Drawing.Point(813, 35);
+            this.buttonTreeViewCollapseAll.Name = "buttonTreeViewCollapseAll";
+            this.buttonTreeViewCollapseAll.Size = new System.Drawing.Size(75, 23);
+            this.buttonTreeViewCollapseAll.TabIndex = 1;
+            this.buttonTreeViewCollapseAll.Text = "Collapse All";
+            this.buttonTreeViewCollapseAll.UseVisualStyleBackColor = true;
+            this.buttonTreeViewCollapseAll.Click += new System.EventHandler(this.buttonTreeViewCollapseAll_Click);
+            // 
+            // buttonTreeViewExpandAll
+            // 
+            this.buttonTreeViewExpandAll.Location = new System.Drawing.Point(813, 6);
+            this.buttonTreeViewExpandAll.Name = "buttonTreeViewExpandAll";
+            this.buttonTreeViewExpandAll.Size = new System.Drawing.Size(75, 23);
+            this.buttonTreeViewExpandAll.TabIndex = 2;
+            this.buttonTreeViewExpandAll.Text = "Expand All";
+            this.buttonTreeViewExpandAll.UseVisualStyleBackColor = true;
+            this.buttonTreeViewExpandAll.Click += new System.EventHandler(this.buttonTreeViewExpandAll_Click);
             // 
             // MainForm
             // 
@@ -174,6 +198,9 @@ namespace RemoteControlSample
 
         }
         #endregion Windows Form Designer generated code
+
+        private System.Windows.Forms.Button buttonTreeViewExpandAll;
+        private System.Windows.Forms.Button buttonTreeViewCollapseAll;
 
     }
 }
