@@ -39,6 +39,7 @@ namespace Hid
         //Capabilities
         public HIDP_CAPS Capabilities { get { return iCapabilities; } }
         private HIDP_CAPS iCapabilities;
+        public string InputCapabilitiesDescription { get; private set; }
         //Input Button Capabilities
         public HIDP_BUTTON_CAPS[] InputButtonCapabilities { get { return iInputButtonCapabilities; } }
         private HIDP_BUTTON_CAPS[] iInputButtonCapabilities;
@@ -138,7 +139,7 @@ namespace Hid
 
             handle.Close();
 
-            SetFriendlyName();
+            SetFriendlyName();            
 
             //Get our HID descriptor pre-parsed data
             PreParsedData = Win32.RawInput.GetPreParsedData(hRawInputDevice);
@@ -156,6 +157,8 @@ namespace Hid
             {
                 throw new Exception("HidDevice: HidP_GetCaps failed: " + status.ToString());
             }
+
+            SetInputCapabilitiesDescription();
 
             //Get input button caps if needed
             if (Capabilities.NumberInputButtonCaps > 0)
@@ -180,10 +183,14 @@ namespace Hid
                     throw new Exception("HidDevice: HidP_GetValueCaps failed: " + status.ToString());
                 }
             }
+        }
 
-
-            
-
+        /// <summary>
+        /// 
+        /// </summary>
+        void SetInputCapabilitiesDescription()
+        {
+            InputCapabilitiesDescription = "[ Input Capabilities ] Button: " + Capabilities.NumberInputButtonCaps + " - Value: " + Capabilities.NumberInputValueCaps + " - Data indices: " + Capabilities.NumberInputDataIndices;
         }
 
         /// <summary>

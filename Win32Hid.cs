@@ -112,7 +112,6 @@ namespace Win32
     [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public struct HIDP_CAPS
     {
-
         /// USAGE->USHORT->unsigned short
         public ushort Usage;
 
