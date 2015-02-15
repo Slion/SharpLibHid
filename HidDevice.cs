@@ -280,7 +280,7 @@ namespace Hid
         {
             get
             {
-                return ((UsagePage)iCapabilities.UsagePage == UsagePage.GenericDesktopControls && (UsageCollectionGenericDesktop)iCapabilities.Usage == UsageCollectionGenericDesktop.GamePad);
+                return ((UsagePage)iCapabilities.UsagePage == UsagePage.GenericDesktopControls && (UsageCollection.GenericDesktop)iCapabilities.Usage == UsageCollection.GenericDesktop.GamePad);
             }
         }
 

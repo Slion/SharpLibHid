@@ -321,11 +321,11 @@ namespace Hid
                 switch (usagePage)
                 {
                     case Hid.UsagePage.Consumer:
-                        usageText += ((Hid.UsageTables.ConsumerControl)usage).ToString();
+                        usageText += ((Hid.Usage.ConsumerControl)usage).ToString();
                         break;
 
                     case Hid.UsagePage.WindowsMediaCenterRemoteControl:
-                        usageText += ((Hid.UsageTables.WindowsMediaCenterRemoteControl)usage).ToString();
+                        usageText += ((Hid.Usage.WindowsMediaCenterRemoteControl)usage).ToString();
                         break;
 
                     default:

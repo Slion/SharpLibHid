@@ -127,12 +127,12 @@ namespace RemoteControlSample
                 //labelButtonName.Text = e.Button.ToString();
                 processed = true;
             }
-            else if (e.MceButton != Hid.UsageTables.WindowsMediaCenterRemoteControl.Null)
+            else if (e.MceButton != Hid.Usage.WindowsMediaCenterRemoteControl.Null)
             {
                 //Display MCE button name
                 //labelButtonName.Text = e.MceButton.ToString();
                 //Check if this is an HP extension
-                if (Enum.IsDefined(typeof(Hid.UsageTables.HpWindowsMediaCenterRemoteControl), (ushort)e.MceButton))
+                if (Enum.IsDefined(typeof(Hid.Usage.HpWindowsMediaCenterRemoteControl), (ushort)e.MceButton))
                 {
                     //Also display HP button name
                     //labelButtonName.Text += " / HP:" + ((Hid.UsageTables.HpWindowsMediaCenterRemoteControl)e.MceButton).ToString();
@@ -140,7 +140,7 @@ namespace RemoteControlSample
 
                 processed = true;                
             }
-            else if (e.ConsumerControl != Hid.UsageTables.ConsumerControl.Null)
+            else if (e.ConsumerControl != Hid.Usage.ConsumerControl.Null)
             {
                 //Display consumer control name
                 //labelButtonName.Text = e.ConsumerControl.ToString();
