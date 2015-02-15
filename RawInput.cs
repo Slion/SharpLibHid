@@ -202,6 +202,11 @@ namespace Win32
                     node.Nodes.Add("UsagePage / UsageCollection: 0x" + hidDevice.Info.hid.usUsagePage.ToString("X4") + " / 0x" + hidDevice.Info.hid.usUsage.ToString("X4"));
                 }
 
+                if (hidDevice.InputCapabilitiesDescription != null)
+                {
+                    node.Nodes.Add(hidDevice.InputCapabilitiesDescription);
+                }
+                
                 node.Nodes.Add(hidDevice.Name);
             }
         }
