@@ -104,6 +104,7 @@ namespace RemoteControlSample
             {
                 //We are in the proper thread
                 listViewEvents.Items.Insert(0, aHidEvent.ToListViewItem());
+                toolStripStatusLabelDevice.Text = aHidEvent.Device.FriendlyName;
             }
         }
 
