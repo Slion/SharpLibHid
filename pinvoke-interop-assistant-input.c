@@ -139,3 +139,16 @@ HidP_GetValueCaps (
        PUSHORT              ValueCapsLength,
           PHIDP_PREPARSED_DATA PreparsedData
 );
+
+NTSTATUS __stdcall
+HidP_GetUsageValue (
+     HIDP_REPORT_TYPE ReportType,
+     USAGE UsagePage,
+     USHORT LinkCollection,
+     USAGE Usage,
+     PULONG UsageValue,
+     PHIDP_PREPARSED_DATA PreparsedData,
+     PCHAR Report,
+     ULONG ReportLength
+    );
+
