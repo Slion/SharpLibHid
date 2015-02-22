@@ -42,6 +42,20 @@ namespace Win32
         [System.Runtime.InteropServices.DllImportAttribute("hid.dll", EntryPoint = "HidP_GetValueCaps", CallingConvention = System.Runtime.InteropServices.CallingConvention.StdCall)]
         public static extern HidStatus HidP_GetValueCaps(HIDP_REPORT_TYPE ReportType, [Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] HIDP_VALUE_CAPS[] ValueCaps, ref ushort ValueCapsLength, System.IntPtr PreparsedData);
 
+        /// Return Type: NTSTATUS->LONG->int
+        ///ReportType: HIDP_REPORT_TYPE->_HIDP_REPORT_TYPE
+        ///UsagePage: USAGE->USHORT->unsigned short
+        ///LinkCollection: USHORT->unsigned short
+        ///Usage: USAGE->USHORT->unsigned short
+        ///UsageValue: PULONG->ULONG*
+        ///PreparsedData: PHIDP_PREPARSED_DATA->_HIDP_PREPARSED_DATA*
+        ///Report: PCHAR->CHAR*
+        ///ReportLength: ULONG->unsigned int
+        [System.Runtime.InteropServices.DllImportAttribute("hid.dll", EntryPoint = "HidP_GetUsageValue", CallingConvention = System.Runtime.InteropServices.CallingConvention.StdCall)]
+        public static extern int HidP_GetUsageValue(HIDP_REPORT_TYPE ReportType, ushort UsagePage, ushort LinkCollection, ushort Usage, ref uint UsageValue, System.IntPtr PreparsedData, System.IntPtr Report, uint ReportLength);
+
+
+
     }
 
 
