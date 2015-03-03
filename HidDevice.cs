@@ -239,12 +239,12 @@ namespace Hid
 
             if (Product != null && Product.Length > 1)
             {
-                //Add the devices with a proper name at the top
+                //This device as a proper name, use it
                 FriendlyName = Product + suffix;
             }
             else
             {
-                //Add other once at the bottom
+                //No proper name just use the device ID instead
                 FriendlyName = "0x" + ProductId.ToString("X4") + suffix;
             }
 

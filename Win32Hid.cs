@@ -52,7 +52,7 @@ namespace Win32
         ///Report: PCHAR->CHAR*
         ///ReportLength: ULONG->unsigned int
         [System.Runtime.InteropServices.DllImportAttribute("hid.dll", EntryPoint = "HidP_GetUsageValue", CallingConvention = System.Runtime.InteropServices.CallingConvention.StdCall)]
-        public static extern int HidP_GetUsageValue(HIDP_REPORT_TYPE ReportType, ushort UsagePage, ushort LinkCollection, ushort Usage, ref uint UsageValue, System.IntPtr PreparsedData, System.IntPtr Report, uint ReportLength);
+        public static extern HidStatus HidP_GetUsageValue(HIDP_REPORT_TYPE ReportType, ushort UsagePage, ushort LinkCollection, ushort Usage, ref uint UsageValue, System.IntPtr PreparsedData, System.IntPtr Report, uint ReportLength);
 
 
 
