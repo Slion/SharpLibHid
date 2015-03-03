@@ -189,7 +189,7 @@ namespace Win32
                 else
                 {
                     //Add other once at the bottom
-                    node = aTreeView.Nodes.Add(hidDevice.Name, "0x" + hidDevice.FriendlyName);
+                    node = aTreeView.Nodes.Add(hidDevice.Name, hidDevice.FriendlyName);
                 }
 
                 node.Nodes.Add("Manufacturer: " + hidDevice.Manufacturer);
