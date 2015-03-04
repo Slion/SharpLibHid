@@ -179,7 +179,7 @@ namespace Devices.RemoteControl
             // remote device. See http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwmt/html/remote_control.asp
             // for the vendor defined usage page.
 
-            RAWINPUTDEVICE[] rid = new RAWINPUTDEVICE[4];
+            RAWINPUTDEVICE[] rid = new RAWINPUTDEVICE[6];
 
             int i = 0;
             rid[i].usUsagePage = (ushort)Hid.UsagePage.WindowsMediaCenterRemoteControl;
@@ -205,21 +205,21 @@ namespace Devices.RemoteControl
             rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             rid[i].hwndTarget = aHWND;
 
-			//i++;
+			i++;
 			rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControls;
 			rid[i].usUsage = (ushort)Hid.UsageCollection.GenericDesktop.GamePad;
 			rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
 			rid[i].hwndTarget = aHWND;
 
-            //i++;
-            //rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControls;
-            //rid[i].usUsage = (ushort)Hid.UsageCollectionGenericDesktop.Keyboard;
+            i++;
+            rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControls;
+            rid[i].usUsage = (ushort)Hid.UsageCollection.GenericDesktop.Keyboard;
             //rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
-            //rid[i].hwndTarget = aHWND;
+            rid[i].hwndTarget = aHWND;
 
             //i++;
             //rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControls;
-            //rid[i].usUsage = (ushort)Hid.UsageCollectionGenericDesktop.Mouse;
+            //rid[i].usUsage = (ushort)Hid.UsageCollection.GenericDesktop.Mouse;
             //rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             //rid[i].hwndTarget = aHWND;
 

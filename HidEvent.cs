@@ -108,12 +108,17 @@ namespace Hid
                 RAWINPUT rawInput = new RAWINPUT();
                 if (!Win32.RawInput.GetRawInputData(aMessage.LParam, ref rawInput, ref rawInputBuffer))
                 {
+                    Debug.WriteLine("GetRawInputData failed!");
                     return;
                 }
 
-
-                //Get various information about this HID device
-                Device = new Hid.HidDevice(rawInput.header.hDevice);
+                //Our device can actually be null.
+                //This is notably happening for some keyboard events
+                if (rawInput.header.hDevice != IntPtr.Zero)
+                {
+                    //Get various information about this HID device
+                    Device = new Hid.HidDevice(rawInput.header.hDevice);
+                }
 
                 if (rawInput.header.dwType == Win32.RawInputDeviceType.RIM_TYPEHID)  //Check that our raw input is HID                        
                 {
@@ -204,12 +209,15 @@ namespace Hid
 
                     Debug.WriteLine("WM_INPUT source device is Keyboard.");
                     // do keyboard handling...
-                    Debug.WriteLine("Type: " + Device.Info.keyboard.dwType.ToString());
-                    Debug.WriteLine("SubType: " + Device.Info.keyboard.dwSubType.ToString());
-                    Debug.WriteLine("Mode: " + Device.Info.keyboard.dwKeyboardMode.ToString());
-                    Debug.WriteLine("Number of function keys: " + Device.Info.keyboard.dwNumberOfFunctionKeys.ToString());
-                    Debug.WriteLine("Number of indicators: " + Device.Info.keyboard.dwNumberOfIndicators.ToString());
-                    Debug.WriteLine("Number of keys total: " + Device.Info.keyboard.dwNumberOfKeysTotal.ToString());
+                    if (Device != null)
+                    {
+                        Debug.WriteLine("Type: " + Device.Info.keyboard.dwType.ToString());
+                        Debug.WriteLine("SubType: " + Device.Info.keyboard.dwSubType.ToString());
+                        Debug.WriteLine("Mode: " + Device.Info.keyboard.dwKeyboardMode.ToString());
+                        Debug.WriteLine("Number of function keys: " + Device.Info.keyboard.dwNumberOfFunctionKeys.ToString());
+                        Debug.WriteLine("Number of indicators: " + Device.Info.keyboard.dwNumberOfIndicators.ToString());
+                        Debug.WriteLine("Number of keys total: " + Device.Info.keyboard.dwNumberOfKeysTotal.ToString());
+                    }
                 }
             }
             finally
@@ -272,7 +280,12 @@ namespace Hid
                 Debug.WriteLine("==== Invalid HidEvent");
                 return;
             }
-            Device.DebugWrite();
+
+            if (Device!=null)
+            {
+                Device.DebugWrite();
+            }
+            
             if (IsGeneric) Debug.WriteLine("==== Generic");
             if (IsKeyboard) Debug.WriteLine("==== Keyboard");
             if (IsMouse) Debug.WriteLine("==== Mouse");
@@ -292,6 +305,11 @@ namespace Hid
         /// <returns></returns>
         public string InputReportString()
         {
+            if (InputReport == null)
+            {
+                return "null";
+            }
+
             string hidDump = "";
             foreach (byte b in InputReport)
             {

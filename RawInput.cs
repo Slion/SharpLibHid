@@ -151,7 +151,7 @@ namespace Win32
 
 
         /// <summary>
-        /// 
+        /// Populate the given tree-view control with our Raw Input Devices.
         /// </summary>
         /// <param name="aTreeView"></param>
         public static void PopulateDeviceList(TreeView aTreeView)

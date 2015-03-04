@@ -26,15 +26,18 @@ namespace RemoteControlSample
             this.columnHeaderRepeat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPageDevices = new System.Windows.Forms.TabPage();
-            this.treeViewDevices = new System.Windows.Forms.TreeView();
-            this.buttonTreeViewCollapseAll = new System.Windows.Forms.Button();
             this.buttonTreeViewExpandAll = new System.Windows.Forms.Button();
+            this.buttonTreeViewCollapseAll = new System.Windows.Forms.Button();
+            this.treeViewDevices = new System.Windows.Forms.TreeView();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelDevice = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tabPageTests = new System.Windows.Forms.TabPage();
+            this.textBoxTests = new System.Windows.Forms.TextBox();
             this.tabControl.SuspendLayout();
             this.tabPageMessages.SuspendLayout();
             this.tabPageDevices.SuspendLayout();
             this.statusStrip.SuspendLayout();
+            this.tabPageTests.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelButtonName
@@ -73,6 +76,7 @@ namespace RemoteControlSample
             | System.Windows.Forms.AnchorStyles.Left)));
             this.tabControl.Controls.Add(this.tabPageMessages);
             this.tabControl.Controls.Add(this.tabPageDevices);
+            this.tabControl.Controls.Add(this.tabPageTests);
             this.tabControl.Location = new System.Drawing.Point(12, 12);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
@@ -88,7 +92,7 @@ namespace RemoteControlSample
             this.tabPageMessages.Location = new System.Drawing.Point(4, 22);
             this.tabPageMessages.Name = "tabPageMessages";
             this.tabPageMessages.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageMessages.Size = new System.Drawing.Size(894, 488);
+            this.tabPageMessages.Size = new System.Drawing.Size(894, 506);
             this.tabPageMessages.TabIndex = 0;
             this.tabPageMessages.Text = "Messages";
             this.tabPageMessages.UseVisualStyleBackColor = true;
@@ -109,7 +113,7 @@ namespace RemoteControlSample
             this.listViewEvents.GridLines = true;
             this.listViewEvents.Location = new System.Drawing.Point(8, 6);
             this.listViewEvents.Name = "listViewEvents";
-            this.listViewEvents.Size = new System.Drawing.Size(744, 474);
+            this.listViewEvents.Size = new System.Drawing.Size(744, 492);
             this.listViewEvents.TabIndex = 3;
             this.listViewEvents.UseCompatibleStateImageBehavior = false;
             this.listViewEvents.View = System.Windows.Forms.View.Details;
@@ -157,14 +161,15 @@ namespace RemoteControlSample
             this.tabPageDevices.Text = "Devices";
             this.tabPageDevices.UseVisualStyleBackColor = true;
             // 
-            // treeViewDevices
+            // buttonTreeViewExpandAll
             // 
-            this.treeViewDevices.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.treeViewDevices.Location = new System.Drawing.Point(8, 6);
-            this.treeViewDevices.Name = "treeViewDevices";
-            this.treeViewDevices.Size = new System.Drawing.Size(713, 492);
-            this.treeViewDevices.TabIndex = 0;
+            this.buttonTreeViewExpandAll.Location = new System.Drawing.Point(813, 6);
+            this.buttonTreeViewExpandAll.Name = "buttonTreeViewExpandAll";
+            this.buttonTreeViewExpandAll.Size = new System.Drawing.Size(75, 23);
+            this.buttonTreeViewExpandAll.TabIndex = 2;
+            this.buttonTreeViewExpandAll.Text = "Expand All";
+            this.buttonTreeViewExpandAll.UseVisualStyleBackColor = true;
+            this.buttonTreeViewExpandAll.Click += new System.EventHandler(this.buttonTreeViewExpandAll_Click);
             // 
             // buttonTreeViewCollapseAll
             // 
@@ -176,15 +181,14 @@ namespace RemoteControlSample
             this.buttonTreeViewCollapseAll.UseVisualStyleBackColor = true;
             this.buttonTreeViewCollapseAll.Click += new System.EventHandler(this.buttonTreeViewCollapseAll_Click);
             // 
-            // buttonTreeViewExpandAll
+            // treeViewDevices
             // 
-            this.buttonTreeViewExpandAll.Location = new System.Drawing.Point(813, 6);
-            this.buttonTreeViewExpandAll.Name = "buttonTreeViewExpandAll";
-            this.buttonTreeViewExpandAll.Size = new System.Drawing.Size(75, 23);
-            this.buttonTreeViewExpandAll.TabIndex = 2;
-            this.buttonTreeViewExpandAll.Text = "Expand All";
-            this.buttonTreeViewExpandAll.UseVisualStyleBackColor = true;
-            this.buttonTreeViewExpandAll.Click += new System.EventHandler(this.buttonTreeViewExpandAll_Click);
+            this.treeViewDevices.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.treeViewDevices.Location = new System.Drawing.Point(8, 6);
+            this.treeViewDevices.Name = "treeViewDevices";
+            this.treeViewDevices.Size = new System.Drawing.Size(713, 492);
+            this.treeViewDevices.TabIndex = 0;
             // 
             // statusStrip
             // 
@@ -202,6 +206,24 @@ namespace RemoteControlSample
             this.toolStripStatusLabelDevice.Size = new System.Drawing.Size(61, 17);
             this.toolStripStatusLabelDevice.Text = "No Device";
             // 
+            // tabPageTests
+            // 
+            this.tabPageTests.Controls.Add(this.textBoxTests);
+            this.tabPageTests.Location = new System.Drawing.Point(4, 22);
+            this.tabPageTests.Name = "tabPageTests";
+            this.tabPageTests.Size = new System.Drawing.Size(894, 506);
+            this.tabPageTests.TabIndex = 2;
+            this.tabPageTests.Text = "Tests";
+            this.tabPageTests.UseVisualStyleBackColor = true;
+            // 
+            // textBoxTests
+            // 
+            this.textBoxTests.Location = new System.Drawing.Point(4, 4);
+            this.textBoxTests.Multiline = true;
+            this.textBoxTests.Name = "textBoxTests";
+            this.textBoxTests.Size = new System.Drawing.Size(887, 499);
+            this.textBoxTests.TabIndex = 0;
+            // 
             // MainForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -218,6 +240,8 @@ namespace RemoteControlSample
             this.tabPageDevices.ResumeLayout(false);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
+            this.tabPageTests.ResumeLayout(false);
+            this.tabPageTests.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -228,6 +252,8 @@ namespace RemoteControlSample
         private System.Windows.Forms.Button buttonTreeViewCollapseAll;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelDevice;
+        private System.Windows.Forms.TabPage tabPageTests;
+        private System.Windows.Forms.TextBox textBoxTests;
 
     }
 }
