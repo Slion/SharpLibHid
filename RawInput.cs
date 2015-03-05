@@ -104,7 +104,7 @@ namespace Win32
             int result = Win32.Function.GetRawInputDeviceInfo(hDevice, RawInputDeviceInfoType.RIDI_PREPARSEDDATA, IntPtr.Zero, ref ppDataSize);
             if (result != 0)
             {
-                Debug.WriteLine("Failed to get raw input pre-parsed data size" + result + Marshal.GetLastWin32Error());
+                Debug.WriteLine("Failed to get raw input pre-parsed data size: " + result + " : " + Marshal.GetLastWin32Error());
                 return IntPtr.Zero;
             }
 
@@ -112,7 +112,7 @@ namespace Win32
             result = Win32.Function.GetRawInputDeviceInfo(hDevice, RawInputDeviceInfoType.RIDI_PREPARSEDDATA, ppData, ref ppDataSize);
             if (result <= 0)
             {
-                Debug.WriteLine("Failed to get raw input pre-parsed data" + result + Marshal.GetLastWin32Error());
+                Debug.WriteLine("Failed to get raw input pre-parsed data: " + result + " : " + Marshal.GetLastWin32Error());
                 return IntPtr.Zero;
             }
             return ppData;

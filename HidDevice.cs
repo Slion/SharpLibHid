@@ -243,9 +243,20 @@ namespace Hid
                 FriendlyName = Product + suffix;
             }
             else
-            {
-                //No proper name just use the device ID instead
-                FriendlyName = "0x" + ProductId.ToString("X4") + suffix;
+            {   
+                //Extract friendly name from name
+                char[] delimiterChars = { '#', '&'};
+                string[] words = Name.Split(delimiterChars);
+                if (words.Length >= 2)
+                {
+                    //Use our name sub-string to describe this device
+                    FriendlyName = words[1] + " - 0x" + ProductId.ToString("X4") + suffix;
+                }
+                else
+                {
+                    //No proper name just use the device ID instead
+                    FriendlyName = "0x" + ProductId.ToString("X4") + suffix;
+                }
             }
 
         }
