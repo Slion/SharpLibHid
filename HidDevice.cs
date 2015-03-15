@@ -1,3 +1,23 @@
+//
+// Copyright (C) 2014-2015 Stéphane Lenclud.
+//
+// This file is part of SharpLibHid.
+//
+// SharpDisplayManager is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// SharpDisplayManager is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with SharpDisplayManager.  If not, see <http://www.gnu.org/licenses/>.
+//
+
+
 using System;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
@@ -6,7 +26,7 @@ using System.Text;
 using Microsoft.Win32.SafeHandles;
 using Win32;
 
-namespace Hid
+namespace SharpLibHid
 {
     /// <summary>
     /// Represent a HID device.
@@ -224,12 +244,12 @@ namespace Hid
             if (Info.dwType == RawInputDeviceType.RIM_TYPEHID)
             {
                 //Process usage page
-                if (Enum.IsDefined(typeof(Hid.UsagePage), Info.hid.usUsagePage))
+                if (Enum.IsDefined(typeof(UsagePage), Info.hid.usUsagePage))
                 {
                     //We know this usage page, add its name
-                    Hid.UsagePage usagePage = (Hid.UsagePage)Info.hid.usUsagePage;
+                    UsagePage usagePage = (UsagePage)Info.hid.usUsagePage;
                     suffix += " ( " + usagePage.ToString() + ", ";
-                    usageCollectionType = Hid.Utils.UsageCollectionType(usagePage);
+                    usageCollectionType = Utils.UsageCollectionType(usagePage);
                 }
                 else
                 {
