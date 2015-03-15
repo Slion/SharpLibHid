@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>SharpLibHid</id>
+        <version>1.0.0</version>
+        <authors>Stéphane Lenclud</authors>
+        <owners>Stéphane Lenclud</owners>
+        <projectUrl>http://hg.slions.net/SharpLibHid</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>C# HID libray designed to handle raw input. Most useful to support IR remote control and gamepad inputs.</description>
+        <copyright>Stéphane Lenclud</copyright>
+        <tags>HID</tags>
+    </metadata>
+    <files>
+        <file src="bin\Release\SharpLibHid.dll" target="lib\net20\SharpLibHid.dll" />
+    </files>
+</package>
