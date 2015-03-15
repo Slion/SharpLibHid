@@ -207,6 +207,10 @@ namespace Win32
                     node.Nodes.Add(hidDevice.InputCapabilitiesDescription);
                 }
 
+                //Add button count
+                node.Nodes.Add("Button Count: " + hidDevice.ButtonCount);
+
+                //Those can be joystick/gamepad axis
                 if (hidDevice.InputValueCapabilities != null)
                 {
                     foreach (HIDP_VALUE_CAPS caps in hidDevice.InputValueCapabilities)

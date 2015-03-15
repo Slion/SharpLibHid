@@ -302,10 +302,10 @@ namespace Win32
 
         /// Union Range/NotRange
         [FieldOffset(56)]
-        HIDP_BUTTON_CAPS_RANGE Range;
+        public HIDP_BUTTON_CAPS_RANGE Range;
 
         [FieldOffset(56)]
-        HIDP_BUTTON_CAPS_NOT_RANGE NotRange;       
+        public HIDP_BUTTON_CAPS_NOT_RANGE NotRange;       
     }
 
     /// <summary>

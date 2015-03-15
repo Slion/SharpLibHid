@@ -47,6 +47,9 @@ namespace Hid
         public HIDP_VALUE_CAPS[] InputValueCapabilities { get { return iInputValueCapabilities; } }
         private HIDP_VALUE_CAPS[] iInputValueCapabilities;
 
+        //
+        public int ButtonCount { get; private set; }
+
         /// <summary>
         /// Class constructor will fetch this object properties from HID sub system.
         /// </summary>
@@ -167,6 +170,8 @@ namespace Hid
                 {
                     throw new Exception("HidDevice: HidP_GetButtonCaps failed: " + status.ToString());
                 }
+
+                ComputeButtonCount();
             }
 
             //Get input value caps if needed
@@ -181,6 +186,23 @@ namespace Hid
                 }
             }
         }
+
+
+        /// <summary>
+        /// Useful for gamepads.
+        /// </summary>
+        void ComputeButtonCount()
+        {
+            ButtonCount = 0;
+            foreach (HIDP_BUTTON_CAPS bc in iInputButtonCapabilities)
+            {
+                if (bc.IsRange)
+                {
+                    ButtonCount += (bc.Range.UsageMax - bc.Range.UsageMin + 1);
+                }
+            }            
+        }
+
 
         /// <summary>
         /// 
@@ -273,7 +295,8 @@ namespace Hid
         }
 
         /// <summary>
-        /// 
+        /// Provide a description for the given capabilities.
+        /// Notably describes axis on a gamepad/joystick.
         /// </summary>
         /// <param name="aCaps"></param>
         /// <returns></returns>
@@ -281,7 +304,20 @@ namespace Hid
         {
             if (!aCaps.IsRange && Enum.IsDefined(typeof(UsagePage), Capabilities.UsagePage))
             {
-                return "Input Value: " + Enum.GetName(Utils.UsageType((UsagePage)Capabilities.UsagePage), aCaps.NotRange.Usage);
+                Type usageType=Utils.UsageType((UsagePage)Capabilities.UsagePage);
+                string name = Enum.GetName(usageType, aCaps.NotRange.Usage);
+                if (name == null)
+                {
+                    //Could not find that usage in our enum.
+                    //Provide a relevant warning instead.
+                    name = "Usage 0x" + aCaps.NotRange.Usage.ToString("X2") + " not defined in " + usageType.Name;
+                }
+                else
+                {
+                    //Prepend our usage type name
+                    name = usageType.Name + "." + name;
+                }
+                return "Input Value: " + name;
             }
 
             return null;

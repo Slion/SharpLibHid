@@ -177,5 +177,11 @@ namespace RemoteControlSample
             treeViewDevices.ExpandAll();
         }
 
+        private void buttonRefresh_Click(object sender, EventArgs e)
+        {
+            treeViewDevices.Nodes.Clear();
+            Win32.RawInput.PopulateDeviceList(treeViewDevices);
+        }
+
 	}
 }

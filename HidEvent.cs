@@ -22,6 +22,9 @@ namespace Hid
         public bool IsBackground { get { return !IsForeground; } }
         public bool IsMouse { get; private set; }
         public bool IsKeyboard { get; private set; }
+        /// <summary>
+        /// If this not a mouse or keyboard event then it's a generic HID event.
+        /// </summary>
         public bool IsGeneric { get; private set; }
         public bool IsButtonDown { get { return Usages.Count == 1 && Usages[0] != 0; } }
         public bool IsButtonUp { get { return Usages.Count == 0; } }
@@ -29,6 +32,8 @@ namespace Hid
         public uint RepeatCount { get; private set; }
 
         public HidDevice Device { get; private set; }
+        public RAWINPUT RawInput { get {return iRawInput;} } 
+        private RAWINPUT iRawInput;
 
         public ushort UsagePage { get; private set; }
         public ushort UsageCollection { get; private set; }
@@ -76,7 +81,6 @@ namespace Hid
             IsKeyboard = false;
             IsGeneric = false;
 
-
             Time = DateTime.Now;
             OriginalTime = DateTime.Now;
             Timer = new System.Timers.Timer();
@@ -105,8 +109,8 @@ namespace Hid
             try
             {
                 //Fetch raw input
-                RAWINPUT rawInput = new RAWINPUT();
-                if (!Win32.RawInput.GetRawInputData(aMessage.LParam, ref rawInput, ref rawInputBuffer))
+                iRawInput = new RAWINPUT();
+                if (!Win32.RawInput.GetRawInputData(aMessage.LParam, ref iRawInput, ref rawInputBuffer))
                 {
                     Debug.WriteLine("GetRawInputData failed!");
                     return;
@@ -114,13 +118,13 @@ namespace Hid
 
                 //Our device can actually be null.
                 //This is notably happening for some keyboard events
-                if (rawInput.header.hDevice != IntPtr.Zero)
+                if (RawInput.header.hDevice != IntPtr.Zero)
                 {
                     //Get various information about this HID device
-                    Device = new Hid.HidDevice(rawInput.header.hDevice);
+                    Device = new Hid.HidDevice(RawInput.header.hDevice);
                 }
 
-                if (rawInput.header.dwType == Win32.RawInputDeviceType.RIM_TYPEHID)  //Check that our raw input is HID                        
+                if (RawInput.header.dwType == Win32.RawInputDeviceType.RIM_TYPEHID)  //Check that our raw input is HID                        
                 {
                     IsGeneric = true;
 
@@ -130,31 +134,31 @@ namespace Hid
                     UsagePage = Device.Info.hid.usUsagePage;
                     UsageCollection = Device.Info.hid.usUsage;
 
-                    if (!(rawInput.hid.dwSizeHid > 1     //Make sure our HID msg size more than 1. In fact the first ushort is irrelevant to us for now
-                        && rawInput.hid.dwCount > 0))    //Check that we have at least one HID msg
+                    if (!(RawInput.hid.dwSizeHid > 1     //Make sure our HID msg size more than 1. In fact the first ushort is irrelevant to us for now
+                        && RawInput.hid.dwCount > 0))    //Check that we have at least one HID msg
                     {
                         return;
                     }
 
                     //Allocate a buffer for one HID input
-                    InputReport = new byte[rawInput.hid.dwSizeHid];
+                    InputReport = new byte[RawInput.hid.dwSizeHid];
 
-                    Debug.WriteLine("Raw input contains " + rawInput.hid.dwCount + " HID input report(s)");
+                    Debug.WriteLine("Raw input contains " + RawInput.hid.dwCount + " HID input report(s)");
 
                     //For each HID input report in our raw input
-                    for (int i = 0; i < rawInput.hid.dwCount; i++)
+                    for (int i = 0; i < RawInput.hid.dwCount; i++)
                     {
                         //Compute the address from which to copy our HID input
                         int hidInputOffset = 0;
                         unsafe
                         {
                             byte* source = (byte*)rawInputBuffer;
-                            source += sizeof(RAWINPUTHEADER) + sizeof(RAWHID) + (rawInput.hid.dwSizeHid * i);
+                            source += sizeof(RAWINPUTHEADER) + sizeof(RAWHID) + (RawInput.hid.dwSizeHid * i);
                             hidInputOffset = (int)source;
                         }
 
                         //Copy HID input into our buffer
-                        Marshal.Copy(new IntPtr(hidInputOffset), InputReport, 0, (int)rawInput.hid.dwSizeHid);
+                        Marshal.Copy(new IntPtr(hidInputOffset), InputReport, 0, (int)RawInput.hid.dwSizeHid);
 
                         //Print HID input report in our debug output
                         //string hidDump = "HID input report: " + InputReportString();
@@ -196,14 +200,14 @@ namespace Hid
                         }
                     }
                 }
-                else if (rawInput.header.dwType == RawInputDeviceType.RIM_TYPEMOUSE)
+                else if (RawInput.header.dwType == RawInputDeviceType.RIM_TYPEMOUSE)
                 {
                     IsMouse = true;
 
                     Debug.WriteLine("WM_INPUT source device is Mouse.");
                     // do mouse handling...
                 }
-                else if (rawInput.header.dwType == RawInputDeviceType.RIM_TYPEKEYBOARD)
+                else if (RawInput.header.dwType == RawInputDeviceType.RIM_TYPEKEYBOARD)
                 {
                     IsKeyboard = true;
 
