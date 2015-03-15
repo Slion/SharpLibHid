@@ -17,7 +17,7 @@
 // along with SharpDisplayManager.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-namespace SharpLibHid
+namespace SharpLib.Hid
 {
     /// <summary>
     /// From USB HID usage tables.

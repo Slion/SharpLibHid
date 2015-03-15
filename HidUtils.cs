@@ -21,7 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharpLibHid
+namespace SharpLib.Hid
 {
     static class Utils
     {

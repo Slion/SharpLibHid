@@ -24,13 +24,13 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.Win32.SafeHandles;
-using Win32;
+using SharpLib.Win32;
 using System.Collections.Generic;
 using System.Timers;
-using SharpLibHid.Usage;
+using SharpLib.Hid.Usage;
 
 
-namespace SharpLibHid
+namespace SharpLib.Hid
 {
     /// <summary>
     /// We provide utility functions to interpret gamepad dpad state.
@@ -433,7 +433,7 @@ namespace SharpLibHid
         /// <returns></returns>
         public DirectionPadState GetDirectionPadState()
         {
-            int index=GetValueCapabilitiesIndex((ushort)SharpLibHid.UsagePage.GenericDesktopControls, (ushort)GenericDesktop.HatSwitch);
+            int index=GetValueCapabilitiesIndex((ushort)Hid.UsagePage.GenericDesktopControls, (ushort)GenericDesktop.HatSwitch);
             if (index < 0)
             {
                 //No hat switch found
@@ -529,11 +529,11 @@ namespace SharpLibHid
                 UsagePage usagePage = (UsagePage)UsagePage;
                 switch (usagePage)
                 {
-                    case SharpLibHid.UsagePage.Consumer:
+                    case Hid.UsagePage.Consumer:
                         usageText += ((ConsumerControl)usage).ToString();
                         break;
 
-                    case SharpLibHid.UsagePage.WindowsMediaCenterRemoteControl:
+                    case Hid.UsagePage.WindowsMediaCenterRemoteControl:
                         usageText += ((WindowsMediaCenterRemoteControl)usage).ToString();
                         break;
 

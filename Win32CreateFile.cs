@@ -21,7 +21,7 @@ using System;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 
-namespace Win32
+namespace SharpLib.Win32
 {
 
     static partial class Function

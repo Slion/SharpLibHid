@@ -20,7 +20,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Win32
+namespace SharpLib.Win32
 {
 
     static partial class Function
@@ -372,7 +372,7 @@ namespace Win32
         [FieldOffset(0)]
         public uint cbSize;
         [FieldOffset(4)]
-        [MarshalAsAttribute(UnmanagedType.U4)]
+        [MarshalAs(UnmanagedType.U4)]
         public RawInputDeviceType dwType;
         [FieldOffset(8)]
         public RID_DEVICE_INFO_MOUSE mouse;

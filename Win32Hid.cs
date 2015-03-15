@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 using System.Text;
 
-namespace Win32
+namespace SharpLib.Win32
 {
 
     static partial class Function
@@ -42,7 +42,7 @@ namespace Win32
         /// Return Type: NTSTATUS->LONG->int
         ///PreparsedData: PHIDP_PREPARSED_DATA->_HIDP_PREPARSED_DATA*
         ///Capabilities: PHIDP_CAPS->_HIDP_CAPS*
-        [DllImportAttribute("hid.dll", EntryPoint = "HidP_GetCaps", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("hid.dll", EntryPoint = "HidP_GetCaps", CallingConvention = CallingConvention.StdCall)]
         public static extern HidStatus HidP_GetCaps(System.IntPtr PreparsedData, ref HIDP_CAPS Capabilities);
 
         /// Return Type: NTSTATUS->LONG->int
@@ -50,7 +50,7 @@ namespace Win32
         ///ButtonCaps: PHIDP_BUTTON_CAPS->_HIDP_BUTTON_CAPS*
         ///ButtonCapsLength: PUSHORT->USHORT*
         ///PreparsedData: PHIDP_PREPARSED_DATA->_HIDP_PREPARSED_DATA*
-        [System.Runtime.InteropServices.DllImportAttribute("hid.dll", EntryPoint = "HidP_GetButtonCaps", CallingConvention = System.Runtime.InteropServices.CallingConvention.StdCall)]
+        [DllImport("hid.dll", EntryPoint = "HidP_GetButtonCaps", CallingConvention = System.Runtime.InteropServices.CallingConvention.StdCall)]
         public static extern HidStatus HidP_GetButtonCaps(HIDP_REPORT_TYPE ReportType, [Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] HIDP_BUTTON_CAPS[] ButtonCaps, ref ushort ButtonCapsLength, System.IntPtr PreparsedData);
 
         /// Return Type: NTSTATUS->LONG->int
@@ -58,7 +58,7 @@ namespace Win32
         ///ValueCaps: PHIDP_VALUE_CAPS->_HIDP_VALUE_CAPS*
         ///ValueCapsLength: PUSHORT->USHORT*
         ///PreparsedData: PHIDP_PREPARSED_DATA->_HIDP_PREPARSED_DATA*
-        [System.Runtime.InteropServices.DllImportAttribute("hid.dll", EntryPoint = "HidP_GetValueCaps", CallingConvention = System.Runtime.InteropServices.CallingConvention.StdCall)]
+        [DllImport("hid.dll", EntryPoint = "HidP_GetValueCaps", CallingConvention = System.Runtime.InteropServices.CallingConvention.StdCall)]
         public static extern HidStatus HidP_GetValueCaps(HIDP_REPORT_TYPE ReportType, [Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] HIDP_VALUE_CAPS[] ValueCaps, ref ushort ValueCapsLength, System.IntPtr PreparsedData);
 
         /// Return Type: NTSTATUS->LONG->int
@@ -70,7 +70,7 @@ namespace Win32
         ///PreparsedData: PHIDP_PREPARSED_DATA->_HIDP_PREPARSED_DATA*
         ///Report: PCHAR->CHAR*
         ///ReportLength: ULONG->unsigned int
-        [System.Runtime.InteropServices.DllImportAttribute("hid.dll", EntryPoint = "HidP_GetUsageValue", CallingConvention = System.Runtime.InteropServices.CallingConvention.StdCall)]
+        [DllImport("hid.dll", EntryPoint = "HidP_GetUsageValue", CallingConvention = System.Runtime.InteropServices.CallingConvention.StdCall)]
         public static extern HidStatus HidP_GetUsageValue(HIDP_REPORT_TYPE ReportType, ushort UsagePage, ushort LinkCollection, ushort Usage, ref uint UsageValue, System.IntPtr PreparsedData, [MarshalAs(UnmanagedType.LPArray)] byte[] Report, uint ReportLength);
 
 
@@ -142,7 +142,7 @@ namespace Win32
     }
 
 
-    [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    [StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public struct HIDP_CAPS
     {
         /// USAGE->USHORT->unsigned short
@@ -161,7 +161,7 @@ namespace Win32
         public ushort FeatureReportByteLength;
 
         /// USHORT[17]
-        [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 17, ArraySubType = System.Runtime.InteropServices.UnmanagedType.U2)]
+        [MarshalAs(System.Runtime.InteropServices.UnmanagedType.ByValArray, SizeConst = 17, ArraySubType = System.Runtime.InteropServices.UnmanagedType.U2)]
         public ushort[] Reserved;
 
         /// USHORT->unsigned short
@@ -198,7 +198,7 @@ namespace Win32
     /// <summary>
     /// Type created in place of an anonymous struct
     /// </summary>
-    [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    [StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public struct HIDP_BUTTON_CAPS_RANGE
     {
 
@@ -230,7 +230,7 @@ namespace Win32
     /// <summary>
     /// Type created in place of an anonymous struct
     /// </summary>
-    [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    [StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public struct HIDP_BUTTON_CAPS_NOT_RANGE
     {
 
@@ -262,7 +262,7 @@ namespace Win32
     /// <summary>
     /// 
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Explicit, Pack = 1)]
+    [StructLayout(LayoutKind.Explicit, Pack = 1)]
     public struct HIDP_BUTTON_CAPS
     {
         /// USAGE->USHORT->unsigned short
@@ -275,7 +275,7 @@ namespace Win32
 
         /// BOOLEAN->BYTE->unsigned char
         [FieldOffset(3)]
-        [MarshalAsAttribute(UnmanagedType.U1)]
+        [MarshalAs(UnmanagedType.U1)]
         public bool IsAlias;
 
         /// USHORT->unsigned short
@@ -296,27 +296,27 @@ namespace Win32
 
         /// BOOLEAN->BYTE->unsigned char
         [FieldOffset(12)]
-        [MarshalAsAttribute(UnmanagedType.U1)]
+        [MarshalAs(UnmanagedType.U1)]
         public bool IsRange;
 
         /// BOOLEAN->BYTE->unsigned char
         [FieldOffset(13)]
-        [MarshalAsAttribute(UnmanagedType.U1)]
+        [MarshalAs(UnmanagedType.U1)]
         public bool IsStringRange;
 
         /// BOOLEAN->BYTE->unsigned char
         [FieldOffset(14)]
-        [MarshalAsAttribute(UnmanagedType.U1)]
+        [MarshalAs(UnmanagedType.U1)]
         public bool IsDesignatorRange;
 
         /// BOOLEAN->BYTE->unsigned char
         [FieldOffset(15)]
-        [MarshalAsAttribute(UnmanagedType.U1)]
+        [MarshalAs(UnmanagedType.U1)]
         public bool IsAbsolute;
 
         /// ULONG[10]
         [FieldOffset(16)]
-        [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = 10, ArraySubType = UnmanagedType.U4)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 10, ArraySubType = UnmanagedType.U4)]
         public uint[] Reserved;
 
         /// Union Range/NotRange
@@ -330,7 +330,7 @@ namespace Win32
     /// <summary>
     /// Type created in place of an anonymous struct
     /// </summary>
-    [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    [StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public struct HIDP_VALUE_CAPS_RANGE
     {
 
@@ -362,7 +362,7 @@ namespace Win32
     /// <summary>
     /// Type created in place of an anonymous struct
     /// </summary>
-    [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    [StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     public struct HIDP_VALUE_CAPS_NOT_RANGE
     {
 
@@ -395,7 +395,7 @@ namespace Win32
     /// <summary>
     /// 
     /// </summary>
-    [StructLayoutAttribute(LayoutKind.Explicit, Pack = 1)]
+    [StructLayout(LayoutKind.Explicit, Pack = 1)]
     public struct HIDP_VALUE_CAPS
     {
 
@@ -409,7 +409,7 @@ namespace Win32
 
         /// BOOLEAN->BYTE->unsigned char
         [FieldOffset(3)]
-        [MarshalAsAttribute(UnmanagedType.U1)]
+        [MarshalAs(UnmanagedType.U1)]
         public bool IsAlias;
 
         /// USHORT->unsigned short
@@ -430,27 +430,27 @@ namespace Win32
 
         /// BOOLEAN->BYTE->unsigned char
         [FieldOffset(12)]
-        [MarshalAsAttribute(UnmanagedType.U1)]
+        [MarshalAs(UnmanagedType.U1)]
         public bool IsRange;
 
         /// BOOLEAN->BYTE->unsigned char
         [FieldOffset(13)]
-        [MarshalAsAttribute(UnmanagedType.U1)]
+        [MarshalAs(UnmanagedType.U1)]
         public bool IsStringRange;
 
         /// BOOLEAN->BYTE->unsigned char
         [FieldOffset(14)]
-        [MarshalAsAttribute(UnmanagedType.U1)]
+        [MarshalAs(UnmanagedType.U1)]
         public bool IsDesignatorRange;
 
         /// BOOLEAN->BYTE->unsigned char
         [FieldOffset(15)]
-        [MarshalAsAttribute(UnmanagedType.U1)]
+        [MarshalAs(UnmanagedType.U1)]
         public bool IsAbsolute;
 
         /// BOOLEAN->BYTE->unsigned char
         [FieldOffset(16)]
-        [MarshalAsAttribute(UnmanagedType.U1)]
+        [MarshalAs(UnmanagedType.U1)]
         public bool HasNull;
 
         /// UCHAR->unsigned char

@@ -24,8 +24,8 @@ using System.Diagnostics;
 using System.Text;
 using Microsoft.Win32.SafeHandles;
 
-using SharpLibHid.Usage;
-using Win32;
+using SharpLib.Hid.Usage;
+using SharpLib.Win32;
 
 
 
@@ -185,7 +185,7 @@ namespace Devices.RemoteControl
         /// <returns></returns>
         public delegate bool HidUsageHandler(ushort aUsage);
 
-        public SharpLibHid.HidHandler iHidHandler;
+        public SharpLib.Hid.HidHandler iHidHandler;
 
 
         //-------------------------------------------------------------
@@ -201,38 +201,38 @@ namespace Devices.RemoteControl
             RAWINPUTDEVICE[] rid = new RAWINPUTDEVICE[6];
 
             int i = 0;
-            rid[i].usUsagePage = (ushort)SharpLibHid.UsagePage.WindowsMediaCenterRemoteControl;
-            rid[i].usUsage = (ushort)SharpLibHid.UsageCollection.WindowsMediaCenter.WindowsMediaCenterRemoteControl;
+            rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.WindowsMediaCenterRemoteControl;
+            rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.WindowsMediaCenter.WindowsMediaCenterRemoteControl;
             rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             rid[i].hwndTarget = aHWND;
 
             i++;
-            rid[i].usUsagePage = (ushort)SharpLibHid.UsagePage.Consumer;
-            rid[i].usUsage = (ushort)SharpLibHid.UsageCollection.Consumer.ConsumerControl;
+            rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.Consumer;
+            rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.Consumer.ConsumerControl;
             rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             rid[i].hwndTarget = aHWND;
 
             i++;
-            rid[i].usUsagePage = (ushort)SharpLibHid.UsagePage.Consumer;
-            rid[i].usUsage = (ushort)SharpLibHid.UsageCollection.Consumer.Selection;
+            rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.Consumer;
+            rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.Consumer.Selection;
             rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             rid[i].hwndTarget = aHWND;
 
             i++;
-            rid[i].usUsagePage = (ushort)SharpLibHid.UsagePage.GenericDesktopControls;
-            rid[i].usUsage = (ushort)SharpLibHid.UsageCollection.GenericDesktop.SystemControl;
+            rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.GenericDesktopControls;
+            rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.GenericDesktop.SystemControl;
             rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             rid[i].hwndTarget = aHWND;
 
 			i++;
-			rid[i].usUsagePage = (ushort)SharpLibHid.UsagePage.GenericDesktopControls;
-			rid[i].usUsage = (ushort)SharpLibHid.UsageCollection.GenericDesktop.GamePad;
+			rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.GenericDesktopControls;
+			rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.GenericDesktop.GamePad;
 			rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
 			rid[i].hwndTarget = aHWND;
 
             i++;
-            rid[i].usUsagePage = (ushort)SharpLibHid.UsagePage.GenericDesktopControls;
-            rid[i].usUsage = (ushort)SharpLibHid.UsageCollection.GenericDesktop.Keyboard;
+            rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.GenericDesktopControls;
+            rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.GenericDesktop.Keyboard;
             //rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             rid[i].hwndTarget = aHWND;
 
@@ -243,7 +243,7 @@ namespace Devices.RemoteControl
             //rid[i].hwndTarget = aHWND;
 
 
-            iHidHandler = new SharpLibHid.HidHandler(rid);
+            iHidHandler = new SharpLib.Hid.HidHandler(rid);
             if (!iHidHandler.IsRegistered)
             {
                 Debug.WriteLine("Failed to register raw input devices: " + Marshal.GetLastWin32Error().ToString());
@@ -414,17 +414,17 @@ namespace Devices.RemoteControl
         /// </summary>
         /// <param name="aSender"></param>
         /// <param name="aHidEvent"></param>
-        void HandleHidEvent(object aSender, SharpLibHid.HidEvent aHidEvent)
+        void HandleHidEvent(object aSender, SharpLib.Hid.HidEvent aHidEvent)
         {
             HidUsageHandler usagePageHandler = null;
 
             //Check if this an MCE remote HID message
-            if (aHidEvent.UsagePage == (ushort)SharpLibHid.UsagePage.WindowsMediaCenterRemoteControl && aHidEvent.UsageCollection == (ushort)SharpLibHid.UsageCollection.WindowsMediaCenter.WindowsMediaCenterRemoteControl)
+            if (aHidEvent.UsagePage == (ushort)SharpLib.Hid.UsagePage.WindowsMediaCenterRemoteControl && aHidEvent.UsageCollection == (ushort)SharpLib.Hid.UsageCollection.WindowsMediaCenter.WindowsMediaCenterRemoteControl)
             {
                 usagePageHandler = HidMceRemoteHandler;
             }
             //Check if this is a consumer control HID message
-            else if (aHidEvent.UsagePage == (ushort)SharpLibHid.UsagePage.Consumer && aHidEvent.UsageCollection == (ushort)SharpLibHid.UsageCollection.Consumer.ConsumerControl)
+            else if (aHidEvent.UsagePage == (ushort)SharpLib.Hid.UsagePage.Consumer && aHidEvent.UsageCollection == (ushort)SharpLib.Hid.UsageCollection.Consumer.ConsumerControl)
             {
                 usagePageHandler = HidConsumerDeviceHandler;
             }

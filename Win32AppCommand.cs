@@ -20,7 +20,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Win32
+namespace SharpLib.Win32
 {
     static public partial class Const
     {
