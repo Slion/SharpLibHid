@@ -12,6 +12,22 @@ using System.Timers;
 namespace Hid
 {
     /// <summary>
+    /// We provide utility functions to interpret gamepad dpad state.
+    /// </summary>
+    public enum DirectionPadState
+    {
+        Rest=-1,
+        Up=0,
+        UpRight=1,
+        Right=2,
+        DownRight=3,
+        Down=4,
+        DownLeft=5,
+        Left=6,
+        UpLeft=7
+    }
+
+    /// <summary>
     /// Represent a HID event.
     /// TODO: Rename this into HidRawInput?
     /// </summary>
@@ -39,6 +55,10 @@ namespace Hid
         public ushort UsageCollection { get; private set; }
         public uint UsageId { get { return ((uint)UsagePage << 16 | (uint)UsageCollection); } }
         public List<ushort> Usages { get; private set; }
+        /// <summary>
+        /// Sorted in the same order as Device.InputValueCapabilities.
+        /// </summary>
+        public Dictionary<HIDP_VALUE_CAPS,uint> UsageValues { get; private set; }
         //TODO: We need a collection of input report
         public byte[] InputReport { get; private set; }
         //
@@ -86,6 +106,7 @@ namespace Hid
             Timer = new System.Timers.Timer();
             Timer.Elapsed += (sender, e) => OnRepeatTimerElapsed(sender, e, this);
             Usages = new List<ushort>();
+            UsageValues = new Dictionary<HIDP_VALUE_CAPS,uint>();
             OnHidEventRepeat += aRepeatDelegate;
 
             if (aMessage.Msg != Const.WM_INPUT)
@@ -159,45 +180,8 @@ namespace Hid
 
                         //Copy HID input into our buffer
                         Marshal.Copy(new IntPtr(hidInputOffset), InputReport, 0, (int)RawInput.hid.dwSizeHid);
-
-                        //Print HID input report in our debug output
-                        //string hidDump = "HID input report: " + InputReportString();
-                        //Debug.WriteLine(hidDump);
-
-                        //Do proper parsing of our HID report
-                        //First query our usage count
-                        uint usageCount = 0;
-                        Win32.USAGE_AND_PAGE[] usages = null;
-                        Win32.HidStatus status = Win32.Function.HidP_GetUsagesEx(Win32.HIDP_REPORT_TYPE.HidP_Input, 0, usages, ref usageCount, Device.PreParsedData, InputReport, (uint)InputReport.Length);
-                        if (status == Win32.HidStatus.HIDP_STATUS_BUFFER_TOO_SMALL)
-                        {
-                            //Allocate a large enough buffer 
-                            usages = new Win32.USAGE_AND_PAGE[usageCount];
-                            //...and fetch our usages
-                            status = Win32.Function.HidP_GetUsagesEx(Win32.HIDP_REPORT_TYPE.HidP_Input, 0, usages, ref usageCount, Device.PreParsedData, InputReport, (uint)InputReport.Length);
-                            if (status != Win32.HidStatus.HIDP_STATUS_SUCCESS)
-                            {
-                                Debug.WriteLine("Second pass could not parse HID data: " + status.ToString());
-                            }
-                        }
-                        else if (status != Win32.HidStatus.HIDP_STATUS_SUCCESS)
-                        {
-                            Debug.WriteLine("First pass could not parse HID data: " + status.ToString());
-                        }
-
-                        Debug.WriteLine("Usage count: " + usageCount.ToString());
-
-                        //Copy usages into this event
-                        if (usages != null)
-                        {
-                            foreach (USAGE_AND_PAGE up in usages)
-                            {
-                                //Debug.WriteLine("UsagePage: 0x" + usages[0].UsagePage.ToString("X4"));
-                                //Debug.WriteLine("Usage: 0x" + usages[0].Usage.ToString("X4"));
-                                //Add this usage to our list
-                                Usages.Add(up.Usage);
-                            }
-                        }
+                        //
+                        ProcessInputReport(InputReport);
                     }
                 }
                 else if (RawInput.header.dwType == RawInputDeviceType.RIM_TYPEMOUSE)
@@ -240,6 +224,153 @@ namespace Hid
             IsValid = true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        private void ProcessInputReport(byte[] aInputReport)
+        {
+            //Print HID input report in our debug output
+            //string hidDump = "HID input report: " + InputReportString();
+            //Debug.WriteLine(hidDump);
+
+            //Get all our usages, those are typically the buttons currently pushed on a gamepad.
+            //For a remote control it's usually just the one button that was pushed.
+            GetUsages(aInputReport);
+
+            //Now process direction pad (d-pad, dpad) and axes
+            GetUsageValues(aInputReport);
+        }
+
+        /// <summary>
+        /// Typically fetches values of a joystick/gamepad axis and dpad directions.
+        /// </summary>
+        /// <param name="aInputReport"></param>
+        private void GetUsageValues(byte[] aInputReport)
+        {
+            if (Device.InputValueCapabilities == null)
+            {
+                return;
+            }
+
+            foreach (HIDP_VALUE_CAPS caps in Device.InputValueCapabilities)
+            {                
+                if (caps.IsRange)
+                {
+                    //What should we do with those guys?
+                    continue;
+                }
+
+                //Now fetch and add our usage value
+                uint usageValue = 0;
+                Win32.HidStatus status = Win32.Function.HidP_GetUsageValue(Win32.HIDP_REPORT_TYPE.HidP_Input, caps.UsagePage, caps.LinkCollection, caps.NotRange.Usage, ref usageValue, Device.PreParsedData, aInputReport, (uint)aInputReport.Length);
+                if (status == Win32.HidStatus.HIDP_STATUS_SUCCESS)
+                {
+                    UsageValues[caps]=usageValue;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get all our usages, those are typically the buttons currently pushed on a gamepad.
+        /// For a remote control it's usually just the one button that was pushed.
+        /// </summary>
+        private void GetUsages(byte[] aInputReport)
+        {
+            //Do proper parsing of our HID report
+            //First query our usage count
+            uint usageCount = 0;
+            Win32.USAGE_AND_PAGE[] usages = null;
+            Win32.HidStatus status = Win32.Function.HidP_GetUsagesEx(Win32.HIDP_REPORT_TYPE.HidP_Input, 0, usages, ref usageCount, Device.PreParsedData, aInputReport, (uint)aInputReport.Length);
+            if (status == Win32.HidStatus.HIDP_STATUS_BUFFER_TOO_SMALL)
+            {
+                //Allocate a large enough buffer 
+                usages = new Win32.USAGE_AND_PAGE[usageCount];
+                //...and fetch our usages
+                status = Win32.Function.HidP_GetUsagesEx(Win32.HIDP_REPORT_TYPE.HidP_Input, 0, usages, ref usageCount, Device.PreParsedData, aInputReport, (uint)aInputReport.Length);
+                if (status != Win32.HidStatus.HIDP_STATUS_SUCCESS)
+                {
+                    Debug.WriteLine("Second pass could not parse HID data: " + status.ToString());
+                }
+            }
+            else if (status != Win32.HidStatus.HIDP_STATUS_SUCCESS)
+            {
+                Debug.WriteLine("First pass could not parse HID data: " + status.ToString());
+            }
+
+            Debug.WriteLine("Usage count: " + usageCount.ToString());
+
+            //Copy usages into this event
+            if (usages != null)
+            {
+                foreach (USAGE_AND_PAGE up in usages)
+                {
+                    //Debug.WriteLine("UsagePage: 0x" + usages[0].UsagePage.ToString("X4"));
+                    //Debug.WriteLine("Usage: 0x" + usages[0].Usage.ToString("X4"));
+                    //Add this usage to our list
+                    Usages.Add(up.Usage);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="aUsagePage"></param>
+        /// <param name="Usage"></param>
+        /// <returns></returns>
+        public uint GetUsageValue(ushort aUsagePage, ushort aUsage)
+        {
+            foreach (HIDP_VALUE_CAPS caps in Device.InputValueCapabilities)
+            {                
+                if (caps.IsRange)
+                {
+                    //What should we do with those guys?
+                    continue;
+                }
+
+                //Check if we have a match
+                if (caps.UsagePage == aUsagePage && caps.NotRange.Usage == aUsage)
+                {
+                    return UsageValues[caps];
+                }
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="aUsagePage"></param>
+        /// <param name="aUsage"></param>
+        /// <returns></returns>
+        public int GetValueCapabilitiesIndex(ushort aUsagePage, ushort aUsage)
+        {
+            int i = -1;
+            foreach (HIDP_VALUE_CAPS caps in Device.InputValueCapabilities)
+            {
+                i++;
+                if (caps.IsRange)
+                {
+                    //What should we do with those guys?
+                    continue;
+                }
+
+                //Check if we have a match
+                if (caps.UsagePage == aUsagePage && caps.NotRange.Usage == aUsage)
+                {
+                    return i;
+                }
+            }
+
+            return i;
+        }        
+
+
+        /// <summary>
+        /// TODO: Move this to another level?
+        /// </summary>
+        /// <param name="aInterval"></param>
         public void StartRepeatTimer(double aInterval)
         {
             if (Timer == null)
@@ -272,6 +403,41 @@ namespace Hid
 
             //Broadcast our repeat event
             aHidEvent.OnHidEventRepeat(aHidEvent);
+        }
+
+        /// <summary>
+        /// Provide the state of the dpad or hat switch if any.
+        /// If no dpad is found we return 'at rest'.
+        /// </summary>
+        /// <returns></returns>
+        public DirectionPadState GetDirectionPadState()
+        {
+            int index=GetValueCapabilitiesIndex((ushort)Hid.UsagePage.GenericDesktopControls, (ushort)Hid.Usage.GenericDesktop.HatSwitch);
+            if (index < 0)
+            {
+                //No hat switch found
+                return DirectionPadState.Rest;
+            }
+
+            HIDP_VALUE_CAPS caps=Device.InputValueCapabilities[index];
+            if (caps.IsRange)
+            {
+                //Defensive
+                return DirectionPadState.Rest;
+            }
+
+            uint dpadUsageValue = UsageValues[caps]; 
+
+            if (dpadUsageValue < caps.LogicalMin || dpadUsageValue > caps.LogicalMax)
+            {
+                //Out of range means at rest
+                return DirectionPadState.Rest;
+            }
+
+            //Normalize value to start at zero
+            //TODO: more error check here?
+            DirectionPadState res = (DirectionPadState)((int)dpadUsageValue - caps.LogicalMin);            
+            return res;
         }
 
         /// <summary>
@@ -356,6 +522,52 @@ namespace Hid
                 }
             }
 
+            //If we are a gamepad display axis and dpad values
+            if (Device.IsGamePad)
+            {
+                //uint dpadUsageValue = GetUsageValue((ushort)Hid.UsagePage.GenericDesktopControls, (ushort)Hid.Usage.GenericDesktop.HatSwitch);
+                //usageText = dpadUsageValue.ToString("X") + " (dpad), " + usageText;
+              
+                if (usageText != "")
+                {
+                    //Add a separator
+                    usageText += " (Buttons)";
+                }
+
+                if (usageText != "")
+                {
+                    //Add a separator
+                    usageText += ", ";
+                }
+
+                usageText += GetDirectionPadState().ToString();
+
+                foreach (KeyValuePair<HIDP_VALUE_CAPS, uint> entry in UsageValues)
+                {
+                    if (entry.Key.IsRange)
+                    {
+                        continue;
+                    }
+
+                    Type usageType = Utils.UsageType((UsagePage)entry.Key.UsagePage);
+                    if (usageType == null)
+                    {
+                        //TODO: check why this is happening on Logitech rumble gamepad 2.
+                        //Probably some of our axis are hiding in there.
+                        continue;
+                    }
+                    string name = Enum.GetName(usageType, entry.Key.NotRange.Usage);
+
+                    if (usageText != "")
+                    {
+                        //Add a separator
+                        usageText += ", ";
+                    }
+                    usageText += entry.Value.ToString("X") + " ("+ name +")";        
+                }
+            }
+
+            //Now create our list item
             ListViewItem item = new ListViewItem(new[] { usageText, InputReportString(), UsagePage.ToString("X2"), UsageCollection.ToString("X2"), RepeatCount.ToString(), Time.ToString("HH:mm:ss:fff") });
             return item;
         }

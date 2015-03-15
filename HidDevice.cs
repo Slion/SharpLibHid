@@ -300,11 +300,11 @@ namespace Hid
         /// </summary>
         /// <param name="aCaps"></param>
         /// <returns></returns>
-        public string InputValueCapabilityDescription(HIDP_VALUE_CAPS aCaps)
+        static public string InputValueCapabilityDescription(HIDP_VALUE_CAPS aCaps)
         {
-            if (!aCaps.IsRange && Enum.IsDefined(typeof(UsagePage), Capabilities.UsagePage))
+            if (!aCaps.IsRange && Enum.IsDefined(typeof(UsagePage), aCaps.UsagePage))
             {
-                Type usageType=Utils.UsageType((UsagePage)Capabilities.UsagePage);
+                Type usageType = Utils.UsageType((UsagePage)aCaps.UsagePage);
                 string name = Enum.GetName(usageType, aCaps.NotRange.Usage);
                 if (name == null)
                 {
