@@ -29,15 +29,16 @@ namespace RemoteControlSample
             this.buttonTreeViewExpandAll = new System.Windows.Forms.Button();
             this.buttonTreeViewCollapseAll = new System.Windows.Forms.Button();
             this.treeViewDevices = new System.Windows.Forms.TreeView();
-            this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabelDevice = new System.Windows.Forms.ToolStripStatusLabel();
             this.tabPageTests = new System.Windows.Forms.TabPage();
             this.textBoxTests = new System.Windows.Forms.TextBox();
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabelDevice = new System.Windows.Forms.ToolStripStatusLabel();
+            this.buttonRefresh = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabPageMessages.SuspendLayout();
             this.tabPageDevices.SuspendLayout();
-            this.statusStrip.SuspendLayout();
             this.tabPageTests.SuspendLayout();
+            this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelButtonName
@@ -150,6 +151,7 @@ namespace RemoteControlSample
             // 
             // tabPageDevices
             // 
+            this.tabPageDevices.Controls.Add(this.buttonRefresh);
             this.tabPageDevices.Controls.Add(this.buttonTreeViewExpandAll);
             this.tabPageDevices.Controls.Add(this.buttonTreeViewCollapseAll);
             this.tabPageDevices.Controls.Add(this.treeViewDevices);
@@ -190,22 +192,6 @@ namespace RemoteControlSample
             this.treeViewDevices.Size = new System.Drawing.Size(713, 492);
             this.treeViewDevices.TabIndex = 0;
             // 
-            // statusStrip
-            // 
-            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabelDevice});
-            this.statusStrip.Location = new System.Drawing.Point(0, 547);
-            this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(935, 22);
-            this.statusStrip.TabIndex = 5;
-            this.statusStrip.Text = "statusStrip1";
-            // 
-            // toolStripStatusLabelDevice
-            // 
-            this.toolStripStatusLabelDevice.Name = "toolStripStatusLabelDevice";
-            this.toolStripStatusLabelDevice.Size = new System.Drawing.Size(61, 17);
-            this.toolStripStatusLabelDevice.Text = "No Device";
-            // 
             // tabPageTests
             // 
             this.tabPageTests.Controls.Add(this.textBoxTests);
@@ -224,6 +210,32 @@ namespace RemoteControlSample
             this.textBoxTests.Size = new System.Drawing.Size(887, 499);
             this.textBoxTests.TabIndex = 0;
             // 
+            // statusStrip
+            // 
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabelDevice});
+            this.statusStrip.Location = new System.Drawing.Point(0, 547);
+            this.statusStrip.Name = "statusStrip";
+            this.statusStrip.Size = new System.Drawing.Size(935, 22);
+            this.statusStrip.TabIndex = 5;
+            this.statusStrip.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabelDevice
+            // 
+            this.toolStripStatusLabelDevice.Name = "toolStripStatusLabelDevice";
+            this.toolStripStatusLabelDevice.Size = new System.Drawing.Size(61, 17);
+            this.toolStripStatusLabelDevice.Text = "No Device";
+            // 
+            // buttonRefresh
+            // 
+            this.buttonRefresh.Location = new System.Drawing.Point(813, 64);
+            this.buttonRefresh.Name = "buttonRefresh";
+            this.buttonRefresh.Size = new System.Drawing.Size(75, 23);
+            this.buttonRefresh.TabIndex = 3;
+            this.buttonRefresh.Text = "Refresh";
+            this.buttonRefresh.UseVisualStyleBackColor = true;
+            this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -238,10 +250,10 @@ namespace RemoteControlSample
             this.tabPageMessages.ResumeLayout(false);
             this.tabPageMessages.PerformLayout();
             this.tabPageDevices.ResumeLayout(false);
-            this.statusStrip.ResumeLayout(false);
-            this.statusStrip.PerformLayout();
             this.tabPageTests.ResumeLayout(false);
             this.tabPageTests.PerformLayout();
+            this.statusStrip.ResumeLayout(false);
+            this.statusStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -254,6 +266,7 @@ namespace RemoteControlSample
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelDevice;
         private System.Windows.Forms.TabPage tabPageTests;
         private System.Windows.Forms.TextBox textBoxTests;
+        private System.Windows.Forms.Button buttonRefresh;
 
     }
 }
