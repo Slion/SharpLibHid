@@ -33,18 +33,18 @@ namespace SharpLib.Hid
     /// <summary>
     /// Our HID handler manages raw input registrations, processes WM_INPUT messages and broadcasts HID events in return.
     /// </summary>
-    public class HidHandler
+    public class Handler
     {
-        public delegate void HidEventHandler(object aSender, HidEvent aHidEvent);
+        public delegate void HidEventHandler(object aSender, Event aHidEvent);
         public event HidEventHandler OnHidEvent;
-        List<HidEvent> iHidEvents;
+        List<Event> iHidEvents;
 
 
         public bool IsRegistered { get; private set; }
 
-        public HidHandler(RAWINPUTDEVICE[] aRawInputDevices)
+        public Handler(RAWINPUTDEVICE[] aRawInputDevices)
         {
-            iHidEvents=new List<HidEvent>();
+            iHidEvents=new List<Event>();
             IsRegistered = Function.RegisterRawInputDevices(aRawInputDevices, (uint)aRawInputDevices.Length, (uint)Marshal.SizeOf(aRawInputDevices[0]));
         }
 
@@ -60,7 +60,7 @@ namespace SharpLib.Hid
                 return;
             }
 
-            HidEvent hidEvent = new HidEvent(aMessage, OnHidEventRepeat);
+            Event hidEvent = new Event(aMessage, OnHidEventRepeat);
             hidEvent.DebugWrite();
 
             if (!hidEvent.IsValid || !hidEvent.IsGeneric)
@@ -93,7 +93,7 @@ namespace SharpLib.Hid
             OnHidEvent(this, hidEvent);    
         }
 
-        public void OnHidEventRepeat(HidEvent aHidEvent)
+        public void OnHidEventRepeat(Event aHidEvent)
         {
             //Broadcast our events
             OnHidEvent(this, aHidEvent);    

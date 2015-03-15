@@ -196,7 +196,7 @@ namespace SharpLib.Win32
             //For each our device add a node to our treeview
             foreach (RAWINPUTDEVICELIST device in ridList)
             {
-                SharpLib.Hid.HidDevice hidDevice=new SharpLib.Hid.HidDevice(device.hDevice);
+                SharpLib.Hid.Device hidDevice=new SharpLib.Hid.Device(device.hDevice);
 
                 TreeNode node = null;
                 if (hidDevice.Product != null && hidDevice.Product.Length > 1)
@@ -233,7 +233,7 @@ namespace SharpLib.Win32
                 {
                     foreach (HIDP_VALUE_CAPS caps in hidDevice.InputValueCapabilities)
                     {
-                        string des = SharpLib.Hid.HidDevice.InputValueCapabilityDescription(caps);
+                        string des = SharpLib.Hid.Device.InputValueCapabilityDescription(caps);
                         if (des != null)
                         {
                             node.Nodes.Add(des);

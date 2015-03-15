@@ -32,7 +32,7 @@ namespace SharpLib.Hid
     /// Represent a HID device.
     /// Rename to RawInputDevice?
     /// </summary>
-    public class HidDevice: IDisposable
+    public class Device: IDisposable
     {
         /// <summary>
         /// Unique name of that HID device.
@@ -74,7 +74,7 @@ namespace SharpLib.Hid
         /// Class constructor will fetch this object properties from HID sub system.
         /// </summary>
         /// <param name="hRawInputDevice">Device Handle as provided by RAWINPUTHEADER.hDevice, typically accessed as rawinput.header.hDevice</param>
-        public HidDevice(IntPtr hRawInputDevice)
+        public Device(IntPtr hRawInputDevice)
         {
             //Try construct and rollback if needed
             try
@@ -93,7 +93,7 @@ namespace SharpLib.Hid
         /// <summary>
         /// Make sure dispose is called even if the user forgot about it.
         /// </summary>
-        ~HidDevice()
+        ~Device()
         {
             Dispose();
         }
