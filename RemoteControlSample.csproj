@@ -124,25 +124,15 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="HidDevice.cs" />
-    <Compile Include="HidEvent.cs" />
-    <Compile Include="HidHandler.cs" />
-    <Compile Include="HidUsageTables.cs" />
-    <Compile Include="HidUtils.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="RawInput.cs" />
     <Compile Include="RemoteControlDevice.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Win32AppCommand.cs" />
-    <Compile Include="Win32CreateFile.cs" />
-    <Compile Include="Win32Hid.cs" />
-    <Compile Include="Win32RawInput.cs" />
     <Content Include="App.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -161,6 +151,12 @@
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="SharpLibHid.csproj">
+      <Project>{4f3f96e6-668a-488e-ba0c-ed249aface9e}</Project>
+      <Name>SharpLibHid</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

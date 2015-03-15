@@ -9,7 +9,7 @@ namespace Win32
     /// <summary>
     /// Provide some utility functions for raw input handling.
     /// </summary>
-    static class RawInput
+    static public class RawInput
     {
         /// <summary>
         /// 
