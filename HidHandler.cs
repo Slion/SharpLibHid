@@ -48,8 +48,18 @@ namespace SharpLib.Hid
             IsRegistered = Function.RegisterRawInputDevices(aRawInputDevices, (uint)aRawInputDevices.Length, (uint)Marshal.SizeOf(aRawInputDevices[0]));
         }
 
-        public void ProcessInput(Message aMessage)
+        /// <summary>
+        /// Process a WM_INPUT message.
+        /// </summary>
+        /// <param name="aMessage"></param>
+        public void ProcessInput(ref Message aMessage)
         {
+            if (aMessage.Msg != Const.WM_INPUT)
+            {
+                //We only process WM_INPUT messages
+                return;
+            }
+
             HidEvent hidEvent = new HidEvent(aMessage, OnHidEventRepeat);
             hidEvent.DebugWrite();
 

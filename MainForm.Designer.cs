@@ -21,7 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace RemoteControlSample
+namespace HidDemo
 {
     public partial class MainForm
     {
@@ -32,8 +32,6 @@ namespace RemoteControlSample
         /// </summary>
         private void InitializeComponent()
         {
-            this.labelButtonName = new System.Windows.Forms.Label();
-            this.labelDeviceName = new System.Windows.Forms.Label();
             this.buttonClear = new System.Windows.Forms.Button();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageMessages = new System.Windows.Forms.TabPage();
@@ -59,26 +57,6 @@ namespace RemoteControlSample
             this.tabPageTests.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // labelButtonName
-            // 
-            this.labelButtonName.AutoSize = true;
-            this.labelButtonName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelButtonName.Location = new System.Drawing.Point(785, 53);
-            this.labelButtonName.Name = "labelButtonName";
-            this.labelButtonName.Size = new System.Drawing.Size(103, 20);
-            this.labelButtonName.TabIndex = 0;
-            this.labelButtonName.Text = "Button Name";
-            // 
-            // labelDeviceName
-            // 
-            this.labelDeviceName.AutoSize = true;
-            this.labelDeviceName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelDeviceName.Location = new System.Drawing.Point(785, 33);
-            this.labelDeviceName.Name = "labelDeviceName";
-            this.labelDeviceName.Size = new System.Drawing.Size(103, 20);
-            this.labelDeviceName.TabIndex = 1;
-            this.labelDeviceName.Text = "Device Name";
             // 
             // buttonClear
             // 
@@ -107,8 +85,6 @@ namespace RemoteControlSample
             // 
             this.tabPageMessages.Controls.Add(this.listViewEvents);
             this.tabPageMessages.Controls.Add(this.buttonClear);
-            this.tabPageMessages.Controls.Add(this.labelDeviceName);
-            this.tabPageMessages.Controls.Add(this.labelButtonName);
             this.tabPageMessages.Location = new System.Drawing.Point(4, 22);
             this.tabPageMessages.Name = "tabPageMessages";
             this.tabPageMessages.Padding = new System.Windows.Forms.Padding(3);
@@ -267,7 +243,6 @@ namespace RemoteControlSample
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.tabControl.ResumeLayout(false);
             this.tabPageMessages.ResumeLayout(false);
-            this.tabPageMessages.PerformLayout();
             this.tabPageDevices.ResumeLayout(false);
             this.tabPageTests.ResumeLayout(false);
             this.tabPageTests.PerformLayout();
@@ -279,6 +254,18 @@ namespace RemoteControlSample
         }
         #endregion Windows Form Designer generated code
 
+        private System.Windows.Forms.Button buttonClear;
+        private System.Windows.Forms.TabControl tabControl;
+        private System.Windows.Forms.TabPage tabPageMessages;
+        private System.Windows.Forms.ListView listViewEvents;
+        private System.Windows.Forms.ColumnHeader columnHeaderUsages;
+        private System.Windows.Forms.ColumnHeader columnHeaderInputReport;
+        private System.Windows.Forms.ColumnHeader columnHeaderUsagePage;
+        private System.Windows.Forms.ColumnHeader columnHeaderUsageCollection;
+        private System.Windows.Forms.ColumnHeader columnHeaderRepeat;
+        private System.Windows.Forms.ColumnHeader columnHeaderTime;
+        private System.Windows.Forms.TabPage tabPageDevices;
+        private System.Windows.Forms.TreeView treeViewDevices;
         private System.Windows.Forms.Button buttonTreeViewExpandAll;
         private System.Windows.Forms.Button buttonTreeViewCollapseAll;
         private System.Windows.Forms.StatusStrip statusStrip;
