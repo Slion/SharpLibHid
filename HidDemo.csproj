@@ -4,7 +4,7 @@
     <ProjectType>Local</ProjectType>
     <ProductVersion>7.10.3077</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F676C5E5-266C-439A-98C4-EF21CB9957F2}</ProjectGuid>
+    <ProjectGuid>{7435D21C-6A5C-4F57-8868-94A8D911980E}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ApplicationIcon>App.ico</ApplicationIcon>

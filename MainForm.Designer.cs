@@ -26,6 +26,7 @@ namespace RemoteControlSample
             this.columnHeaderRepeat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPageDevices = new System.Windows.Forms.TabPage();
+            this.buttonRefresh = new System.Windows.Forms.Button();
             this.buttonTreeViewExpandAll = new System.Windows.Forms.Button();
             this.buttonTreeViewCollapseAll = new System.Windows.Forms.Button();
             this.treeViewDevices = new System.Windows.Forms.TreeView();
@@ -33,7 +34,6 @@ namespace RemoteControlSample
             this.textBoxTests = new System.Windows.Forms.TextBox();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelDevice = new System.Windows.Forms.ToolStripStatusLabel();
-            this.buttonRefresh = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabPageMessages.SuspendLayout();
             this.tabPageDevices.SuspendLayout();
@@ -163,6 +163,16 @@ namespace RemoteControlSample
             this.tabPageDevices.Text = "Devices";
             this.tabPageDevices.UseVisualStyleBackColor = true;
             // 
+            // buttonRefresh
+            // 
+            this.buttonRefresh.Location = new System.Drawing.Point(813, 64);
+            this.buttonRefresh.Name = "buttonRefresh";
+            this.buttonRefresh.Size = new System.Drawing.Size(75, 23);
+            this.buttonRefresh.TabIndex = 3;
+            this.buttonRefresh.Text = "Refresh";
+            this.buttonRefresh.UseVisualStyleBackColor = true;
+            this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
+            // 
             // buttonTreeViewExpandAll
             // 
             this.buttonTreeViewExpandAll.Location = new System.Drawing.Point(813, 6);
@@ -226,16 +236,6 @@ namespace RemoteControlSample
             this.toolStripStatusLabelDevice.Size = new System.Drawing.Size(61, 17);
             this.toolStripStatusLabelDevice.Text = "No Device";
             // 
-            // buttonRefresh
-            // 
-            this.buttonRefresh.Location = new System.Drawing.Point(813, 64);
-            this.buttonRefresh.Name = "buttonRefresh";
-            this.buttonRefresh.Size = new System.Drawing.Size(75, 23);
-            this.buttonRefresh.TabIndex = 3;
-            this.buttonRefresh.Text = "Refresh";
-            this.buttonRefresh.UseVisualStyleBackColor = true;
-            this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -244,7 +244,7 @@ namespace RemoteControlSample
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.tabControl);
             this.Name = "MainForm";
-            this.Text = "Remote Control Sample";
+            this.Text = "HID Demo";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.tabControl.ResumeLayout(false);
             this.tabPageMessages.ResumeLayout(false);
