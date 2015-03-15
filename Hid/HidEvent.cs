@@ -52,7 +52,7 @@ namespace SharpLib.Hid
     /// Represent a HID event.
     /// TODO: Rename this into HidRawInput?
     /// </summary>
-    public class HidEvent : IDisposable
+    public class Event : IDisposable
     {
         public bool IsValid { get; private set; }
         public bool IsForeground { get; private set; }
@@ -68,7 +68,7 @@ namespace SharpLib.Hid
         public bool IsRepeat { get { return RepeatCount != 0; } }
         public uint RepeatCount { get; private set; }
 
-        public HidDevice Device { get; private set; }
+        public Device Device { get; private set; }
         public RAWINPUT RawInput { get {return iRawInput;} } 
         private RAWINPUT iRawInput;
 
@@ -83,7 +83,7 @@ namespace SharpLib.Hid
         //TODO: We need a collection of input report
         public byte[] InputReport { get; private set; }
         //
-        public delegate void HidEventRepeatDelegate(HidEvent aHidEvent);
+        public delegate void HidEventRepeatDelegate(Event aHidEvent);
         public event HidEventRepeatDelegate OnHidEventRepeat;
 
         private System.Timers.Timer Timer { get; set; }
@@ -115,7 +115,7 @@ namespace SharpLib.Hid
         /// Initialize an HidEvent from a WM_INPUT message
         /// </summary>
         /// <param name="hRawInputDevice">Device Handle as provided by RAWINPUTHEADER.hDevice, typically accessed as rawinput.header.hDevice</param>
-        public HidEvent(Message aMessage, HidEventRepeatDelegate aRepeatDelegate)
+        public Event(Message aMessage, HidEventRepeatDelegate aRepeatDelegate)
         {
             RepeatCount = 0;
             IsValid = false;
@@ -163,7 +163,7 @@ namespace SharpLib.Hid
                 if (RawInput.header.hDevice != IntPtr.Zero)
                 {
                     //Get various information about this HID device
-                    Device = new HidDevice(RawInput.header.hDevice);
+                    Device = new Device(RawInput.header.hDevice);
                 }
 
                 if (RawInput.header.dwType == Win32.RawInputDeviceType.RIM_TYPEHID)  //Check that our raw input is HID                        
@@ -406,7 +406,7 @@ namespace SharpLib.Hid
             Timer.Enabled = true;
         }
 
-        static private void OnRepeatTimerElapsed(object sender, ElapsedEventArgs e, HidEvent aHidEvent)
+        static private void OnRepeatTimerElapsed(object sender, ElapsedEventArgs e, Event aHidEvent)
         {
             if (aHidEvent.IsStray)
             {

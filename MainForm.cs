@@ -25,19 +25,19 @@ using System.Windows.Forms;
 using System.Data;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using SharpLib.Hid;
+using Hid = SharpLib.Hid;
 using SharpLib.Win32;
 
 namespace HidDemo
 {
 	/// <summary>
-	/// Summary description for Form1.
+	/// MainForm for our HID demo.
 	/// </summary>
 	public partial class MainForm : System.Windows.Forms.Form
 	{
-	    private HidHandler iHidHandler;
+        private Hid.Handler iHidHandler;
 
-        public delegate void OnHidEventDelegate(object aSender, SharpLib.Hid.HidEvent aHidEvent);
+        public delegate void OnHidEventDelegate(object aSender, Hid.Event aHidEvent);
 
 		public MainForm()
 		{
@@ -114,7 +114,7 @@ namespace HidDemo
             //rid[i].hwndTarget = aHWND;
 
 
-            iHidHandler = new SharpLib.Hid.HidHandler(rid);
+            iHidHandler = new SharpLib.Hid.Handler(rid);
             if (!iHidHandler.IsRegistered)
             {
                 Debug.WriteLine("Failed to register raw input devices: " + Marshal.GetLastWin32Error().ToString());
@@ -122,7 +122,7 @@ namespace HidDemo
             iHidHandler.OnHidEvent += HandleHidEventThreadSafe;
 	    }
 
-        public void HandleHidEventThreadSafe(object aSender, SharpLib.Hid.HidEvent aHidEvent)
+        public void HandleHidEventThreadSafe(object aSender, SharpLib.Hid.Event aHidEvent)
         {
             if (aHidEvent.IsStray)
             {
