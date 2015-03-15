@@ -1,3 +1,22 @@
+//
+// Copyright (C) 2014-2015 Stéphane Lenclud.
+//
+// This file is part of SharpLibHid.
+//
+// SharpDisplayManager is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// SharpDisplayManager is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with SharpDisplayManager.  If not, see <http://www.gnu.org/licenses/>.
+//
+
 using System;
 using System.Drawing;
 using System.Collections;
@@ -34,7 +53,7 @@ namespace RemoteControlSample
         private TreeView treeViewDevices;
 		private Timer _timer;
 
-        public delegate void OnHidEventDelegate(object aSender, Hid.HidEvent aHidEvent);
+        public delegate void OnHidEventDelegate(object aSender, SharpLibHid.HidEvent aHidEvent);
 
 		public MainForm()
 		{
@@ -86,7 +105,7 @@ namespace RemoteControlSample
 
 		}
 
-        public void HandleHidEventThreadSafe(object aSender, Hid.HidEvent aHidEvent)
+        public void HandleHidEventThreadSafe(object aSender, SharpLibHid.HidEvent aHidEvent)
         {
             if (aHidEvent.IsStray)
             {
@@ -128,12 +147,12 @@ namespace RemoteControlSample
                 //labelButtonName.Text = e.Button.ToString();
                 processed = true;
             }
-            else if (e.MceButton != Hid.Usage.WindowsMediaCenterRemoteControl.Null)
+            else if (e.MceButton != SharpLibHid.Usage.WindowsMediaCenterRemoteControl.Null)
             {
                 //Display MCE button name
                 //labelButtonName.Text = e.MceButton.ToString();
                 //Check if this is an HP extension
-                if (Enum.IsDefined(typeof(Hid.Usage.HpWindowsMediaCenterRemoteControl), (ushort)e.MceButton))
+                if (Enum.IsDefined(typeof(SharpLibHid.Usage.HpWindowsMediaCenterRemoteControl), (ushort)e.MceButton))
                 {
                     //Also display HP button name
                     //labelButtonName.Text += " / HP:" + ((Hid.UsageTables.HpWindowsMediaCenterRemoteControl)e.MceButton).ToString();
@@ -141,7 +160,7 @@ namespace RemoteControlSample
 
                 processed = true;                
             }
-            else if (e.ConsumerControl != Hid.Usage.ConsumerControl.Null)
+            else if (e.ConsumerControl != SharpLibHid.Usage.ConsumerControl.Null)
             {
                 //Display consumer control name
                 //labelButtonName.Text = e.ConsumerControl.ToString();

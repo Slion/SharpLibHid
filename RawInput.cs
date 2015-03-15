@@ -1,8 +1,26 @@
+//
+// Copyright (C) 2014-2015 Stéphane Lenclud.
+//
+// This file is part of SharpLibHid.
+//
+// SharpDisplayManager is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// SharpDisplayManager is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with SharpDisplayManager.  If not, see <http://www.gnu.org/licenses/>.
+//
+
 using System;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Windows.Forms;
-
 
 namespace Win32
 {
@@ -178,7 +196,7 @@ namespace Win32
             //For each our device add a node to our treeview
             foreach (RAWINPUTDEVICELIST device in ridList)
             {
-                Hid.HidDevice hidDevice=new Hid.HidDevice(device.hDevice);
+                SharpLibHid.HidDevice hidDevice=new SharpLibHid.HidDevice(device.hDevice);
 
                 TreeNode node = null;
                 if (hidDevice.Product != null && hidDevice.Product.Length > 1)
@@ -215,7 +233,7 @@ namespace Win32
                 {
                     foreach (HIDP_VALUE_CAPS caps in hidDevice.InputValueCapabilities)
                     {
-                        string des = Hid.HidDevice.InputValueCapabilityDescription(caps);
+                        string des = SharpLibHid.HidDevice.InputValueCapabilityDescription(caps);
                         if (des != null)
                         {
                             node.Nodes.Add(des);
