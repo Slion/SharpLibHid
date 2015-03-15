@@ -23,64 +23,26 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
-using Devices.RemoteControl;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using SharpLib.Hid;
+using SharpLib.Win32;
 
-namespace RemoteControlSample
+namespace HidDemo
 {
 	/// <summary>
 	/// Summary description for Form1.
 	/// </summary>
 	public partial class MainForm : System.Windows.Forms.Form
 	{
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-        private System.ComponentModel.Container components = null;
-        private RemoteControlDevice _remote;
-        private Label labelButtonName;
-        private Label labelDeviceName;
-        private Button buttonClear;
-        private TabControl tabControl;
-        private TabPage tabPageMessages;
-        private ListView listViewEvents;
-        private ColumnHeader columnHeaderUsages;
-        private ColumnHeader columnHeaderInputReport;
-        private ColumnHeader columnHeaderUsagePage;
-        private ColumnHeader columnHeaderUsageCollection;
-        private ColumnHeader columnHeaderRepeat;
-        private ColumnHeader columnHeaderTime;
-        private TabPage tabPageDevices;
-        private TreeView treeViewDevices;
-		private Timer _timer;
+	    private HidHandler iHidHandler;
 
         public delegate void OnHidEventDelegate(object aSender, SharpLib.Hid.HidEvent aHidEvent);
 
 		public MainForm()
 		{
-			//
 			// Required for Windows Form Designer support
-			//
-			InitializeComponent();
-
-			_timer = new Timer();
-			_timer.Interval = 3000;
-			_timer.Enabled = false;
-			_timer.Tick +=new EventHandler(_timer_Tick);            
-		}
-
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		protected override void Dispose( bool disposing )
-		{
-			if( disposing )
-			{
-				if (components != null)
-				{
-					components.Dispose();
-				}
-			}
-			base.Dispose( disposing );
+			InitializeComponent();           
 		}
 
 
@@ -95,15 +57,70 @@ namespace RemoteControlSample
 		}
 
         private void MainForm_Load(object sender, System.EventArgs e)
-		{
-            _remote = new RemoteControlDevice(this.Handle);
-            _remote.ButtonPressed += new Devices.RemoteControl.RemoteControlDevice.RemoteControlDeviceEventHandler(_remote_ButtonPressed);
-            _remote.iHidHandler.OnHidEvent += HandleHidEventThreadSafe;
-            
-            //
+        {
+            RegisterHidDevices();
+            //Create our list of HID devices
             SharpLib.Win32.RawInput.PopulateDeviceList(treeViewDevices);
-
 		}
+
+	    void RegisterHidDevices()
+	    {           
+            // Register the input device to receive the commands from the
+            // remote device. See http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwmt/html/remote_control.asp
+            // for the vendor defined usage page.
+
+            RAWINPUTDEVICE[] rid = new RAWINPUTDEVICE[6];
+
+            int i = 0;
+            rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.WindowsMediaCenterRemoteControl;
+            rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.WindowsMediaCenter.WindowsMediaCenterRemoteControl;
+            rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+            rid[i].hwndTarget = Handle;
+
+            i++;
+            rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.Consumer;
+            rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.Consumer.ConsumerControl;
+            rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+            rid[i].hwndTarget = Handle;
+
+            i++;
+            rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.Consumer;
+            rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.Consumer.Selection;
+            rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+            rid[i].hwndTarget = Handle;
+
+            i++;
+            rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.GenericDesktopControls;
+            rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.GenericDesktop.SystemControl;
+            rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+            rid[i].hwndTarget = Handle;
+
+            i++;
+            rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.GenericDesktopControls;
+            rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.GenericDesktop.GamePad;
+            rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+            rid[i].hwndTarget = Handle;
+
+            i++;
+            rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.GenericDesktopControls;
+            rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.GenericDesktop.Keyboard;
+            //rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+            rid[i].hwndTarget = Handle;
+
+            //i++;
+            //rid[i].usUsagePage = (ushort)Hid.UsagePage.GenericDesktopControls;
+            //rid[i].usUsage = (ushort)Hid.UsageCollection.GenericDesktop.Mouse;
+            //rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+            //rid[i].hwndTarget = aHWND;
+
+
+            iHidHandler = new SharpLib.Hid.HidHandler(rid);
+            if (!iHidHandler.IsRegistered)
+            {
+                Debug.WriteLine("Failed to register raw input devices: " + Marshal.GetLastWin32Error().ToString());
+            }
+            iHidHandler.OnHidEvent += HandleHidEventThreadSafe;
+	    }
 
         public void HandleHidEventThreadSafe(object aSender, SharpLib.Hid.HidEvent aHidEvent)
         {
@@ -129,56 +146,19 @@ namespace RemoteControlSample
 
 		protected override void WndProc(ref Message message)
 		{
-            if (_remote != null)
+            switch (message.Msg)
             {
-                _remote.ProcessMessage(message);
+                case Const.WM_KEYDOWN:
+                    //ProcessKeyDown(message.WParam);
+                    break;
+                case Const.WM_INPUT:
+                    //Returning zero means we processed that message.
+                    message.Result = new IntPtr(0);
+                    iHidHandler.ProcessInput(ref message);
+                    break;
             }
+            //Is that needed? Check the docs.
 			base.WndProc(ref message);
-		}
-
-		private bool _remote_ButtonPressed(object sender, RemoteControlEventArgs e)
-		{
-            //Set text from here was disabled because of threading issues
-            //That whole thing should be removed anyway
-            bool processed = false;
-			_timer.Enabled = false;
-            if (e.Button != RemoteControlButton.Unknown)
-            {
-                //labelButtonName.Text = e.Button.ToString();
-                processed = true;
-            }
-            else if (e.MceButton != SharpLib.Hid.Usage.WindowsMediaCenterRemoteControl.Null)
-            {
-                //Display MCE button name
-                //labelButtonName.Text = e.MceButton.ToString();
-                //Check if this is an HP extension
-                if (Enum.IsDefined(typeof(SharpLib.Hid.Usage.HpWindowsMediaCenterRemoteControl), (ushort)e.MceButton))
-                {
-                    //Also display HP button name
-                    //labelButtonName.Text += " / HP:" + ((Hid.UsageTables.HpWindowsMediaCenterRemoteControl)e.MceButton).ToString();
-                }
-
-                processed = true;                
-            }
-            else if (e.ConsumerControl != SharpLib.Hid.Usage.ConsumerControl.Null)
-            {
-                //Display consumer control name
-                //labelButtonName.Text = e.ConsumerControl.ToString();
-                processed = true;
-            }
-            else
-            {
-                //labelButtonName.Text = "Unknown";
-            }
-			//labelDeviceName.Text = e.Device.ToString();
-			_timer.Enabled = true;
-            return processed;
-		}
-
-		private void _timer_Tick(object sender, EventArgs e)
-		{
-			_timer.Enabled = false;
-			labelButtonName.Text = "Ready...";
 		}
 
 		private void buttonClear_Click(object sender, EventArgs e)
