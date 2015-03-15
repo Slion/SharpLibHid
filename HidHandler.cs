@@ -24,11 +24,11 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.Win32.SafeHandles;
-using Win32;
+using SharpLib.Win32;
 using System.Collections.Generic;
 
 
-namespace SharpLibHid
+namespace SharpLib.Hid
 {
     /// <summary>
     /// Our HID handler manages raw input registrations, processes WM_INPUT messages and broadcasts HID events in return.

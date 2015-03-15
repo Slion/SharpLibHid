@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace Win32
+namespace SharpLib.Win32
 {
     /// <summary>
     /// Provide some utility functions for raw input handling.
@@ -196,7 +196,7 @@ namespace Win32
             //For each our device add a node to our treeview
             foreach (RAWINPUTDEVICELIST device in ridList)
             {
-                SharpLibHid.HidDevice hidDevice=new SharpLibHid.HidDevice(device.hDevice);
+                SharpLib.Hid.HidDevice hidDevice=new SharpLib.Hid.HidDevice(device.hDevice);
 
                 TreeNode node = null;
                 if (hidDevice.Product != null && hidDevice.Product.Length > 1)
@@ -233,7 +233,7 @@ namespace Win32
                 {
                     foreach (HIDP_VALUE_CAPS caps in hidDevice.InputValueCapabilities)
                     {
-                        string des = SharpLibHid.HidDevice.InputValueCapabilityDescription(caps);
+                        string des = SharpLib.Hid.HidDevice.InputValueCapabilityDescription(caps);
                         if (des != null)
                         {
                             node.Nodes.Add(des);

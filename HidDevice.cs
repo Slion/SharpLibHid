@@ -24,9 +24,9 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.Win32.SafeHandles;
-using Win32;
+using SharpLib.Win32;
 
-namespace SharpLibHid
+namespace SharpLib.Hid
 {
     /// <summary>
     /// Represent a HID device.

@@ -53,7 +53,7 @@ namespace RemoteControlSample
         private TreeView treeViewDevices;
 		private Timer _timer;
 
-        public delegate void OnHidEventDelegate(object aSender, SharpLibHid.HidEvent aHidEvent);
+        public delegate void OnHidEventDelegate(object aSender, SharpLib.Hid.HidEvent aHidEvent);
 
 		public MainForm()
 		{
@@ -101,11 +101,11 @@ namespace RemoteControlSample
             _remote.iHidHandler.OnHidEvent += HandleHidEventThreadSafe;
             
             //
-            Win32.RawInput.PopulateDeviceList(treeViewDevices);
+            SharpLib.Win32.RawInput.PopulateDeviceList(treeViewDevices);
 
 		}
 
-        public void HandleHidEventThreadSafe(object aSender, SharpLibHid.HidEvent aHidEvent)
+        public void HandleHidEventThreadSafe(object aSender, SharpLib.Hid.HidEvent aHidEvent)
         {
             if (aHidEvent.IsStray)
             {
@@ -147,12 +147,12 @@ namespace RemoteControlSample
                 //labelButtonName.Text = e.Button.ToString();
                 processed = true;
             }
-            else if (e.MceButton != SharpLibHid.Usage.WindowsMediaCenterRemoteControl.Null)
+            else if (e.MceButton != SharpLib.Hid.Usage.WindowsMediaCenterRemoteControl.Null)
             {
                 //Display MCE button name
                 //labelButtonName.Text = e.MceButton.ToString();
                 //Check if this is an HP extension
-                if (Enum.IsDefined(typeof(SharpLibHid.Usage.HpWindowsMediaCenterRemoteControl), (ushort)e.MceButton))
+                if (Enum.IsDefined(typeof(SharpLib.Hid.Usage.HpWindowsMediaCenterRemoteControl), (ushort)e.MceButton))
                 {
                     //Also display HP button name
                     //labelButtonName.Text += " / HP:" + ((Hid.UsageTables.HpWindowsMediaCenterRemoteControl)e.MceButton).ToString();
@@ -160,7 +160,7 @@ namespace RemoteControlSample
 
                 processed = true;                
             }
-            else if (e.ConsumerControl != SharpLibHid.Usage.ConsumerControl.Null)
+            else if (e.ConsumerControl != SharpLib.Hid.Usage.ConsumerControl.Null)
             {
                 //Display consumer control name
                 //labelButtonName.Text = e.ConsumerControl.ToString();
@@ -199,7 +199,7 @@ namespace RemoteControlSample
         private void buttonRefresh_Click(object sender, EventArgs e)
         {
             treeViewDevices.Nodes.Clear();
-            Win32.RawInput.PopulateDeviceList(treeViewDevices);
+            SharpLib.Win32.RawInput.PopulateDeviceList(treeViewDevices);
         }
 
 	}
