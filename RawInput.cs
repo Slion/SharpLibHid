@@ -215,7 +215,7 @@ namespace Win32
                 {
                     foreach (HIDP_VALUE_CAPS caps in hidDevice.InputValueCapabilities)
                     {
-                        string des = hidDevice.InputValueCapabilityDescription(caps);
+                        string des = Hid.HidDevice.InputValueCapabilityDescription(caps);
                         if (des != null)
                         {
                             node.Nodes.Add(des);
