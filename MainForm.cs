@@ -69,6 +69,14 @@ namespace HidDemo
             // remote device. See http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwmt/html/remote_control.asp
             // for the vendor defined usage page.
 
+            if (iHidHandler!=null)
+            {
+                //First de-register
+                iHidHandler.Dispose();
+                iHidHandler = null;
+            }
+
+
             RAWINPUTDEVICE[] rid = new RAWINPUTDEVICE[5];
 
             int i = 0;
@@ -114,7 +122,7 @@ namespace HidDemo
             //rid[i].hwndTarget = aHWND;
 
 
-            iHidHandler = new SharpLib.Hid.Handler(rid);
+            iHidHandler = new SharpLib.Hid.Handler(rid, checkBoxRepeat.Checked);
             if (!iHidHandler.IsRegistered)
             {
                 Debug.WriteLine("Failed to register raw input devices: " + Marshal.GetLastWin32Error().ToString());
@@ -180,6 +188,11 @@ namespace HidDemo
         {
             treeViewDevices.Nodes.Clear();
             SharpLib.Win32.RawInput.PopulateDeviceList(treeViewDevices);
+        }
+
+        private void checkBoxRepeat_CheckedChanged(object sender, EventArgs e)
+        {
+            RegisterHidDevices();
         }
 
 	}

@@ -115,7 +115,7 @@ namespace SharpLib.Hid
         /// Initialize an HidEvent from a WM_INPUT message
         /// </summary>
         /// <param name="hRawInputDevice">Device Handle as provided by RAWINPUTHEADER.hDevice, typically accessed as rawinput.header.hDevice</param>
-        public Event(Message aMessage, HidEventRepeatDelegate aRepeatDelegate)
+        public Event(Message aMessage, HidEventRepeatDelegate aRepeatDelegate, bool aRepeat)
         {
             RepeatCount = 0;
             IsValid = false;
@@ -236,10 +236,10 @@ namespace SharpLib.Hid
             }
 
             //
-            if (IsButtonDown)
+            if (IsButtonDown && aRepeat)
             {
                 //TODO: Make this optional
-                //StartRepeatTimer(iRepeatDelay);
+                StartRepeatTimer(iRepeatDelay);
             }
 
             IsValid = true;
@@ -527,20 +527,12 @@ namespace SharpLib.Hid
                 }
 
                 UsagePage usagePage = (UsagePage)UsagePage;
-                switch (usagePage)
+                string name = Enum.GetName(Utils.UsageType(usagePage), usage);
+                if (name == null)
                 {
-                    case Hid.UsagePage.Consumer:
-                        usageText += ((ConsumerControl)usage).ToString();
-                        break;
-
-                    case Hid.UsagePage.WindowsMediaCenterRemoteControl:
-                        usageText += ((WindowsMediaCenterRemoteControl)usage).ToString();
-                        break;
-
-                    default:
-                        usageText += usage.ToString("X2");
-                        break;
+                    name += usage.ToString("X2");
                 }
+                usageText += name;
             }
 
             //If we are a gamepad display axis and dpad values

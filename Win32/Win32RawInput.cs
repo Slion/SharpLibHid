@@ -110,7 +110,7 @@ namespace SharpLib.Win32
 
         /// <summary>
         /// If set, the application command keys are handled. RIDEV_APPKEYS can be specified only if RIDEV_NOLEGACY is specified for a keyboard device.
-        /// </summary>        
+        /// </summary>
         public const uint RIDEV_APPKEYS = 0x00000400;
 
         /// <summary>

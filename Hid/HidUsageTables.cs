@@ -22,7 +22,7 @@ namespace SharpLib.Hid
     /// <summary>
     /// From USB HID usage tables.
     /// http://www.usb.org/developers/hidpage#HID_Usage
-    /// http://www.usb.org/developers/devclass_docs/Hut1_12v2.pdf
+    /// http://www.usb.org/developers/hidpage/Hut1_12v2.pdf
     /// </summary>
     public enum UsagePage : ushort
     {
@@ -322,6 +322,19 @@ namespace SharpLib.Hid
             Microphone = 0x04,
             Headphone = 0x05,
             GraphicEqualizer = 0x06,
+            ThinkPadMicrophoneMute = 0x10, //Custom
+            ThinkPadVantage = 0x11, //Custom
+            ThinkPadSystemLock = 0x12, //Custom
+            ThinkPadPowerManagement = 0x13, //Custom
+            ThinkPadWirelessNetwork = 0x14, //Custom
+            ThinkPadCamera = 0x15, //Custom
+            ThinkPadDisplayScheme = 0x16, //Custom
+            ThinkPadMouseProperties = 0x17, //Custom
+            ThinkPadEject = 0x18, //Custom
+            ThinkPadSystemHibernate = 0x19, //Custom
+            ThinkPadBrightnessIncrement = 0x1A, //Custom
+            ThinkPadBrightnessDecrement = 0x1B, //Custom
+            ThinkPadFullscreenMagnifier = 0x1D, //Custom
             Plus10 = 0x20,
             Plus100 = 0x21,
             AmPm = 0x22,
