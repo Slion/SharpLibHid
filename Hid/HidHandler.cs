@@ -33,19 +33,40 @@ namespace SharpLib.Hid
     /// <summary>
     /// Our HID handler manages raw input registrations, processes WM_INPUT messages and broadcasts HID events in return.
     /// </summary>
-    public class Handler
+    public class Handler : IDisposable
     {
         public delegate void HidEventHandler(object aSender, Event aHidEvent);
         public event HidEventHandler OnHidEvent;
         List<Event> iHidEvents;
+        RAWINPUTDEVICE[] iRawInputDevices;
 
 
         public bool IsRegistered { get; private set; }
+        public bool ManageRepeats { get; private set; }
 
-        public Handler(RAWINPUTDEVICE[] aRawInputDevices)
+        public Handler(RAWINPUTDEVICE[] aRawInputDevices, bool aManageRepeats=false)
         {
-            iHidEvents=new List<Event>();
-            IsRegistered = Function.RegisterRawInputDevices(aRawInputDevices, (uint)aRawInputDevices.Length, (uint)Marshal.SizeOf(aRawInputDevices[0]));
+            iRawInputDevices = aRawInputDevices;
+            iHidEvents = new List<Event>();
+            IsRegistered = Function.RegisterRawInputDevices(iRawInputDevices, (uint)iRawInputDevices.Length, (uint)Marshal.SizeOf(iRawInputDevices[0]));
+            ManageRepeats = aManageRepeats;
+        }
+
+        /// <summary>
+        /// Will de-register devices.
+        /// </summary>
+        public void Dispose()
+        {
+            //Setup device removal
+            for (int i=0; i<iRawInputDevices.Length; i++)
+            {
+                iRawInputDevices[i].dwFlags = Const.RIDEV_REMOVE;
+                iRawInputDevices[i].hwndTarget = IntPtr.Zero;
+            }
+
+            //De-register
+            Function.RegisterRawInputDevices(iRawInputDevices, (uint)iRawInputDevices.Length, (uint)Marshal.SizeOf(iRawInputDevices[0]));
+            IsRegistered = false;
         }
 
         /// <summary>
@@ -60,7 +81,7 @@ namespace SharpLib.Hid
                 return;
             }
 
-            Event hidEvent = new Event(aMessage, OnHidEventRepeat);
+            Event hidEvent = new Event(aMessage, OnHidEventRepeat, ManageRepeats);
             hidEvent.DebugWrite();
 
             if (!hidEvent.IsValid || !hidEvent.IsGeneric)
@@ -70,23 +91,26 @@ namespace SharpLib.Hid
             }
 
             //
-            if (hidEvent.IsButtonUp)
+            if (ManageRepeats)
             {
-                //This is a key up event
-                //We need to discard any events belonging to the same page and collection
-                for (int i = (iHidEvents.Count-1); i >= 0; i--)
+                if (hidEvent.IsButtonUp)
                 {
-                    if (iHidEvents[i].UsageId == hidEvent.UsageId)
+                    //This is a key up event
+                    //We need to discard any events belonging to the same page and collection
+                    for (int i = (iHidEvents.Count - 1); i >= 0; i--)
                     {
-                        iHidEvents[i].Dispose();
-                        iHidEvents.RemoveAt(i);
+                        if (iHidEvents[i].UsageId == hidEvent.UsageId)
+                        {
+                            iHidEvents[i].Dispose();
+                            iHidEvents.RemoveAt(i);
+                        }
                     }
                 }
-            }
-            else
-            {
-                //Keep that event until we get a key up message
-                iHidEvents.Add(hidEvent);
+                else
+                {
+                    //Keep that event until we get a key up message
+                    iHidEvents.Add(hidEvent);
+                }
             }
 
             //Broadcast our events

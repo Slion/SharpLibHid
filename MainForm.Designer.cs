@@ -51,6 +51,7 @@ namespace HidDemo
             this.textBoxTests = new System.Windows.Forms.TextBox();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelDevice = new System.Windows.Forms.ToolStripStatusLabel();
+            this.checkBoxRepeat = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabPageMessages.SuspendLayout();
             this.tabPageDevices.SuspendLayout();
@@ -83,6 +84,7 @@ namespace HidDemo
             // 
             // tabPageMessages
             // 
+            this.tabPageMessages.Controls.Add(this.checkBoxRepeat);
             this.tabPageMessages.Controls.Add(this.listViewEvents);
             this.tabPageMessages.Controls.Add(this.buttonClear);
             this.tabPageMessages.Location = new System.Drawing.Point(4, 22);
@@ -231,6 +233,17 @@ namespace HidDemo
             this.toolStripStatusLabelDevice.Size = new System.Drawing.Size(61, 17);
             this.toolStripStatusLabelDevice.Text = "No Device";
             // 
+            // checkBoxRepeat
+            // 
+            this.checkBoxRepeat.AutoSize = true;
+            this.checkBoxRepeat.Location = new System.Drawing.Point(813, 46);
+            this.checkBoxRepeat.Name = "checkBoxRepeat";
+            this.checkBoxRepeat.Size = new System.Drawing.Size(61, 17);
+            this.checkBoxRepeat.TabIndex = 4;
+            this.checkBoxRepeat.Text = "Repeat";
+            this.checkBoxRepeat.UseVisualStyleBackColor = true;
+            this.checkBoxRepeat.CheckedChanged += new System.EventHandler(this.checkBoxRepeat_CheckedChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -243,6 +256,7 @@ namespace HidDemo
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.tabControl.ResumeLayout(false);
             this.tabPageMessages.ResumeLayout(false);
+            this.tabPageMessages.PerformLayout();
             this.tabPageDevices.ResumeLayout(false);
             this.tabPageTests.ResumeLayout(false);
             this.tabPageTests.PerformLayout();
@@ -273,6 +287,7 @@ namespace HidDemo
         private System.Windows.Forms.TabPage tabPageTests;
         private System.Windows.Forms.TextBox textBoxTests;
         private System.Windows.Forms.Button buttonRefresh;
+        private System.Windows.Forms.CheckBox checkBoxRepeat;
 
     }
 }
