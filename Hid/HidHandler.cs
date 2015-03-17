@@ -90,27 +90,19 @@ namespace SharpLib.Hid
                 return;
             }
 
-            //
+            //We want to repeat only a single event at a time.
+            //Any other event will interrupt the current repeat.
             if (ManageRepeats)
             {
-                if (hidEvent.IsButtonUp)
+                //Discard all outstanding repeats, though we should only ever have only one
+                for (int i = (iHidEvents.Count - 1); i >= 0; i--)
                 {
-                    //This is a key up event
-                    //We need to discard any events belonging to the same page and collection
-                    for (int i = (iHidEvents.Count - 1); i >= 0; i--)
-                    {
-                        if (iHidEvents[i].UsageId == hidEvent.UsageId)
-                        {
-                            iHidEvents[i].Dispose();
-                            iHidEvents.RemoveAt(i);
-                        }
-                    }
+                        iHidEvents[i].Dispose();
+                        iHidEvents.RemoveAt(i);
                 }
-                else
-                {
-                    //Keep that event until we get a key up message
-                    iHidEvents.Add(hidEvent);
-                }
+                //Add our newly created event in our repeat list
+                //TODO: instead of a list we could now have a single event since we only support one repeat at a time
+                iHidEvents.Add(hidEvent);
             }
 
             //Broadcast our events

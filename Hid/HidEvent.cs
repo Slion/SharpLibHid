@@ -464,6 +464,7 @@ namespace SharpLib.Hid
         /// <summary>
         /// Print information about this device to our debug output.
         /// </summary>
+        [Conditional("DEBUG")]
         public void DebugWrite()
         {
             if (!IsValid)
