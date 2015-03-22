@@ -1,0 +1,75 @@
+00 Undefined   
+01  Pointer  CP  4.1 
+02  Mouse  CA  4.1  03 Reserved   
+04  Joystick  CA  4.1 
+05  Game Pad  CA  4.1 
+06  Keyboard  CA  4.1 
+07  Keypad  CA  4.1 
+08  Multi-axis Controller  CA  4.1 
+09  Tablet PC System Controls  CA  4.1 
+0A-2F Reserved 
+30 X  DV  4.2 
+31 Y  DV  4.2 
+32 Z  DV  4.2 
+33 Rx  DV  4.2 
+34 Ry  DV  4.2 
+35 Rz  DV  4.2 
+36 Slider  DV  4.3 
+37 Dial  DV  4.3 
+38 Wheel  DV  4.3 
+39 Hat switch  DV  4.3 
+3A  Counted Buffer  CL  4.6 
+3B Byte Count  DV  4.6 
+3C Motion Wakeup  OSC  4.3 
+3D Start  OOC  4.3 
+3E Select  OOC  4.3  3F Reserved   
+40 Vx  DV  4.3.1 
+41 Vy  DV  4.3.1 
+42 Vz  DV  4.3.1 
+43 Vbrx  DV  4.3.1 
+44 Vbry  DV  4.3.1 
+45 Vbrz  DV  4.3.1 
+46 Vno  DV  4.3.1 
+47 Feature Notification  DV,DF  4.8 
+48 Resolution Multiplier DV 
+49-7F Reserved 
+80  System Control  CA  4.5 
+81 System Power Down OSC  4.5 
+82 System Sleep  OSC  4.5.1 
+83 System Wake Up  OSC  4.5.1 
+84  System Context Menu  OSC  4.5 
+85 System Main Menu  OSC  4.5 
+86  System App Menu  OSC  4.5 
+87 System Menu Help  OSC  4.5 
+88 System Menu Exit  OSC  4.5 
+89 System Menu Select OSC  4.5 
+8A System Menu Right  RTC  4.5 
+8B System Menu Left  RTC  4.5 
+8C System Menu Up  RTC  4.5 
+8D System Menu Down  RTC  4.5 
+8E  System Cold Restart  OSC  4.5.1 
+8F  System Warm Restart  OSC  4.5.1 
+90 D-pad Up  OOC  4.7 
+91 D-pad Down  OOC  4.7 
+92 D-pad Right  OOC  4.7 
+93 D-pad Left  OOC  4.7 
+94-9F Reserved 
+A0 System Dock  OSC  4.5.1 
+A1 System Undock  OSC  4.5.1 
+A2 System Setup  OSC  4.5.1 
+A3 System Break  OSC  4.9 
+A4  System Debugger Break  OSC  4.9 
+A5 Application Break  OSC  4.9 
+A6  Application Debugger Break  OSC  4.9 
+A7  System Speaker Mute  OSC  4.5.1 
+A8 System Hibernate  OSC  4.5.1 
+A9-AF Reserved 
+B0  System Display Invert  OSC  4.10 
+B1  System Display Internal  OSC  4.10 
+B2  System Display External  OSC  4.10 
+B3  System Display Both  OSC  4.10 
+B4  System Display Dual  OSC  4.10 
+B5  System Display Toggle Int/Ext  OSC  4.10 
+B6  System Display Swap Primary/Secondary OSC  4.10 
+B7  System Display LCD Autoscale  OSC  4.10 
+B8-FFFF Reserved 
