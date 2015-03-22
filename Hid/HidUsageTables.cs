@@ -698,7 +698,7 @@ namespace SharpLib.Hid
         /// <summary>
         ///
         /// </summary>
-        enum GenericDesktop : ushort
+        public enum GenericDesktop : ushort
         {
             Null = 0x00,
             Pointer = 0x01,
@@ -773,7 +773,7 @@ namespace SharpLib.Hid
         /// <summary>
         ///
         /// </summary>
-        enum SimulationControl : ushort
+        public enum SimulationControl : ushort
         {
             Null = 0x00,
             FlightSimulationDevice = 0x01,
@@ -832,7 +832,7 @@ namespace SharpLib.Hid
         /// <summary>
         ///
         /// </summary>
-        enum GameControl : ushort
+        public enum GameControl : ushort
         {
             Null = 0x00,
             GameController3D = 0x01,
@@ -868,7 +868,7 @@ namespace SharpLib.Hid
         /// <summary>
         ///
         /// </summary>
-        enum TelephonyDevice : ushort
+        public enum TelephonyDevice : ushort
         {
             Null = 0x00,
             Phone = 0x01,
