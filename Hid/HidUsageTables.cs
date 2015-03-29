@@ -361,6 +361,8 @@ namespace SharpLib.Hid
             BroadcastMode = 0x64,
             Snapshot = 0x65,
             Still = 0x66,
+            LenovoBrightnessIncrement = 0x6F, //Custom
+            LenovoBrightnessDecrement = 0x70, //Custom
             Selection = 0x80,
             AssignSelection = 0x81,
             ModeStep = 0x82,
@@ -768,6 +770,20 @@ namespace SharpLib.Hid
             SystemDisplayToggleIntExt = 0xB5,
             SystemDisplaySwapPrimarySecondary = 0xB6,
             SystemDisplayLcdAutoscale = 0xB7
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public enum GenericDevice : ushort
+        {
+            BatteryStrength = 0x20,
+            WirelessChannel = 0x21,
+            WirelessID = 0x22,
+            DiscoverWirelessControl = 0x23,
+            SecurityCodeCharacterEntered = 0x24,
+            SecurityCodeCharacterErased = 0x25,
+            SecurityCodeCleared = 0x26
         }
 
         /// <summary>
