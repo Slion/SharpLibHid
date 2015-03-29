@@ -325,6 +325,10 @@ namespace SharpLib.Hid
             if (!aCaps.IsRange && Enum.IsDefined(typeof(UsagePage), aCaps.UsagePage))
             {
                 Type usageType = Utils.UsageType((UsagePage)aCaps.UsagePage);
+                if (usageType==null)
+                {
+                    return "Input Value: " + Enum.GetName(typeof(UsagePage), aCaps.UsagePage) + " Usage 0x" + aCaps.NotRange.Usage.ToString("X2");
+                }
                 string name = Enum.GetName(usageType, aCaps.NotRange.Usage);
                 if (name == null)
                 {

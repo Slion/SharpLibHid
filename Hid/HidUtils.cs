@@ -75,6 +75,9 @@ namespace SharpLib.Hid
                 case UsagePage.GameControls:
                     return typeof(Usage.GameControl);
 
+                case UsagePage.GenericDeviceControls:
+                    return typeof(Usage.GenericDevice);
+
                 default:
                     return null;
             }

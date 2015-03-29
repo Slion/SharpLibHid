@@ -27,6 +27,6 @@ Adding support for optional event repeat.</releaseNotes>
         <tags>HID USB RawInput GamePad Input IR remote control</tags>
     </metadata>
     <files>
-        <file src="bin\Release\SharpLibHid.dll" target="lib\net20\SharpLibHid.dll" />
+        <file src="bin\x86\Release\SharpLibHid.dll" target="lib\x86\SharpLibHid.dll" />
     </files>
 </package>
