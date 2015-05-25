@@ -92,8 +92,8 @@ namespace SharpLib.Hid
 
         //Compute repeat delay and speed based on system settings
         //Those computations were taken from the Petzold here: ftp://ftp.charlespetzold.com/ProgWinForms/4%20Custom%20Controls/NumericScan/NumericScan/ClickmaticButton.cs
-        private int iRepeatDelay = 250 * (1 + SystemInformation.KeyboardDelay);
-        private int iRepeatSpeed = 405 - 12 * SystemInformation.KeyboardSpeed;
+        private int iRepeatDelayInMs = 250 * (1 + SystemInformation.KeyboardDelay);
+        private int iRepeatSpeedInMs = 405 - 12 * SystemInformation.KeyboardSpeed;
 
         /// <summary>
         /// Tells whether this event has already been disposed of.
@@ -115,7 +115,7 @@ namespace SharpLib.Hid
         /// Initialize an HidEvent from a WM_INPUT message
         /// </summary>
         /// <param name="hRawInputDevice">Device Handle as provided by RAWINPUTHEADER.hDevice, typically accessed as rawinput.header.hDevice</param>
-        public Event(Message aMessage, HidEventRepeatDelegate aRepeatDelegate, bool aRepeat)
+        public Event(Message aMessage, HidEventRepeatDelegate aRepeatDelegate, bool aRepeat, int aRepeatDelayInMs=-1, int aRepeatSpeedInMs=-1 )
         {
             RepeatCount = 0;
             IsValid = false;
@@ -130,6 +130,19 @@ namespace SharpLib.Hid
             UsageValues = new Dictionary<HIDP_VALUE_CAPS,uint>();
             OnHidEventRepeat += aRepeatDelegate;
 
+            //Use custom repeat delay if specified
+            if (aRepeatDelayInMs >= 0)
+            {
+                iRepeatDelayInMs = aRepeatDelayInMs;
+            }
+
+            //Use custom repeat speed if specified
+            if (aRepeatSpeedInMs >= 0)
+            {
+                iRepeatSpeedInMs = aRepeatSpeedInMs;
+            }
+
+            //
             if (aMessage.Msg != Const.WM_INPUT)
             {
                 //Has to be a WM_INPUT message
@@ -235,11 +248,12 @@ namespace SharpLib.Hid
                 Marshal.FreeHGlobal(rawInputBuffer);
             }
 
-            //
-            if (IsButtonDown && aRepeat)
+            //We don't want to repeat every events. Key up events for instance must not be repeated.
+            if ( aRepeat &&         //If repeat is enabled
+                (IsButtonDown ||    //and if we are dealing with a button down event
+                (GetDirectionPadState() != DirectionPadState.Rest))) //or our dpad is not at rest
             {
-                //TODO: Make this optional
-                StartRepeatTimer(iRepeatDelay);
+                StartRepeatTimer(iRepeatDelayInMs);
             }
 
             IsValid = true;
@@ -368,6 +382,13 @@ namespace SharpLib.Hid
         public int GetValueCapabilitiesIndex(ushort aUsagePage, ushort aUsage)
         {
             int i = -1;
+            //Make sure we have a device with input value capabilities
+            if (Device == null || Device.InputValueCapabilities == null)
+            {
+                return i;
+            }
+
+            //Search our value capabilities for the first one matching usage and usage page
             foreach (HIDP_VALUE_CAPS caps in Device.InputValueCapabilities)
             {
                 i++;
@@ -385,13 +406,13 @@ namespace SharpLib.Hid
             }
 
             return i;
-        }        
+        }
 
 
         /// <summary>
-        /// TODO: Move this to another level?
+        /// Start the repeat timer for this event. 
         /// </summary>
-        /// <param name="aInterval"></param>
+        /// <param name="aInterval">The time, in milliseconds, after which the timer elapsed event is triggered.</param>
         public void StartRepeatTimer(double aInterval)
         {
             if (Timer == null)
@@ -406,6 +427,13 @@ namespace SharpLib.Hid
             Timer.Enabled = true;
         }
 
+        /// <summary>
+        /// Callback from our repeat timer.
+        /// </summary>
+        /// <seealso cref="System.Timers.ElapsedEventHandler"/>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">An System.Timers.ElapsedEventArgs object that contains the event data.</param>
+        /// <param name="aHidEvent">The HID Event from which our repeat is coming from.</param>
         static private void OnRepeatTimerElapsed(object sender, ElapsedEventArgs e, Event aHidEvent)
         {
             if (aHidEvent.IsStray)
@@ -419,7 +447,7 @@ namespace SharpLib.Hid
             if (aHidEvent.RepeatCount == 1)
             {
                 //Re-Start our timer only after the initial delay 
-                aHidEvent.StartRepeatTimer(aHidEvent.iRepeatSpeed);
+                aHidEvent.StartRepeatTimer(aHidEvent.iRepeatSpeedInMs);
             }
 
             //Broadcast our repeat event
@@ -556,6 +584,7 @@ namespace SharpLib.Hid
 
                 usageText += GetDirectionPadState().ToString();
 
+                //For each axis
                 foreach (KeyValuePair<HIDP_VALUE_CAPS, uint> entry in UsageValues)
                 {
                     if (entry.Key.IsRange)
@@ -563,13 +592,17 @@ namespace SharpLib.Hid
                         continue;
                     }
 
+                    //Get our usage type
                     Type usageType = Utils.UsageType((UsagePage)entry.Key.UsagePage);
                     if (usageType == null)
                     {
+                        //Unknown usage type
                         //TODO: check why this is happening on Logitech rumble gamepad 2.
                         //Probably some of our axis are hiding in there.
                         continue;
                     }
+
+                    //Get the name of our axis
                     string name = Enum.GetName(usageType, entry.Key.NotRange.Usage);
 
                     if (usageText != "")

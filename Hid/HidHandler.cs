@@ -43,13 +43,25 @@ namespace SharpLib.Hid
 
         public bool IsRegistered { get; private set; }
         public bool ManageRepeats { get; private set; }
+        public int RepeatDelayInMs { get; private set; }
+        public int RepeatSpeedInMs { get; private set; }
 
-        public Handler(RAWINPUTDEVICE[] aRawInputDevices, bool aManageRepeats=false)
+        /// <summary>
+        /// Create an HID handler.
+        /// Registers the provided input devices.
+        /// </summary>
+        /// <param name="aRawInputDevices">List of HID devices to receive input from.</param>
+        /// <param name="aManageRepeats">Specify if we want to our handler to manage event repeats for our application.</param>
+        /// <param name="aRepeatDelayInMs">The initial delay in milliseconds before an event starts repeating.</param>
+        /// <param name="aRepeatSpeedInMs">The delay in milliseconds between an event repeat notification past the first one.</param>
+        public Handler(RAWINPUTDEVICE[] aRawInputDevices, bool aManageRepeats = false, int aRepeatDelayInMs = -1, int aRepeatSpeedInMs = -1)
         {
             iRawInputDevices = aRawInputDevices;
             iHidEvents = new List<Event>();
             IsRegistered = Function.RegisterRawInputDevices(iRawInputDevices, (uint)iRawInputDevices.Length, (uint)Marshal.SizeOf(iRawInputDevices[0]));
             ManageRepeats = aManageRepeats;
+            RepeatDelayInMs = aRepeatDelayInMs;
+            RepeatSpeedInMs = aRepeatSpeedInMs;
         }
 
         /// <summary>
@@ -81,7 +93,7 @@ namespace SharpLib.Hid
                 return;
             }
 
-            Event hidEvent = new Event(aMessage, OnHidEventRepeat, ManageRepeats);
+            Event hidEvent = new Event(aMessage, OnHidEventRepeat, ManageRepeats, RepeatDelayInMs, RepeatSpeedInMs);
             hidEvent.DebugWrite();
 
             if (!hidEvent.IsValid || !hidEvent.IsGeneric)
