@@ -122,7 +122,7 @@ namespace HidDemo
             //rid[i].hwndTarget = aHWND;
 
 
-            iHidHandler = new SharpLib.Hid.Handler(rid, checkBoxRepeat.Checked);
+            iHidHandler = new SharpLib.Hid.Handler(rid, checkBoxRepeat.Checked, (int)numericRepeatDelay.Value, (int)numericRepeatSpeed.Value);
             if (!iHidHandler.IsRegistered)
             {
                 Debug.WriteLine("Failed to register raw input devices: " + Marshal.GetLastWin32Error().ToString());
@@ -140,7 +140,8 @@ namespace HidDemo
 
             if (this.InvokeRequired)
             {
-                //Not in the proper thread, invoke ourselves
+                //Not in the proper thread, invoke ourselves.
+                //Repeat events usually come from another thread.
                 OnHidEventDelegate d = new OnHidEventDelegate(HandleHidEventThreadSafe);
                 this.Invoke(d, new object[] { aSender, aHidEvent });
             }
@@ -191,6 +192,16 @@ namespace HidDemo
         }
 
         private void checkBoxRepeat_CheckedChanged(object sender, EventArgs e)
+        {
+            RegisterHidDevices();
+        }
+
+        private void numericRepeatDelay_ValueChanged(object sender, EventArgs e)
+        {
+            RegisterHidDevices();
+        }
+
+        private void numericRepeatSpeed_ValueChanged(object sender, EventArgs e)
         {
             RegisterHidDevices();
         }

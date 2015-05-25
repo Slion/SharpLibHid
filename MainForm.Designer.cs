@@ -35,6 +35,10 @@ namespace HidDemo
             this.buttonClear = new System.Windows.Forms.Button();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageMessages = new System.Windows.Forms.TabPage();
+            this.labelRepeatDelay = new System.Windows.Forms.Label();
+            this.numericRepeatSpeed = new System.Windows.Forms.NumericUpDown();
+            this.numericRepeatDelay = new System.Windows.Forms.NumericUpDown();
+            this.checkBoxRepeat = new System.Windows.Forms.CheckBox();
             this.listViewEvents = new System.Windows.Forms.ListView();
             this.columnHeaderUsages = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderInputReport = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -51,9 +55,11 @@ namespace HidDemo
             this.textBoxTests = new System.Windows.Forms.TextBox();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelDevice = new System.Windows.Forms.ToolStripStatusLabel();
-            this.checkBoxRepeat = new System.Windows.Forms.CheckBox();
+            this.labelRepeatSpeed = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabPageMessages.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericRepeatSpeed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericRepeatDelay)).BeginInit();
             this.tabPageDevices.SuspendLayout();
             this.tabPageTests.SuspendLayout();
             this.statusStrip.SuspendLayout();
@@ -79,21 +85,91 @@ namespace HidDemo
             this.tabControl.Location = new System.Drawing.Point(12, 12);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(902, 532);
+            this.tabControl.Size = new System.Drawing.Size(902, 565);
             this.tabControl.TabIndex = 4;
             // 
             // tabPageMessages
             // 
+            this.tabPageMessages.Controls.Add(this.labelRepeatSpeed);
+            this.tabPageMessages.Controls.Add(this.labelRepeatDelay);
+            this.tabPageMessages.Controls.Add(this.numericRepeatSpeed);
+            this.tabPageMessages.Controls.Add(this.numericRepeatDelay);
             this.tabPageMessages.Controls.Add(this.checkBoxRepeat);
             this.tabPageMessages.Controls.Add(this.listViewEvents);
             this.tabPageMessages.Controls.Add(this.buttonClear);
             this.tabPageMessages.Location = new System.Drawing.Point(4, 22);
             this.tabPageMessages.Name = "tabPageMessages";
             this.tabPageMessages.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageMessages.Size = new System.Drawing.Size(894, 506);
+            this.tabPageMessages.Size = new System.Drawing.Size(894, 539);
             this.tabPageMessages.TabIndex = 0;
             this.tabPageMessages.Text = "Messages";
             this.tabPageMessages.UseVisualStyleBackColor = true;
+            // 
+            // labelRepeatDelay
+            // 
+            this.labelRepeatDelay.AutoSize = true;
+            this.labelRepeatDelay.Location = new System.Drawing.Point(770, 71);
+            this.labelRepeatDelay.Name = "labelRepeatDelay";
+            this.labelRepeatDelay.Size = new System.Drawing.Size(56, 13);
+            this.labelRepeatDelay.TabIndex = 7;
+            this.labelRepeatDelay.Text = "Delay (ms)";
+            // 
+            // numericRepeatSpeed
+            // 
+            this.numericRepeatSpeed.Location = new System.Drawing.Point(834, 95);
+            this.numericRepeatSpeed.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numericRepeatSpeed.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.numericRepeatSpeed.Name = "numericRepeatSpeed";
+            this.numericRepeatSpeed.Size = new System.Drawing.Size(57, 20);
+            this.numericRepeatSpeed.TabIndex = 6;
+            this.numericRepeatSpeed.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.numericRepeatSpeed.ValueChanged += new System.EventHandler(this.numericRepeatSpeed_ValueChanged);
+            // 
+            // numericRepeatDelay
+            // 
+            this.numericRepeatDelay.Location = new System.Drawing.Point(834, 69);
+            this.numericRepeatDelay.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numericRepeatDelay.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.numericRepeatDelay.Name = "numericRepeatDelay";
+            this.numericRepeatDelay.Size = new System.Drawing.Size(57, 20);
+            this.numericRepeatDelay.TabIndex = 5;
+            this.numericRepeatDelay.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.numericRepeatDelay.ValueChanged += new System.EventHandler(this.numericRepeatDelay_ValueChanged);
+            // 
+            // checkBoxRepeat
+            // 
+            this.checkBoxRepeat.AutoSize = true;
+            this.checkBoxRepeat.Location = new System.Drawing.Point(813, 46);
+            this.checkBoxRepeat.Name = "checkBoxRepeat";
+            this.checkBoxRepeat.Size = new System.Drawing.Size(61, 17);
+            this.checkBoxRepeat.TabIndex = 4;
+            this.checkBoxRepeat.Text = "Repeat";
+            this.checkBoxRepeat.UseVisualStyleBackColor = true;
+            this.checkBoxRepeat.CheckedChanged += new System.EventHandler(this.checkBoxRepeat_CheckedChanged);
             // 
             // listViewEvents
             // 
@@ -111,7 +187,7 @@ namespace HidDemo
             this.listViewEvents.GridLines = true;
             this.listViewEvents.Location = new System.Drawing.Point(8, 6);
             this.listViewEvents.Name = "listViewEvents";
-            this.listViewEvents.Size = new System.Drawing.Size(744, 492);
+            this.listViewEvents.Size = new System.Drawing.Size(744, 525);
             this.listViewEvents.TabIndex = 3;
             this.listViewEvents.UseCompatibleStateImageBehavior = false;
             this.listViewEvents.View = System.Windows.Forms.View.Details;
@@ -155,7 +231,7 @@ namespace HidDemo
             this.tabPageDevices.Location = new System.Drawing.Point(4, 22);
             this.tabPageDevices.Name = "tabPageDevices";
             this.tabPageDevices.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageDevices.Size = new System.Drawing.Size(894, 506);
+            this.tabPageDevices.Size = new System.Drawing.Size(894, 539);
             this.tabPageDevices.TabIndex = 1;
             this.tabPageDevices.Text = "Devices";
             this.tabPageDevices.UseVisualStyleBackColor = true;
@@ -196,7 +272,7 @@ namespace HidDemo
             | System.Windows.Forms.AnchorStyles.Left)));
             this.treeViewDevices.Location = new System.Drawing.Point(8, 6);
             this.treeViewDevices.Name = "treeViewDevices";
-            this.treeViewDevices.Size = new System.Drawing.Size(713, 492);
+            this.treeViewDevices.Size = new System.Drawing.Size(713, 525);
             this.treeViewDevices.TabIndex = 0;
             // 
             // tabPageTests
@@ -204,7 +280,7 @@ namespace HidDemo
             this.tabPageTests.Controls.Add(this.textBoxTests);
             this.tabPageTests.Location = new System.Drawing.Point(4, 22);
             this.tabPageTests.Name = "tabPageTests";
-            this.tabPageTests.Size = new System.Drawing.Size(894, 506);
+            this.tabPageTests.Size = new System.Drawing.Size(894, 539);
             this.tabPageTests.TabIndex = 2;
             this.tabPageTests.Text = "Tests";
             this.tabPageTests.UseVisualStyleBackColor = true;
@@ -221,9 +297,9 @@ namespace HidDemo
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabelDevice});
-            this.statusStrip.Location = new System.Drawing.Point(0, 547);
+            this.statusStrip.Location = new System.Drawing.Point(0, 580);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(935, 22);
+            this.statusStrip.Size = new System.Drawing.Size(944, 22);
             this.statusStrip.TabIndex = 5;
             this.statusStrip.Text = "statusStrip1";
             // 
@@ -233,30 +309,33 @@ namespace HidDemo
             this.toolStripStatusLabelDevice.Size = new System.Drawing.Size(61, 17);
             this.toolStripStatusLabelDevice.Text = "No Device";
             // 
-            // checkBoxRepeat
+            // labelRepeatSpeed
             // 
-            this.checkBoxRepeat.AutoSize = true;
-            this.checkBoxRepeat.Location = new System.Drawing.Point(813, 46);
-            this.checkBoxRepeat.Name = "checkBoxRepeat";
-            this.checkBoxRepeat.Size = new System.Drawing.Size(61, 17);
-            this.checkBoxRepeat.TabIndex = 4;
-            this.checkBoxRepeat.Text = "Repeat";
-            this.checkBoxRepeat.UseVisualStyleBackColor = true;
-            this.checkBoxRepeat.CheckedChanged += new System.EventHandler(this.checkBoxRepeat_CheckedChanged);
+            this.labelRepeatSpeed.AutoSize = true;
+            this.labelRepeatSpeed.Location = new System.Drawing.Point(771, 97);
+            this.labelRepeatSpeed.Name = "labelRepeatSpeed";
+            this.labelRepeatSpeed.Size = new System.Drawing.Size(60, 13);
+            this.labelRepeatSpeed.TabIndex = 8;
+            this.labelRepeatSpeed.Text = "Speed (ms)";
             // 
             // MainForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            this.AutoScroll = true;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(935, 569);
+            this.ClientSize = new System.Drawing.Size(944, 602);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.tabControl);
+            this.DoubleBuffered = true;
+            this.MinimumSize = new System.Drawing.Size(960, 640);
             this.Name = "MainForm";
             this.Text = "HID Demo";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.tabControl.ResumeLayout(false);
             this.tabPageMessages.ResumeLayout(false);
             this.tabPageMessages.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericRepeatSpeed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericRepeatDelay)).EndInit();
             this.tabPageDevices.ResumeLayout(false);
             this.tabPageTests.ResumeLayout(false);
             this.tabPageTests.PerformLayout();
@@ -288,6 +367,10 @@ namespace HidDemo
         private System.Windows.Forms.TextBox textBoxTests;
         private System.Windows.Forms.Button buttonRefresh;
         private System.Windows.Forms.CheckBox checkBoxRepeat;
+        private System.Windows.Forms.Label labelRepeatDelay;
+        private System.Windows.Forms.NumericUpDown numericRepeatSpeed;
+        private System.Windows.Forms.NumericUpDown numericRepeatDelay;
+        private System.Windows.Forms.Label labelRepeatSpeed;
 
     }
 }
