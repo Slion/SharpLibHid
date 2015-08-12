@@ -140,6 +140,10 @@ namespace SharpLib.Hid
             Null = 0x00,
             GreenStart = 0x0D,
             ClosedCaptioning = 0x2B,
+            PrestigoA = 0x52, // Philips Prestigo A
+            PrestigoB = 0x53, // Philips Prestigo B
+            PrestigoC = 0x54, // Philips Prestigo C
+            PrestigoD = 0x55, // Philips Prestigo D
             Teletext = 0x5A,
             TeletextRed = 0x5B,
             TeletextGreen = 0x5C,
