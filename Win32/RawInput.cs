@@ -196,7 +196,18 @@ namespace SharpLib.Win32
             //For each our device add a node to our treeview
             foreach (RAWINPUTDEVICELIST device in ridList)
             {
-                SharpLib.Hid.Device hidDevice=new SharpLib.Hid.Device(device.hDevice);
+                SharpLib.Hid.Device hidDevice;
+
+                //Try create our HID device.
+                try
+                {
+                    hidDevice = new SharpLib.Hid.Device(device.hDevice);
+                }
+                catch /*(System.Exception ex)*/
+                {
+                    //Just skip that device then
+                    continue;
+                }                
 
                 TreeNode node = null;
                 if (hidDevice.Product != null && hidDevice.Product.Length > 1)
