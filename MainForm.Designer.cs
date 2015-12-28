@@ -35,6 +35,7 @@ namespace HidDemo
             this.buttonClear = new System.Windows.Forms.Button();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageMessages = new System.Windows.Forms.TabPage();
+            this.labelRepeatSpeed = new System.Windows.Forms.Label();
             this.labelRepeatDelay = new System.Windows.Forms.Label();
             this.numericRepeatSpeed = new System.Windows.Forms.NumericUpDown();
             this.numericRepeatDelay = new System.Windows.Forms.NumericUpDown();
@@ -55,7 +56,7 @@ namespace HidDemo
             this.textBoxTests = new System.Windows.Forms.TextBox();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelDevice = new System.Windows.Forms.ToolStripStatusLabel();
-            this.labelRepeatSpeed = new System.Windows.Forms.Label();
+            this.checkBoxUseSingleHandler = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabPageMessages.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericRepeatSpeed)).BeginInit();
@@ -90,6 +91,7 @@ namespace HidDemo
             // 
             // tabPageMessages
             // 
+            this.tabPageMessages.Controls.Add(this.checkBoxUseSingleHandler);
             this.tabPageMessages.Controls.Add(this.labelRepeatSpeed);
             this.tabPageMessages.Controls.Add(this.labelRepeatDelay);
             this.tabPageMessages.Controls.Add(this.numericRepeatSpeed);
@@ -104,6 +106,15 @@ namespace HidDemo
             this.tabPageMessages.TabIndex = 0;
             this.tabPageMessages.Text = "Messages";
             this.tabPageMessages.UseVisualStyleBackColor = true;
+            // 
+            // labelRepeatSpeed
+            // 
+            this.labelRepeatSpeed.AutoSize = true;
+            this.labelRepeatSpeed.Location = new System.Drawing.Point(771, 97);
+            this.labelRepeatSpeed.Name = "labelRepeatSpeed";
+            this.labelRepeatSpeed.Size = new System.Drawing.Size(60, 13);
+            this.labelRepeatSpeed.TabIndex = 8;
+            this.labelRepeatSpeed.Text = "Speed (ms)";
             // 
             // labelRepeatDelay
             // 
@@ -309,14 +320,18 @@ namespace HidDemo
             this.toolStripStatusLabelDevice.Size = new System.Drawing.Size(61, 17);
             this.toolStripStatusLabelDevice.Text = "No Device";
             // 
-            // labelRepeatSpeed
+            // checkBoxUseSingleHandler
             // 
-            this.labelRepeatSpeed.AutoSize = true;
-            this.labelRepeatSpeed.Location = new System.Drawing.Point(771, 97);
-            this.labelRepeatSpeed.Name = "labelRepeatSpeed";
-            this.labelRepeatSpeed.Size = new System.Drawing.Size(60, 13);
-            this.labelRepeatSpeed.TabIndex = 8;
-            this.labelRepeatSpeed.Text = "Speed (ms)";
+            this.checkBoxUseSingleHandler.AutoSize = true;
+            this.checkBoxUseSingleHandler.Checked = true;
+            this.checkBoxUseSingleHandler.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxUseSingleHandler.Location = new System.Drawing.Point(771, 132);
+            this.checkBoxUseSingleHandler.Name = "checkBoxUseSingleHandler";
+            this.checkBoxUseSingleHandler.Size = new System.Drawing.Size(117, 17);
+            this.checkBoxUseSingleHandler.TabIndex = 9;
+            this.checkBoxUseSingleHandler.Text = "Use Single Handler";
+            this.checkBoxUseSingleHandler.UseVisualStyleBackColor = true;
+            this.checkBoxUseSingleHandler.CheckedChanged += new System.EventHandler(this.checkBoxUseSingleHandler_CheckedChanged);
             // 
             // MainForm
             // 
@@ -330,6 +345,7 @@ namespace HidDemo
             this.MinimumSize = new System.Drawing.Size(960, 640);
             this.Name = "MainForm";
             this.Text = "HID Demo";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.tabControl.ResumeLayout(false);
             this.tabPageMessages.ResumeLayout(false);
@@ -371,6 +387,6 @@ namespace HidDemo
         private System.Windows.Forms.NumericUpDown numericRepeatSpeed;
         private System.Windows.Forms.NumericUpDown numericRepeatDelay;
         private System.Windows.Forms.Label labelRepeatSpeed;
-
+        private System.Windows.Forms.CheckBox checkBoxUseSingleHandler;
     }
 }
