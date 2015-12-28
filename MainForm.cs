@@ -35,7 +35,18 @@ namespace HidDemo
 	/// </summary>
 	public partial class MainForm : System.Windows.Forms.Form
 	{
+        /// <summary>
+        /// Can be used to register for WM_INPUT messages and parse them.
+        /// For testing purposes it can also be used to solely register for WM_INPUT messages.
+        /// </summary>
         private Hid.Handler iHidHandler;
+
+        /// <summary>
+        /// Just using another handler to check that one can use the parser without registering.
+        /// That's useful cause only one windows per application can register for a range of WM_INPUT apparently.
+        /// See: http://stackoverflow.com/a/9756322/3288206
+        /// </summary>
+        private Hid.Handler iHidParser;
 
         public delegate void OnHidEventDelegate(object aSender, Hid.Event aHidEvent);
 
@@ -63,19 +74,37 @@ namespace HidDemo
             SharpLib.Win32.RawInput.PopulateDeviceList(treeViewDevices);
 		}
 
-	    void RegisterHidDevices()
-	    {           
-            // Register the input device to receive the commands from the
-            // remote device. See http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwmt/html/remote_control.asp
-            // for the vendor defined usage page.
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            DisposeHandlers();
+        }
 
-            if (iHidHandler!=null)
+
+        private void DisposeHandlers()
+        {
+            if (iHidHandler != null)
             {
                 //First de-register
                 iHidHandler.Dispose();
                 iHidHandler = null;
             }
 
+            if (iHidParser != null)
+            {
+                //First de-register
+                iHidParser.Dispose();
+                iHidParser = null;
+            }
+
+        }
+
+        void RegisterHidDevices()
+	    {
+            // Register the input device to receive the commands from the
+            // remote device. See http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwmt/html/remote_control.asp
+            // for the vendor defined usage page.
+
+            DisposeHandlers();
 
             RAWINPUTDEVICE[] rid = new RAWINPUTDEVICE[5];
 
@@ -120,15 +149,25 @@ namespace HidDemo
             //rid[i].usUsage = (ushort)Hid.UsageCollection.GenericDesktop.Mouse;
             //rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             //rid[i].hwndTarget = aHWND;
-
-
+           
             iHidHandler = new SharpLib.Hid.Handler(rid, checkBoxRepeat.Checked, (int)numericRepeatDelay.Value, (int)numericRepeatSpeed.Value);
             if (!iHidHandler.IsRegistered)
             {
                 Debug.WriteLine("Failed to register raw input devices: " + Marshal.GetLastWin32Error().ToString());
             }
-            iHidHandler.OnHidEvent += HandleHidEventThreadSafe;
-	    }
+
+            if (checkBoxUseSingleHandler.Checked)
+            {
+                iHidParser = iHidHandler;
+            }
+            else
+            {
+                //For testing purposes we parse WM_INPUT messages from another Handler instance.
+                iHidParser = new SharpLib.Hid.Handler(checkBoxRepeat.Checked, (int)numericRepeatDelay.Value, (int)numericRepeatSpeed.Value);
+            }
+            
+            iHidParser.OnHidEvent += HandleHidEventThreadSafe;            
+        }
 
         public void HandleHidEventThreadSafe(object aSender, SharpLib.Hid.Event aHidEvent)
         {
@@ -163,7 +202,8 @@ namespace HidDemo
                 case Const.WM_INPUT:
                     //Returning zero means we processed that message.
                     message.Result = new IntPtr(0);
-                    iHidHandler.ProcessInput(ref message);
+                    //iHidHandler.ProcessInput(ref message);
+                    iHidParser.ProcessInput(ref message);
                     break;
             }
             //Is that needed? Check the docs.
@@ -206,5 +246,9 @@ namespace HidDemo
             RegisterHidDevices();
         }
 
-	}
+        private void checkBoxUseSingleHandler_CheckedChanged(object sender, EventArgs e)
+        {
+            RegisterHidDevices();
+        }
+    }
 }
