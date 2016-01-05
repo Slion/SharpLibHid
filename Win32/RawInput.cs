@@ -174,7 +174,6 @@ namespace SharpLib.Win32
         /// <param name="aTreeView"></param>
         public static void PopulateDeviceList(TreeView aTreeView)
         {
-
             //Get our list of devices
             RAWINPUTDEVICELIST[] ridList = null;
             uint deviceCount = 0;
@@ -207,7 +206,7 @@ namespace SharpLib.Win32
                 {
                     //Just skip that device then
                     continue;
-                }                
+                }
 
                 TreeNode node = null;
                 if (hidDevice.Product != null && hidDevice.Product.Length > 1)
