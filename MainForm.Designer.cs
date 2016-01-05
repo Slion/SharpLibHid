@@ -32,9 +32,11 @@ namespace HidDemo
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.buttonClear = new System.Windows.Forms.Button();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageMessages = new System.Windows.Forms.TabPage();
+            this.checkBoxUseSingleHandler = new System.Windows.Forms.CheckBox();
             this.labelRepeatSpeed = new System.Windows.Forms.Label();
             this.labelRepeatDelay = new System.Windows.Forms.Label();
             this.numericRepeatSpeed = new System.Windows.Forms.NumericUpDown();
@@ -56,7 +58,6 @@ namespace HidDemo
             this.textBoxTests = new System.Windows.Forms.TextBox();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelDevice = new System.Windows.Forms.ToolStripStatusLabel();
-            this.checkBoxUseSingleHandler = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabPageMessages.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericRepeatSpeed)).BeginInit();
@@ -106,6 +107,19 @@ namespace HidDemo
             this.tabPageMessages.TabIndex = 0;
             this.tabPageMessages.Text = "Messages";
             this.tabPageMessages.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxUseSingleHandler
+            // 
+            this.checkBoxUseSingleHandler.AutoSize = true;
+            this.checkBoxUseSingleHandler.Checked = true;
+            this.checkBoxUseSingleHandler.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxUseSingleHandler.Location = new System.Drawing.Point(771, 132);
+            this.checkBoxUseSingleHandler.Name = "checkBoxUseSingleHandler";
+            this.checkBoxUseSingleHandler.Size = new System.Drawing.Size(117, 17);
+            this.checkBoxUseSingleHandler.TabIndex = 9;
+            this.checkBoxUseSingleHandler.Text = "Use Single Handler";
+            this.checkBoxUseSingleHandler.UseVisualStyleBackColor = true;
+            this.checkBoxUseSingleHandler.CheckedChanged += new System.EventHandler(this.checkBoxUseSingleHandler_CheckedChanged);
             // 
             // labelRepeatSpeed
             // 
@@ -320,19 +334,6 @@ namespace HidDemo
             this.toolStripStatusLabelDevice.Size = new System.Drawing.Size(61, 17);
             this.toolStripStatusLabelDevice.Text = "No Device";
             // 
-            // checkBoxUseSingleHandler
-            // 
-            this.checkBoxUseSingleHandler.AutoSize = true;
-            this.checkBoxUseSingleHandler.Checked = true;
-            this.checkBoxUseSingleHandler.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxUseSingleHandler.Location = new System.Drawing.Point(771, 132);
-            this.checkBoxUseSingleHandler.Name = "checkBoxUseSingleHandler";
-            this.checkBoxUseSingleHandler.Size = new System.Drawing.Size(117, 17);
-            this.checkBoxUseSingleHandler.TabIndex = 9;
-            this.checkBoxUseSingleHandler.Text = "Use Single Handler";
-            this.checkBoxUseSingleHandler.UseVisualStyleBackColor = true;
-            this.checkBoxUseSingleHandler.CheckedChanged += new System.EventHandler(this.checkBoxUseSingleHandler_CheckedChanged);
-            // 
             // MainForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -342,6 +343,7 @@ namespace HidDemo
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.tabControl);
             this.DoubleBuffered = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(960, 640);
             this.Name = "MainForm";
             this.Text = "HID Demo";
