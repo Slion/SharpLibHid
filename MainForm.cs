@@ -70,24 +70,24 @@ namespace HidDemo
 			Application.Run(new MainForm());
 		}
 
-        private void ShowClickOnceVersion()
+        public static string ClickOnceVersion()
         {
             //Check if we are running a Click Once deployed application
             if (ApplicationDeployment.IsNetworkDeployed)
             {
                 //This is a proper Click Once installation, fetch and show our version number
-                this.Text += " - v" + ApplicationDeployment.CurrentDeployment.CurrentVersion;
+                return "v" + ApplicationDeployment.CurrentDeployment.CurrentVersion;
             }
             else
             {
                 //Not a proper Click Once installation, assuming development build then
-                this.Text += " - development";
+                return "development";
             }
         }
 
         private void MainForm_Load(object sender, System.EventArgs e)
         {
-            ShowClickOnceVersion();
+            this.Text += " - " + ClickOnceVersion(); 
 
             RegisterHidDevices();
             //Create our list of HID devices

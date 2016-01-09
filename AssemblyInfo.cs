@@ -27,7 +27,7 @@ using System.Runtime.CompilerServices;
 // associated with an assembly.
 //
 [assembly: AssemblyTitle("HID Demo")]
-[assembly: AssemblyDescription("SharpLibHid demo application")]
+[assembly: AssemblyDescription("SharpLibHid demo application.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Slions")]
 [assembly: AssemblyProduct("HID Demo")]
