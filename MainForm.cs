@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2014-2015 Stéphane Lenclud.
+// Copyright (C) 2014-2016 Stéphane Lenclud.
 //
 // This file is part of SharpLibHid.
 //
@@ -27,6 +27,9 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Hid = SharpLib.Hid;
 using SharpLib.Win32;
+
+//For ClickOnce support
+using System.Deployment.Application;
 
 namespace HidDemo
 {
@@ -67,8 +70,25 @@ namespace HidDemo
 			Application.Run(new MainForm());
 		}
 
+        private void ShowClickOnceVersion()
+        {
+            //Check if we are running a Click Once deployed application
+            if (ApplicationDeployment.IsNetworkDeployed)
+            {
+                //This is a proper Click Once installation, fetch and show our version number
+                this.Text += " - v" + ApplicationDeployment.CurrentDeployment.CurrentVersion;
+            }
+            else
+            {
+                //Not a proper Click Once installation, assuming development build then
+                this.Text += " - development";
+            }
+        }
+
         private void MainForm_Load(object sender, System.EventArgs e)
         {
+            ShowClickOnceVersion();
+
             RegisterHidDevices();
             //Create our list of HID devices
             SharpLib.Win32.RawInput.PopulateDeviceList(treeViewDevices);
@@ -210,7 +230,83 @@ namespace HidDemo
 			base.WndProc(ref message);
 		}
 
-		private void buttonClear_Click(object sender, EventArgs e)
+        /// <summary>
+        /// ClickOnce install update.
+        /// </summary>
+        private void InstallUpdateSyncWithInfo()
+        {
+            UpdateCheckInfo info = null;
+
+            if (ApplicationDeployment.IsNetworkDeployed)
+            {
+                ApplicationDeployment ad = ApplicationDeployment.CurrentDeployment;
+
+                try
+                {
+                    info = ad.CheckForDetailedUpdate();
+                }
+                catch (DeploymentDownloadException dde)
+                {
+                    MessageBox.Show("The new version of the application cannot be downloaded at this time. \n\nPlease check your network connection, or try again later. Error: " + dde.Message);
+                    return;
+                }
+                catch (InvalidDeploymentException ide)
+                {
+                    MessageBox.Show("Cannot check for a new version of the application. The ClickOnce deployment is corrupt. Please redeploy the application and try again. Error: " + ide.Message);
+                    return;
+                }
+                catch (InvalidOperationException ioe)
+                {
+                    MessageBox.Show("This application cannot be updated. It is likely not a ClickOnce application. Error: " + ioe.Message);
+                    return;
+                }
+
+                if (info.UpdateAvailable)
+                {
+                    Boolean doUpdate = true;
+
+                    if (!info.IsUpdateRequired)
+                    {
+                        DialogResult dr = MessageBox.Show("An update is available. Would you like to update the application now?", "Update Available", MessageBoxButtons.OKCancel);
+                        if (!(DialogResult.OK == dr))
+                        {
+                            doUpdate = false;
+                        }
+                    }
+                    else
+                    {
+                        // Display a message that the app MUST reboot. Display the minimum required version.
+                        MessageBox.Show("This application has detected a mandatory update from your current " +
+                            "version to version " + info.MinimumRequiredVersion.ToString() +
+                            ". The application will now install the update and restart.",
+                            "Update Available", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+                    }
+
+                    if (doUpdate)
+                    {
+                        try
+                        {
+                            ad.Update();
+                            MessageBox.Show("The application has been upgraded, and will now restart.");
+                            Application.Restart();
+                        }
+                        catch (DeploymentDownloadException dde)
+                        {
+                            MessageBox.Show("Cannot install the latest version of the application. \n\nPlease check your network connection, or try again later. Error: " + dde);
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("You are already running the latest version.", "Application up-to-date");
+                }
+            }
+        }
+
+
+        private void buttonClear_Click(object sender, EventArgs e)
 		{
 			listViewEvents.Items.Clear();
 		}
@@ -249,6 +345,18 @@ namespace HidDemo
         private void checkBoxUseSingleHandler_CheckedChanged(object sender, EventArgs e)
         {
             RegisterHidDevices();
+        }
+
+        private void updateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //Check for ClickOnce update.
+            InstallUpdateSyncWithInfo();
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutBox box = new AboutBox();
+            box.ShowDialog();
         }
     }
 }

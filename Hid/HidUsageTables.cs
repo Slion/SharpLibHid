@@ -258,7 +258,11 @@ namespace SharpLib.Hid
             NetworkSelection = 0x2C,
             BlueRayTool = 0x78,
             ChannelInfo = 0x41,
-            VideoSelection = 0x61
+            VideoSelection = 0x61,
+            /// <summary>
+            /// Notably featured on the OrigenAE RC147 and other MCE remote with basic IR learning capabilities.
+            /// </summary>
+            TvPower = 0x65, 
         }
 
         /// <summary>

@@ -58,6 +58,9 @@ namespace HidDemo
             this.textBoxTests = new System.Windows.Forms.TextBox();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelDevice = new System.Windows.Forms.ToolStripStatusLabel();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl.SuspendLayout();
             this.tabPageMessages.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericRepeatSpeed)).BeginInit();
@@ -65,6 +68,7 @@ namespace HidDemo
             this.tabPageDevices.SuspendLayout();
             this.tabPageTests.SuspendLayout();
             this.statusStrip.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonClear
@@ -84,10 +88,10 @@ namespace HidDemo
             this.tabControl.Controls.Add(this.tabPageMessages);
             this.tabControl.Controls.Add(this.tabPageDevices);
             this.tabControl.Controls.Add(this.tabPageTests);
-            this.tabControl.Location = new System.Drawing.Point(12, 12);
+            this.tabControl.Location = new System.Drawing.Point(12, 27);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(902, 565);
+            this.tabControl.Size = new System.Drawing.Size(942, 594);
             this.tabControl.TabIndex = 4;
             // 
             // tabPageMessages
@@ -103,7 +107,7 @@ namespace HidDemo
             this.tabPageMessages.Location = new System.Drawing.Point(4, 22);
             this.tabPageMessages.Name = "tabPageMessages";
             this.tabPageMessages.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageMessages.Size = new System.Drawing.Size(894, 539);
+            this.tabPageMessages.Size = new System.Drawing.Size(934, 568);
             this.tabPageMessages.TabIndex = 0;
             this.tabPageMessages.Text = "Messages";
             this.tabPageMessages.UseVisualStyleBackColor = true;
@@ -212,7 +216,7 @@ namespace HidDemo
             this.listViewEvents.GridLines = true;
             this.listViewEvents.Location = new System.Drawing.Point(8, 6);
             this.listViewEvents.Name = "listViewEvents";
-            this.listViewEvents.Size = new System.Drawing.Size(744, 525);
+            this.listViewEvents.Size = new System.Drawing.Size(744, 554);
             this.listViewEvents.TabIndex = 3;
             this.listViewEvents.UseCompatibleStateImageBehavior = false;
             this.listViewEvents.View = System.Windows.Forms.View.Details;
@@ -256,7 +260,7 @@ namespace HidDemo
             this.tabPageDevices.Location = new System.Drawing.Point(4, 22);
             this.tabPageDevices.Name = "tabPageDevices";
             this.tabPageDevices.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageDevices.Size = new System.Drawing.Size(894, 539);
+            this.tabPageDevices.Size = new System.Drawing.Size(934, 568);
             this.tabPageDevices.TabIndex = 1;
             this.tabPageDevices.Text = "Devices";
             this.tabPageDevices.UseVisualStyleBackColor = true;
@@ -297,7 +301,7 @@ namespace HidDemo
             | System.Windows.Forms.AnchorStyles.Left)));
             this.treeViewDevices.Location = new System.Drawing.Point(8, 6);
             this.treeViewDevices.Name = "treeViewDevices";
-            this.treeViewDevices.Size = new System.Drawing.Size(713, 525);
+            this.treeViewDevices.Size = new System.Drawing.Size(713, 554);
             this.treeViewDevices.TabIndex = 0;
             // 
             // tabPageTests
@@ -305,7 +309,7 @@ namespace HidDemo
             this.tabPageTests.Controls.Add(this.textBoxTests);
             this.tabPageTests.Location = new System.Drawing.Point(4, 22);
             this.tabPageTests.Name = "tabPageTests";
-            this.tabPageTests.Size = new System.Drawing.Size(894, 539);
+            this.tabPageTests.Size = new System.Drawing.Size(934, 568);
             this.tabPageTests.TabIndex = 2;
             this.tabPageTests.Text = "Tests";
             this.tabPageTests.UseVisualStyleBackColor = true;
@@ -322,9 +326,9 @@ namespace HidDemo
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabelDevice});
-            this.statusStrip.Location = new System.Drawing.Point(0, 580);
+            this.statusStrip.Location = new System.Drawing.Point(0, 624);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(944, 22);
+            this.statusStrip.Size = new System.Drawing.Size(966, 22);
             this.statusStrip.TabIndex = 5;
             this.statusStrip.Text = "statusStrip1";
             // 
@@ -334,16 +338,43 @@ namespace HidDemo
             this.toolStripStatusLabelDevice.Size = new System.Drawing.Size(61, 17);
             this.toolStripStatusLabelDevice.Text = "No Device";
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.updateToolStripMenuItem,
+            this.aboutToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(966, 24);
+            this.menuStrip1.TabIndex = 6;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // updateToolStripMenuItem
+            // 
+            this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
+            this.updateToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
+            this.updateToolStripMenuItem.Text = "Update";
+            this.updateToolStripMenuItem.Click += new System.EventHandler(this.updateToolStripMenuItem_Click);
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.AutoScroll = true;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(944, 602);
+            this.ClientSize = new System.Drawing.Size(966, 646);
             this.Controls.Add(this.statusStrip);
+            this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.tabControl);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(960, 640);
             this.Name = "MainForm";
             this.Text = "HID Demo";
@@ -359,6 +390,8 @@ namespace HidDemo
             this.tabPageTests.PerformLayout();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -390,5 +423,8 @@ namespace HidDemo
         private System.Windows.Forms.NumericUpDown numericRepeatDelay;
         private System.Windows.Forms.Label labelRepeatSpeed;
         private System.Windows.Forms.CheckBox checkBoxUseSingleHandler;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem updateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
     }
 }

@@ -1,3 +1,4 @@
+using System.Resources;
 //
 // Copyright (C) 2014-2015 Stéphane Lenclud.
 //
@@ -25,12 +26,12 @@ using System.Runtime.CompilerServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle("")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("HID Demo")]
+[assembly: AssemblyDescription("SharpLibHid demo application")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCompany("Slions")]
+[assembly: AssemblyProduct("HID Demo")]
+[assembly: AssemblyCopyright("Copyright  © 2014-2016 Stéphane Lenclud")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
@@ -75,3 +76,5 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyDelaySign(false)]
 [assembly: AssemblyKeyFile("")]
 [assembly: AssemblyKeyName("")]
+[assembly: NeutralResourcesLanguage("en")]
+
