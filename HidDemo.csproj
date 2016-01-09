@@ -44,7 +44,6 @@
     <ProductName>HID Demo</ProductName>
     <PublisherName>Slions</PublisherName>
     <SuiteName>HID Demo</SuiteName>
-    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>index.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>5</ApplicationRevision>
