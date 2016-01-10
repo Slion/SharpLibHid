@@ -70,6 +70,10 @@ namespace HidDemo
 			Application.Run(new MainForm());
 		}
 
+        /// <summary>
+        /// Get a ClickOnce version string if any otherwise otherwise return a default string.
+        /// </summary>
+        /// <returns>ClickOnce version string or place holder instead.</returns>
         public static string ClickOnceVersion()
         {
             //Check if we are running a Click Once deployed application
@@ -133,6 +137,12 @@ namespace HidDemo
             rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.WindowsMediaCenter.WindowsMediaCenterRemoteControl;
             rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             rid[i].hwndTarget = Handle;
+
+            //i++;
+            //rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.WindowsMediaCenterRemoteControl;
+            //rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.WindowsMediaCenter.WindowsMediaCenterLowLevel;
+            //rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+            //rid[i].hwndTarget = Handle;
 
             i++;
             rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.Consumer;
