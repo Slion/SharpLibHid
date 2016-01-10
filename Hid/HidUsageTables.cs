@@ -120,7 +120,8 @@ namespace SharpLib.Hid
 
         public enum WindowsMediaCenter : ushort
         {
-            WindowsMediaCenterRemoteControl = 0x88
+            WindowsMediaCenterRemoteControl = 0x88,
+            WindowsMediaCenterLowLevel = 0x89
         }
 
     }
