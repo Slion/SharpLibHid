@@ -30,6 +30,7 @@ using SharpLib.Win32;
 
 //For ClickOnce support
 using System.Deployment.Application;
+using System.Linq;
 
 namespace HidDemo
 {
@@ -130,42 +131,46 @@ namespace HidDemo
 
             DisposeHandlers();
 
-            RAWINPUTDEVICE[] rid = new RAWINPUTDEVICE[5];
+            RadioButton checkedRadioButton = groupBoxRegistrationFlag.Controls.OfType<RadioButton>().FirstOrDefault(r => r.Checked);
+            uint flags = uint.Parse((string)checkedRadioButton.Tag, System.Globalization.NumberStyles.HexNumber);
+            // See: Const.RIDEV_EXINPUTSINK and Const.RIDEV_INPUTSINK
+
+            RAWINPUTDEVICE[] rid = new RAWINPUTDEVICE[6];
 
             int i = 0;
             rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.WindowsMediaCenterRemoteControl;
             rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.WindowsMediaCenter.WindowsMediaCenterRemoteControl;
-            rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+            rid[i].dwFlags = flags;
             rid[i].hwndTarget = Handle;
 
-            //i++;
-            //rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.WindowsMediaCenterRemoteControl;
-            //rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.WindowsMediaCenter.WindowsMediaCenterLowLevel;
-            //rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
-            //rid[i].hwndTarget = Handle;
+            i++;
+            rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.WindowsMediaCenterRemoteControl;
+            rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.WindowsMediaCenter.WindowsMediaCenterLowLevel;
+            rid[i].dwFlags = flags;
+            rid[i].hwndTarget = Handle;
 
             i++;
             rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.Consumer;
             rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.Consumer.ConsumerControl;
-            rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+            rid[i].dwFlags = flags;
             rid[i].hwndTarget = Handle;
 
             i++;
             rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.Consumer;
             rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.Consumer.Selection;
-            rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+            rid[i].dwFlags = flags;
             rid[i].hwndTarget = Handle;
 
             i++;
             rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.GenericDesktopControls;
             rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.GenericDesktop.SystemControl;
-            rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+            rid[i].dwFlags = flags;
             rid[i].hwndTarget = Handle;
 
             i++;
             rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.GenericDesktopControls;
             rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.GenericDesktop.GamePad;
-            rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
+            rid[i].dwFlags = flags;
             rid[i].hwndTarget = Handle;
 
             //i++;
@@ -367,6 +372,31 @@ namespace HidDemo
         {
             AboutBox box = new AboutBox();
             box.ShowDialog();
+        }
+
+        private void radioButtonInputSink_CheckedChanged(object sender, EventArgs e)
+        {
+            if (((RadioButton)sender).Checked)
+            {
+                RegisterHidDevices();
+            }
+        }
+
+        private void radioButtonExInputSink_CheckedChanged(object sender, EventArgs e)
+        {
+            if (((RadioButton)sender).Checked)
+            {
+                RegisterHidDevices();
+            }
+
+        }
+
+        private void radioButtonNone_CheckedChanged(object sender, EventArgs e)
+        {
+            if (((RadioButton)sender).Checked)
+            {
+                RegisterHidDevices();
+            }
         }
     }
 }
