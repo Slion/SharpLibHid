@@ -61,6 +61,11 @@ namespace HidDemo
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.columnBackground = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.groupBoxRegistrationFlag = new System.Windows.Forms.GroupBox();
+            this.radioButtonInputSink = new System.Windows.Forms.RadioButton();
+            this.radioButtonExInputSink = new System.Windows.Forms.RadioButton();
+            this.radioButtonNone = new System.Windows.Forms.RadioButton();
             this.tabControl.SuspendLayout();
             this.tabPageMessages.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericRepeatSpeed)).BeginInit();
@@ -69,11 +74,12 @@ namespace HidDemo
             this.tabPageTests.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.groupBoxRegistrationFlag.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonClear
             // 
-            this.buttonClear.Location = new System.Drawing.Point(813, 6);
+            this.buttonClear.Location = new System.Drawing.Point(950, 5);
             this.buttonClear.Name = "buttonClear";
             this.buttonClear.Size = new System.Drawing.Size(75, 23);
             this.buttonClear.TabIndex = 3;
@@ -91,11 +97,12 @@ namespace HidDemo
             this.tabControl.Location = new System.Drawing.Point(12, 27);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(942, 594);
+            this.tabControl.Size = new System.Drawing.Size(1039, 594);
             this.tabControl.TabIndex = 4;
             // 
             // tabPageMessages
             // 
+            this.tabPageMessages.Controls.Add(this.groupBoxRegistrationFlag);
             this.tabPageMessages.Controls.Add(this.checkBoxUseSingleHandler);
             this.tabPageMessages.Controls.Add(this.labelRepeatSpeed);
             this.tabPageMessages.Controls.Add(this.labelRepeatDelay);
@@ -107,7 +114,7 @@ namespace HidDemo
             this.tabPageMessages.Location = new System.Drawing.Point(4, 22);
             this.tabPageMessages.Name = "tabPageMessages";
             this.tabPageMessages.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageMessages.Size = new System.Drawing.Size(934, 568);
+            this.tabPageMessages.Size = new System.Drawing.Size(1031, 568);
             this.tabPageMessages.TabIndex = 0;
             this.tabPageMessages.Text = "Messages";
             this.tabPageMessages.UseVisualStyleBackColor = true;
@@ -117,7 +124,7 @@ namespace HidDemo
             this.checkBoxUseSingleHandler.AutoSize = true;
             this.checkBoxUseSingleHandler.Checked = true;
             this.checkBoxUseSingleHandler.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxUseSingleHandler.Location = new System.Drawing.Point(771, 132);
+            this.checkBoxUseSingleHandler.Location = new System.Drawing.Point(908, 131);
             this.checkBoxUseSingleHandler.Name = "checkBoxUseSingleHandler";
             this.checkBoxUseSingleHandler.Size = new System.Drawing.Size(117, 17);
             this.checkBoxUseSingleHandler.TabIndex = 9;
@@ -128,7 +135,7 @@ namespace HidDemo
             // labelRepeatSpeed
             // 
             this.labelRepeatSpeed.AutoSize = true;
-            this.labelRepeatSpeed.Location = new System.Drawing.Point(771, 97);
+            this.labelRepeatSpeed.Location = new System.Drawing.Point(908, 96);
             this.labelRepeatSpeed.Name = "labelRepeatSpeed";
             this.labelRepeatSpeed.Size = new System.Drawing.Size(60, 13);
             this.labelRepeatSpeed.TabIndex = 8;
@@ -137,7 +144,7 @@ namespace HidDemo
             // labelRepeatDelay
             // 
             this.labelRepeatDelay.AutoSize = true;
-            this.labelRepeatDelay.Location = new System.Drawing.Point(770, 71);
+            this.labelRepeatDelay.Location = new System.Drawing.Point(907, 70);
             this.labelRepeatDelay.Name = "labelRepeatDelay";
             this.labelRepeatDelay.Size = new System.Drawing.Size(56, 13);
             this.labelRepeatDelay.TabIndex = 7;
@@ -145,7 +152,7 @@ namespace HidDemo
             // 
             // numericRepeatSpeed
             // 
-            this.numericRepeatSpeed.Location = new System.Drawing.Point(834, 95);
+            this.numericRepeatSpeed.Location = new System.Drawing.Point(971, 94);
             this.numericRepeatSpeed.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -168,7 +175,7 @@ namespace HidDemo
             // 
             // numericRepeatDelay
             // 
-            this.numericRepeatDelay.Location = new System.Drawing.Point(834, 69);
+            this.numericRepeatDelay.Location = new System.Drawing.Point(971, 68);
             this.numericRepeatDelay.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -192,7 +199,7 @@ namespace HidDemo
             // checkBoxRepeat
             // 
             this.checkBoxRepeat.AutoSize = true;
-            this.checkBoxRepeat.Location = new System.Drawing.Point(813, 46);
+            this.checkBoxRepeat.Location = new System.Drawing.Point(950, 45);
             this.checkBoxRepeat.Name = "checkBoxRepeat";
             this.checkBoxRepeat.Size = new System.Drawing.Size(61, 17);
             this.checkBoxRepeat.TabIndex = 4;
@@ -212,11 +219,12 @@ namespace HidDemo
             this.columnHeaderUsagePage,
             this.columnHeaderUsageCollection,
             this.columnHeaderRepeat,
-            this.columnHeaderTime});
+            this.columnHeaderTime,
+            this.columnBackground});
             this.listViewEvents.GridLines = true;
             this.listViewEvents.Location = new System.Drawing.Point(8, 6);
             this.listViewEvents.Name = "listViewEvents";
-            this.listViewEvents.Size = new System.Drawing.Size(744, 554);
+            this.listViewEvents.Size = new System.Drawing.Size(845, 554);
             this.listViewEvents.TabIndex = 3;
             this.listViewEvents.UseCompatibleStateImageBehavior = false;
             this.listViewEvents.View = System.Windows.Forms.View.Details;
@@ -224,12 +232,12 @@ namespace HidDemo
             // columnHeaderUsages
             // 
             this.columnHeaderUsages.Text = "Usages";
-            this.columnHeaderUsages.Width = 180;
+            this.columnHeaderUsages.Width = 192;
             // 
             // columnHeaderInputReport
             // 
             this.columnHeaderInputReport.Text = "Input Report";
-            this.columnHeaderInputReport.Width = 176;
+            this.columnHeaderInputReport.Width = 154;
             // 
             // columnHeaderUsagePage
             // 
@@ -239,7 +247,7 @@ namespace HidDemo
             // columnHeaderUsageCollection
             // 
             this.columnHeaderUsageCollection.Text = "Usage Collection";
-            this.columnHeaderUsageCollection.Width = 134;
+            this.columnHeaderUsageCollection.Width = 116;
             // 
             // columnHeaderRepeat
             // 
@@ -328,7 +336,7 @@ namespace HidDemo
             this.toolStripStatusLabelDevice});
             this.statusStrip.Location = new System.Drawing.Point(0, 624);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(966, 22);
+            this.statusStrip.Size = new System.Drawing.Size(1063, 22);
             this.statusStrip.TabIndex = 5;
             this.statusStrip.Text = "statusStrip1";
             // 
@@ -345,7 +353,7 @@ namespace HidDemo
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(966, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1063, 24);
             this.menuStrip1.TabIndex = 6;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -363,12 +371,67 @@ namespace HidDemo
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
+            // columnBackground
+            // 
+            this.columnBackground.Text = "Background";
+            this.columnBackground.Width = 97;
+            // 
+            // groupBoxRegistrationFlag
+            // 
+            this.groupBoxRegistrationFlag.Controls.Add(this.radioButtonNone);
+            this.groupBoxRegistrationFlag.Controls.Add(this.radioButtonExInputSink);
+            this.groupBoxRegistrationFlag.Controls.Add(this.radioButtonInputSink);
+            this.groupBoxRegistrationFlag.Location = new System.Drawing.Point(860, 169);
+            this.groupBoxRegistrationFlag.Name = "groupBoxRegistrationFlag";
+            this.groupBoxRegistrationFlag.Size = new System.Drawing.Size(165, 102);
+            this.groupBoxRegistrationFlag.TabIndex = 10;
+            this.groupBoxRegistrationFlag.TabStop = false;
+            this.groupBoxRegistrationFlag.Text = "Flag";
+            // 
+            // radioButtonInputSink
+            // 
+            this.radioButtonInputSink.AutoSize = true;
+            this.radioButtonInputSink.Location = new System.Drawing.Point(7, 20);
+            this.radioButtonInputSink.Name = "radioButtonInputSink";
+            this.radioButtonInputSink.Size = new System.Drawing.Size(83, 17);
+            this.radioButtonInputSink.TabIndex = 0;
+            this.radioButtonInputSink.Tag = "00000100";
+            this.radioButtonInputSink.Text = "INPUTSINK";
+            this.radioButtonInputSink.UseVisualStyleBackColor = true;
+            this.radioButtonInputSink.CheckedChanged += new System.EventHandler(this.radioButtonInputSink_CheckedChanged);
+            // 
+            // radioButtonExInputSink
+            // 
+            this.radioButtonExInputSink.AutoSize = true;
+            this.radioButtonExInputSink.Location = new System.Drawing.Point(7, 43);
+            this.radioButtonExInputSink.Name = "radioButtonExInputSink";
+            this.radioButtonExInputSink.Size = new System.Drawing.Size(97, 17);
+            this.radioButtonExInputSink.TabIndex = 1;
+            this.radioButtonExInputSink.Tag = "00001000";
+            this.radioButtonExInputSink.Text = "EXINPUTSINK";
+            this.radioButtonExInputSink.UseVisualStyleBackColor = true;
+            this.radioButtonExInputSink.CheckedChanged += new System.EventHandler(this.radioButtonExInputSink_CheckedChanged);
+            // 
+            // radioButtonNone
+            // 
+            this.radioButtonNone.AutoSize = true;
+            this.radioButtonNone.Checked = true;
+            this.radioButtonNone.Location = new System.Drawing.Point(7, 66);
+            this.radioButtonNone.Name = "radioButtonNone";
+            this.radioButtonNone.Size = new System.Drawing.Size(51, 17);
+            this.radioButtonNone.TabIndex = 2;
+            this.radioButtonNone.TabStop = true;
+            this.radioButtonNone.Tag = "0";
+            this.radioButtonNone.Text = "None";
+            this.radioButtonNone.UseVisualStyleBackColor = true;
+            this.radioButtonNone.CheckedChanged += new System.EventHandler(this.radioButtonNone_CheckedChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.AutoScroll = true;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(966, 646);
+            this.ClientSize = new System.Drawing.Size(1063, 646);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.tabControl);
@@ -392,6 +455,8 @@ namespace HidDemo
             this.statusStrip.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.groupBoxRegistrationFlag.ResumeLayout(false);
+            this.groupBoxRegistrationFlag.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -426,5 +491,10 @@ namespace HidDemo
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem updateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ColumnHeader columnBackground;
+        private System.Windows.Forms.GroupBox groupBoxRegistrationFlag;
+        private System.Windows.Forms.RadioButton radioButtonNone;
+        private System.Windows.Forms.RadioButton radioButtonExInputSink;
+        private System.Windows.Forms.RadioButton radioButtonInputSink;
     }
 }
