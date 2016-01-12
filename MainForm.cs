@@ -96,7 +96,7 @@ namespace HidDemo
             //Create our list of HID devices
             SharpLib.Win32.RawInput.PopulateDeviceList(treeViewDevices);
 
-            textBoxLogs.AppendText(TreeViewToText(treeViewDevices));
+            richTextBoxLogs.AppendText(TreeViewToText(treeViewDevices));
         }
 
         private string TreeNodeToText(TreeNode aTreeNode, uint aDepth)
@@ -286,7 +286,7 @@ namespace HidDemo
                 //We are in the proper thread
                 listViewEvents.Items.Insert(0, aHidEvent.ToListViewItem());
                 toolStripStatusLabelDevice.Text = aHidEvent.Device.FriendlyName;
-                textBoxLogs.AppendText(aHidEvent.ToString());
+                richTextBoxLogs.AppendText(aHidEvent.ToString());
             }
         }
 
@@ -299,7 +299,7 @@ namespace HidDemo
                     break;
                 case Const.WM_INPUT:
                     //Log that message
-                    textBoxLogs.AppendText("WM_INPUT: " + message.ToString() + "\r\n");
+                    richTextBoxLogs.AppendText("WM_INPUT: " + message.ToString() + "\r\n");
                     //Returning zero means we processed that message.
                     message.Result = new IntPtr(0);
                     //iHidHandler.ProcessInput(ref message);
@@ -461,6 +461,11 @@ namespace HidDemo
             {
                 RegisterHidDevices();
             }
+        }
+
+        private void buttonClearLogs_Click(object sender, EventArgs e)
+        {
+            richTextBoxLogs.Text = "";
         }
     }
 }

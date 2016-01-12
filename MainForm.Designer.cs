@@ -61,13 +61,14 @@ namespace HidDemo
             this.treeViewDevices = new System.Windows.Forms.TreeView();
             this.tabPageTests = new System.Windows.Forms.TabPage();
             this.textBoxTests = new System.Windows.Forms.TextBox();
+            this.tabPageLogs = new System.Windows.Forms.TabPage();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelDevice = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabPageLogs = new System.Windows.Forms.TabPage();
-            this.textBoxLogs = new System.Windows.Forms.TextBox();
+            this.richTextBoxLogs = new System.Windows.Forms.RichTextBox();
+            this.buttonClearLogs = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabPageMessages.SuspendLayout();
             this.groupBoxRegistrationFlag.SuspendLayout();
@@ -75,9 +76,9 @@ namespace HidDemo
             ((System.ComponentModel.ISupportInitialize)(this.numericRepeatDelay)).BeginInit();
             this.tabPageDevices.SuspendLayout();
             this.tabPageTests.SuspendLayout();
+            this.tabPageLogs.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
-            this.tabPageLogs.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonClear
@@ -390,6 +391,18 @@ namespace HidDemo
             this.textBoxTests.Size = new System.Drawing.Size(887, 499);
             this.textBoxTests.TabIndex = 0;
             // 
+            // tabPageLogs
+            // 
+            this.tabPageLogs.Controls.Add(this.buttonClearLogs);
+            this.tabPageLogs.Controls.Add(this.richTextBoxLogs);
+            this.tabPageLogs.Location = new System.Drawing.Point(4, 22);
+            this.tabPageLogs.Name = "tabPageLogs";
+            this.tabPageLogs.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageLogs.Size = new System.Drawing.Size(1031, 568);
+            this.tabPageLogs.TabIndex = 3;
+            this.tabPageLogs.Text = "Logs";
+            this.tabPageLogs.UseVisualStyleBackColor = true;
+            // 
             // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -431,30 +444,30 @@ namespace HidDemo
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
-            // tabPageLogs
+            // richTextBoxLogs
             // 
-            this.tabPageLogs.Controls.Add(this.textBoxLogs);
-            this.tabPageLogs.Location = new System.Drawing.Point(4, 22);
-            this.tabPageLogs.Name = "tabPageLogs";
-            this.tabPageLogs.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageLogs.Size = new System.Drawing.Size(1031, 568);
-            this.tabPageLogs.TabIndex = 3;
-            this.tabPageLogs.Text = "Logs";
-            this.tabPageLogs.UseVisualStyleBackColor = true;
-            // 
-            // textBoxLogs
-            // 
-            this.textBoxLogs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.richTextBoxLogs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.textBoxLogs.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxLogs.Location = new System.Drawing.Point(6, 6);
-            this.textBoxLogs.Multiline = true;
-            this.textBoxLogs.Name = "textBoxLogs";
-            this.textBoxLogs.ReadOnly = true;
-            this.textBoxLogs.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxLogs.Size = new System.Drawing.Size(893, 556);
-            this.textBoxLogs.TabIndex = 1;
-            this.textBoxLogs.WordWrap = false;
+            this.richTextBoxLogs.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBoxLogs.DetectUrls = false;
+            this.richTextBoxLogs.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBoxLogs.Location = new System.Drawing.Point(6, 6);
+            this.richTextBoxLogs.Name = "richTextBoxLogs";
+            this.richTextBoxLogs.ReadOnly = true;
+            this.richTextBoxLogs.Size = new System.Drawing.Size(897, 556);
+            this.richTextBoxLogs.TabIndex = 0;
+            this.richTextBoxLogs.Text = "";
+            this.richTextBoxLogs.WordWrap = false;
+            // 
+            // buttonClearLogs
+            // 
+            this.buttonClearLogs.Location = new System.Drawing.Point(950, 6);
+            this.buttonClearLogs.Name = "buttonClearLogs";
+            this.buttonClearLogs.Size = new System.Drawing.Size(75, 23);
+            this.buttonClearLogs.TabIndex = 4;
+            this.buttonClearLogs.Text = "Clear";
+            this.buttonClearLogs.UseVisualStyleBackColor = true;
+            this.buttonClearLogs.Click += new System.EventHandler(this.buttonClearLogs_Click);
             // 
             // MainForm
             // 
@@ -483,12 +496,11 @@ namespace HidDemo
             this.tabPageDevices.ResumeLayout(false);
             this.tabPageTests.ResumeLayout(false);
             this.tabPageTests.PerformLayout();
+            this.tabPageLogs.ResumeLayout(false);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
-            this.tabPageLogs.ResumeLayout(false);
-            this.tabPageLogs.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -529,6 +541,7 @@ namespace HidDemo
         private System.Windows.Forms.RadioButton radioButtonExInputSink;
         private System.Windows.Forms.RadioButton radioButtonInputSink;
         private System.Windows.Forms.TabPage tabPageLogs;
-        private System.Windows.Forms.TextBox textBoxLogs;
+        private System.Windows.Forms.RichTextBox richTextBoxLogs;
+        private System.Windows.Forms.Button buttonClearLogs;
     }
 }
