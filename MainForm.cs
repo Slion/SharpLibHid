@@ -90,13 +90,75 @@ namespace HidDemo
             }
         }
 
+        private void PopulateDeviceList()
+        {
+            treeViewDevices.Nodes.Clear();
+            //Create our list of HID devices
+            SharpLib.Win32.RawInput.PopulateDeviceList(treeViewDevices);
+
+            textBoxLogs.AppendText(TreeViewToText(treeViewDevices));
+        }
+
+        private string TreeNodeToText(TreeNode aTreeNode, uint aDepth)
+        {
+            // Print the node.
+            string res = "\r\n";
+
+            uint depth = aDepth;
+            while (depth>1)
+            {
+                depth--;
+                res += "  ";
+            }
+
+            res += "|-";
+            
+            if (aTreeNode.Nodes.Count > 0)
+            {
+                res += "+";
+            }
+            else
+            {
+                res += "-";
+            }
+
+
+            res += aTreeNode.Text;
+
+            // Print each node recursively.
+            foreach (TreeNode tn in aTreeNode.Nodes)
+            {
+                res += TreeNodeToText(tn, aDepth+1);
+            }
+
+            return res;
+        }
+
+        /// <summary>
+        /// Dumps a Tree View control into a string.
+        /// </summary>
+        /// <param name="aTreeView"></param>
+        /// <returns></returns>
+        private string TreeViewToText(TreeView aTreeView)
+        {
+            // Print each node recursively.
+            string res = "--------------------------------------------------------------------------------------------------------------------------\r\n";
+            res += "+" + aTreeView.Name.Replace("treeView","").Replace("iTreeView", "");
+            TreeNodeCollection nodes = aTreeView.Nodes;
+            foreach (TreeNode n in nodes)
+            {
+                res += TreeNodeToText(n,1);
+            }
+            res += "\r\n--------------------------------------------------------------------------------------------------------------------------\r\n";
+            return res;
+        }
+
         private void MainForm_Load(object sender, System.EventArgs e)
         {
             this.Text += " - " + ClickOnceVersion(); 
 
             RegisterHidDevices();
-            //Create our list of HID devices
-            SharpLib.Win32.RawInput.PopulateDeviceList(treeViewDevices);
+            PopulateDeviceList();
 		}
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -224,6 +286,7 @@ namespace HidDemo
                 //We are in the proper thread
                 listViewEvents.Items.Insert(0, aHidEvent.ToListViewItem());
                 toolStripStatusLabelDevice.Text = aHidEvent.Device.FriendlyName;
+                textBoxLogs.AppendText(aHidEvent.ToString());
             }
         }
 
@@ -235,6 +298,8 @@ namespace HidDemo
                     //ProcessKeyDown(message.WParam);
                     break;
                 case Const.WM_INPUT:
+                    //Log that message
+                    textBoxLogs.AppendText("WM_INPUT: " + message.ToString() + "\r\n");
                     //Returning zero means we processed that message.
                     message.Result = new IntPtr(0);
                     //iHidHandler.ProcessInput(ref message);
@@ -338,8 +403,7 @@ namespace HidDemo
 
         private void buttonRefresh_Click(object sender, EventArgs e)
         {
-            treeViewDevices.Nodes.Clear();
-            SharpLib.Win32.RawInput.PopulateDeviceList(treeViewDevices);
+            PopulateDeviceList();            
         }
 
         private void checkBoxRepeat_CheckedChanged(object sender, EventArgs e)

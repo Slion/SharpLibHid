@@ -36,6 +36,10 @@ namespace HidDemo
             this.buttonClear = new System.Windows.Forms.Button();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageMessages = new System.Windows.Forms.TabPage();
+            this.groupBoxRegistrationFlag = new System.Windows.Forms.GroupBox();
+            this.radioButtonNone = new System.Windows.Forms.RadioButton();
+            this.radioButtonExInputSink = new System.Windows.Forms.RadioButton();
+            this.radioButtonInputSink = new System.Windows.Forms.RadioButton();
             this.checkBoxUseSingleHandler = new System.Windows.Forms.CheckBox();
             this.labelRepeatSpeed = new System.Windows.Forms.Label();
             this.labelRepeatDelay = new System.Windows.Forms.Label();
@@ -49,6 +53,7 @@ namespace HidDemo
             this.columnHeaderUsageCollection = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderRepeat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnBackground = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPageDevices = new System.Windows.Forms.TabPage();
             this.buttonRefresh = new System.Windows.Forms.Button();
             this.buttonTreeViewExpandAll = new System.Windows.Forms.Button();
@@ -58,23 +63,21 @@ namespace HidDemo
             this.textBoxTests = new System.Windows.Forms.TextBox();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelDevice = new System.Windows.Forms.ToolStripStatusLabel();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.columnBackground = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.groupBoxRegistrationFlag = new System.Windows.Forms.GroupBox();
-            this.radioButtonInputSink = new System.Windows.Forms.RadioButton();
-            this.radioButtonExInputSink = new System.Windows.Forms.RadioButton();
-            this.radioButtonNone = new System.Windows.Forms.RadioButton();
+            this.tabPageLogs = new System.Windows.Forms.TabPage();
+            this.textBoxLogs = new System.Windows.Forms.TextBox();
             this.tabControl.SuspendLayout();
             this.tabPageMessages.SuspendLayout();
+            this.groupBoxRegistrationFlag.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericRepeatSpeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRepeatDelay)).BeginInit();
             this.tabPageDevices.SuspendLayout();
             this.tabPageTests.SuspendLayout();
             this.statusStrip.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
-            this.groupBoxRegistrationFlag.SuspendLayout();
+            this.menuStrip.SuspendLayout();
+            this.tabPageLogs.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonClear
@@ -89,11 +92,13 @@ namespace HidDemo
             // 
             // tabControl
             // 
-            this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.tabPageMessages);
             this.tabControl.Controls.Add(this.tabPageDevices);
             this.tabControl.Controls.Add(this.tabPageTests);
+            this.tabControl.Controls.Add(this.tabPageLogs);
             this.tabControl.Location = new System.Drawing.Point(12, 27);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
@@ -118,6 +123,56 @@ namespace HidDemo
             this.tabPageMessages.TabIndex = 0;
             this.tabPageMessages.Text = "Messages";
             this.tabPageMessages.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxRegistrationFlag
+            // 
+            this.groupBoxRegistrationFlag.Controls.Add(this.radioButtonNone);
+            this.groupBoxRegistrationFlag.Controls.Add(this.radioButtonExInputSink);
+            this.groupBoxRegistrationFlag.Controls.Add(this.radioButtonInputSink);
+            this.groupBoxRegistrationFlag.Location = new System.Drawing.Point(860, 169);
+            this.groupBoxRegistrationFlag.Name = "groupBoxRegistrationFlag";
+            this.groupBoxRegistrationFlag.Size = new System.Drawing.Size(165, 102);
+            this.groupBoxRegistrationFlag.TabIndex = 10;
+            this.groupBoxRegistrationFlag.TabStop = false;
+            this.groupBoxRegistrationFlag.Text = "Flag";
+            // 
+            // radioButtonNone
+            // 
+            this.radioButtonNone.AutoSize = true;
+            this.radioButtonNone.Checked = true;
+            this.radioButtonNone.Location = new System.Drawing.Point(7, 66);
+            this.radioButtonNone.Name = "radioButtonNone";
+            this.radioButtonNone.Size = new System.Drawing.Size(51, 17);
+            this.radioButtonNone.TabIndex = 2;
+            this.radioButtonNone.TabStop = true;
+            this.radioButtonNone.Tag = "0";
+            this.radioButtonNone.Text = "None";
+            this.radioButtonNone.UseVisualStyleBackColor = true;
+            this.radioButtonNone.CheckedChanged += new System.EventHandler(this.radioButtonNone_CheckedChanged);
+            // 
+            // radioButtonExInputSink
+            // 
+            this.radioButtonExInputSink.AutoSize = true;
+            this.radioButtonExInputSink.Location = new System.Drawing.Point(7, 43);
+            this.radioButtonExInputSink.Name = "radioButtonExInputSink";
+            this.radioButtonExInputSink.Size = new System.Drawing.Size(97, 17);
+            this.radioButtonExInputSink.TabIndex = 1;
+            this.radioButtonExInputSink.Tag = "00001000";
+            this.radioButtonExInputSink.Text = "EXINPUTSINK";
+            this.radioButtonExInputSink.UseVisualStyleBackColor = true;
+            this.radioButtonExInputSink.CheckedChanged += new System.EventHandler(this.radioButtonExInputSink_CheckedChanged);
+            // 
+            // radioButtonInputSink
+            // 
+            this.radioButtonInputSink.AutoSize = true;
+            this.radioButtonInputSink.Location = new System.Drawing.Point(7, 20);
+            this.radioButtonInputSink.Name = "radioButtonInputSink";
+            this.radioButtonInputSink.Size = new System.Drawing.Size(83, 17);
+            this.radioButtonInputSink.TabIndex = 0;
+            this.radioButtonInputSink.Tag = "00000100";
+            this.radioButtonInputSink.Text = "INPUTSINK";
+            this.radioButtonInputSink.UseVisualStyleBackColor = true;
+            this.radioButtonInputSink.CheckedChanged += new System.EventHandler(this.radioButtonInputSink_CheckedChanged);
             // 
             // checkBoxUseSingleHandler
             // 
@@ -259,6 +314,11 @@ namespace HidDemo
             this.columnHeaderTime.Text = "Time";
             this.columnHeaderTime.Width = 76;
             // 
+            // columnBackground
+            // 
+            this.columnBackground.Text = "Background";
+            this.columnBackground.Width = 97;
+            // 
             // tabPageDevices
             // 
             this.tabPageDevices.Controls.Add(this.buttonRefresh);
@@ -268,7 +328,7 @@ namespace HidDemo
             this.tabPageDevices.Location = new System.Drawing.Point(4, 22);
             this.tabPageDevices.Name = "tabPageDevices";
             this.tabPageDevices.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageDevices.Size = new System.Drawing.Size(934, 568);
+            this.tabPageDevices.Size = new System.Drawing.Size(1031, 568);
             this.tabPageDevices.TabIndex = 1;
             this.tabPageDevices.Text = "Devices";
             this.tabPageDevices.UseVisualStyleBackColor = true;
@@ -317,7 +377,7 @@ namespace HidDemo
             this.tabPageTests.Controls.Add(this.textBoxTests);
             this.tabPageTests.Location = new System.Drawing.Point(4, 22);
             this.tabPageTests.Name = "tabPageTests";
-            this.tabPageTests.Size = new System.Drawing.Size(934, 568);
+            this.tabPageTests.Size = new System.Drawing.Size(1031, 568);
             this.tabPageTests.TabIndex = 2;
             this.tabPageTests.Text = "Tests";
             this.tabPageTests.UseVisualStyleBackColor = true;
@@ -346,16 +406,16 @@ namespace HidDemo
             this.toolStripStatusLabelDevice.Size = new System.Drawing.Size(61, 17);
             this.toolStripStatusLabelDevice.Text = "No Device";
             // 
-            // menuStrip1
+            // menuStrip
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.updateToolStripMenuItem,
             this.aboutToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1063, 24);
-            this.menuStrip1.TabIndex = 6;
-            this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip.Name = "menuStrip";
+            this.menuStrip.Size = new System.Drawing.Size(1063, 24);
+            this.menuStrip.TabIndex = 6;
+            this.menuStrip.Text = "menuStrip1";
             // 
             // updateToolStripMenuItem
             // 
@@ -371,60 +431,30 @@ namespace HidDemo
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
-            // columnBackground
+            // tabPageLogs
             // 
-            this.columnBackground.Text = "Background";
-            this.columnBackground.Width = 97;
+            this.tabPageLogs.Controls.Add(this.textBoxLogs);
+            this.tabPageLogs.Location = new System.Drawing.Point(4, 22);
+            this.tabPageLogs.Name = "tabPageLogs";
+            this.tabPageLogs.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageLogs.Size = new System.Drawing.Size(1031, 568);
+            this.tabPageLogs.TabIndex = 3;
+            this.tabPageLogs.Text = "Logs";
+            this.tabPageLogs.UseVisualStyleBackColor = true;
             // 
-            // groupBoxRegistrationFlag
+            // textBoxLogs
             // 
-            this.groupBoxRegistrationFlag.Controls.Add(this.radioButtonNone);
-            this.groupBoxRegistrationFlag.Controls.Add(this.radioButtonExInputSink);
-            this.groupBoxRegistrationFlag.Controls.Add(this.radioButtonInputSink);
-            this.groupBoxRegistrationFlag.Location = new System.Drawing.Point(860, 169);
-            this.groupBoxRegistrationFlag.Name = "groupBoxRegistrationFlag";
-            this.groupBoxRegistrationFlag.Size = new System.Drawing.Size(165, 102);
-            this.groupBoxRegistrationFlag.TabIndex = 10;
-            this.groupBoxRegistrationFlag.TabStop = false;
-            this.groupBoxRegistrationFlag.Text = "Flag";
-            // 
-            // radioButtonInputSink
-            // 
-            this.radioButtonInputSink.AutoSize = true;
-            this.radioButtonInputSink.Location = new System.Drawing.Point(7, 20);
-            this.radioButtonInputSink.Name = "radioButtonInputSink";
-            this.radioButtonInputSink.Size = new System.Drawing.Size(83, 17);
-            this.radioButtonInputSink.TabIndex = 0;
-            this.radioButtonInputSink.Tag = "00000100";
-            this.radioButtonInputSink.Text = "INPUTSINK";
-            this.radioButtonInputSink.UseVisualStyleBackColor = true;
-            this.radioButtonInputSink.CheckedChanged += new System.EventHandler(this.radioButtonInputSink_CheckedChanged);
-            // 
-            // radioButtonExInputSink
-            // 
-            this.radioButtonExInputSink.AutoSize = true;
-            this.radioButtonExInputSink.Location = new System.Drawing.Point(7, 43);
-            this.radioButtonExInputSink.Name = "radioButtonExInputSink";
-            this.radioButtonExInputSink.Size = new System.Drawing.Size(97, 17);
-            this.radioButtonExInputSink.TabIndex = 1;
-            this.radioButtonExInputSink.Tag = "00001000";
-            this.radioButtonExInputSink.Text = "EXINPUTSINK";
-            this.radioButtonExInputSink.UseVisualStyleBackColor = true;
-            this.radioButtonExInputSink.CheckedChanged += new System.EventHandler(this.radioButtonExInputSink_CheckedChanged);
-            // 
-            // radioButtonNone
-            // 
-            this.radioButtonNone.AutoSize = true;
-            this.radioButtonNone.Checked = true;
-            this.radioButtonNone.Location = new System.Drawing.Point(7, 66);
-            this.radioButtonNone.Name = "radioButtonNone";
-            this.radioButtonNone.Size = new System.Drawing.Size(51, 17);
-            this.radioButtonNone.TabIndex = 2;
-            this.radioButtonNone.TabStop = true;
-            this.radioButtonNone.Tag = "0";
-            this.radioButtonNone.Text = "None";
-            this.radioButtonNone.UseVisualStyleBackColor = true;
-            this.radioButtonNone.CheckedChanged += new System.EventHandler(this.radioButtonNone_CheckedChanged);
+            this.textBoxLogs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxLogs.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxLogs.Location = new System.Drawing.Point(6, 6);
+            this.textBoxLogs.Multiline = true;
+            this.textBoxLogs.Name = "textBoxLogs";
+            this.textBoxLogs.ReadOnly = true;
+            this.textBoxLogs.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBoxLogs.Size = new System.Drawing.Size(893, 556);
+            this.textBoxLogs.TabIndex = 1;
+            this.textBoxLogs.WordWrap = false;
             // 
             // MainForm
             // 
@@ -433,11 +463,11 @@ namespace HidDemo
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1063, 646);
             this.Controls.Add(this.statusStrip);
-            this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.menuStrip);
             this.Controls.Add(this.tabControl);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MainMenuStrip = this.menuStrip1;
+            this.MainMenuStrip = this.menuStrip;
             this.MinimumSize = new System.Drawing.Size(960, 640);
             this.Name = "MainForm";
             this.Text = "HID Demo";
@@ -446,6 +476,8 @@ namespace HidDemo
             this.tabControl.ResumeLayout(false);
             this.tabPageMessages.ResumeLayout(false);
             this.tabPageMessages.PerformLayout();
+            this.groupBoxRegistrationFlag.ResumeLayout(false);
+            this.groupBoxRegistrationFlag.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericRepeatSpeed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRepeatDelay)).EndInit();
             this.tabPageDevices.ResumeLayout(false);
@@ -453,10 +485,10 @@ namespace HidDemo
             this.tabPageTests.PerformLayout();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
-            this.groupBoxRegistrationFlag.ResumeLayout(false);
-            this.groupBoxRegistrationFlag.PerformLayout();
+            this.menuStrip.ResumeLayout(false);
+            this.menuStrip.PerformLayout();
+            this.tabPageLogs.ResumeLayout(false);
+            this.tabPageLogs.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -488,7 +520,7 @@ namespace HidDemo
         private System.Windows.Forms.NumericUpDown numericRepeatDelay;
         private System.Windows.Forms.Label labelRepeatSpeed;
         private System.Windows.Forms.CheckBox checkBoxUseSingleHandler;
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem updateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader columnBackground;
@@ -496,5 +528,7 @@ namespace HidDemo
         private System.Windows.Forms.RadioButton radioButtonNone;
         private System.Windows.Forms.RadioButton radioButtonExInputSink;
         private System.Windows.Forms.RadioButton radioButtonInputSink;
+        private System.Windows.Forms.TabPage tabPageLogs;
+        private System.Windows.Forms.TextBox textBoxLogs;
     }
 }

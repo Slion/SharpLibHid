@@ -355,6 +355,23 @@ namespace SharpLib.Hid
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        override public string ToString()
+        {
+            string res = "";
+            res += "==================== HID Device ====================" + "\r\n";
+            res += "==== Name: " + Name + "\r\n";
+            res += "==== Manufacturer: " + Manufacturer + "\r\n";
+            res += "==== Product: " + Product + "\r\n";
+            res += "==== VendorID: 0x" + VendorId.ToString("X4") + "\r\n";
+            res += "==== ProductID: 0x" + ProductId.ToString("X4") + "\r\n";
+            res += "==== Version: " + Version.ToString() + "\r\n";
+            res += "====================================================" + "\r\n";
+            return res;
+        }
 
         /// <summary>
         /// Print information about this device to our debug output.
@@ -362,14 +379,7 @@ namespace SharpLib.Hid
         [Conditional("DEBUG")]
         public void DebugWrite()
         {
-            Debug.WriteLine("================ HID =========================================================================================");
-            Debug.WriteLine("==== Name: " + Name);
-            Debug.WriteLine("==== Manufacturer: " + Manufacturer);
-            Debug.WriteLine("==== Product: " + Product);
-            Debug.WriteLine("==== VendorID: 0x" + VendorId.ToString("X4"));
-            Debug.WriteLine("==== ProductID: 0x" + ProductId.ToString("X4"));
-            Debug.WriteLine("==== Version: " + Version.ToString());
-            Debug.WriteLine("==============================================================================================================");
+            Debug.Write(ToString());
         }
 
     }

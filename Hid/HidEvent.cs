@@ -211,7 +211,7 @@ namespace SharpLib.Hid
                             source += sizeof(RAWINPUTHEADER) + sizeof(RAWHID) + (RawInput.hid.dwSizeHid * i);
                             hidInputOffset = (int)source;
                         }
-
+                        
                         //Copy HID input into our buffer
                         Marshal.Copy(new IntPtr(hidInputOffset), InputReport, 0, (int)RawInput.hid.dwSizeHid);
                         //
@@ -495,28 +495,44 @@ namespace SharpLib.Hid
         [Conditional("DEBUG")]
         public void DebugWrite()
         {
+            Debug.Write(ToString());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        override public string ToString()
+        {
+            string res = "";            
             if (!IsValid)
             {
-                Debug.WriteLine("==== Invalid HidEvent");
-                return;
+                res += "==== WARNING: Invalid HidEvent\r\n";
+                return res;
             }
 
-            if (Device!=null)
+            res += "==================== HID Event ====================" + "\r\n";
+
+            if (Device != null)
             {
-                Device.DebugWrite();
+                res += Device.ToString();
             }
-            
-            if (IsGeneric) Debug.WriteLine("==== Generic");
-            if (IsKeyboard) Debug.WriteLine("==== Keyboard");
-            if (IsMouse) Debug.WriteLine("==== Mouse");
-            Debug.WriteLine("==== Foreground: " + IsForeground.ToString());
-            Debug.WriteLine("==== UsagePage: 0x" + UsagePage.ToString("X4"));
-            Debug.WriteLine("==== UsageCollection: 0x" + UsageCollection.ToString("X4"));
-            Debug.WriteLine("==== InputReport: 0x" + InputReportString());
+
+            if (IsGeneric) res += "==== Generic\r\n";
+            if (IsKeyboard) res += "==== Keyboard\r\n";
+            if (IsMouse) res += "==== Mouse\r\n";
+            res += "==== Foreground: " + IsForeground.ToString() + "\r\n";
+            res += "==== UsagePage: 0x" + UsagePage.ToString("X4") + "\r\n";
+            res += "==== UsageCollection: 0x" + UsageCollection.ToString("X4") + "\r\n";
+            res += "==== InputReport: 0x" + InputReportString() + "\r\n";
             foreach (ushort usage in Usages)
             {
-                Debug.WriteLine("==== Usage: 0x" + usage.ToString("X4"));
+                res += "==== Usage: 0x" + usage.ToString("X4") + "\r\n";
             }
+
+            res += "===================================================" + "\r\n";
+
+            return res;
         }
 
         /// <summary>
