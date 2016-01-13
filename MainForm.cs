@@ -91,33 +91,6 @@ namespace HidDemo
             }
         }
 
-        private void PopulateDeviceList()
-        {
-            treeViewDevices.Nodes.Clear();
-            //Create our list of HID devices
-            SharpLib.Win32.RawInput.PopulateDeviceList(treeViewDevices);
-            treeViewDevices.CollapseAll();
-            //Hide check boxes
-            //treeViewDevices.Nodes.OfType<TreeNode>().ToList().ForEach(n => TreeViewUtils.HideCheckBox(treeViewDevices,n));
-            //Do it twice because of that bug where the first node we hit is not hidding its checkbox as it should.
-            treeViewDevices.Nodes.OfType<TreeNode>().ToList().ForEach(n => n.Nodes.OfType<TreeNode>().ToList().ForEach(on => TreeViewUtils.HideCheckBox(treeViewDevices, on)));
-            treeViewDevices.Nodes.OfType<TreeNode>().ToList().ForEach(n => n.Nodes.OfType<TreeNode>().ToList().ForEach(on => TreeViewUtils.HideCheckBox(treeViewDevices, on)));
-
-            foreach (TreeNode node in treeViewDevices.Nodes)
-            {
-                Hid.Device device = (Hid.Device)node.Tag;
-                if (!device.IsHid)
-                {
-                    //Do not allow registering mice and keyboards for now
-                    TreeViewUtils.HideCheckBox(treeViewDevices, node);
-                }
-            }
-
-            //Dump our devices to our logs
-            richTextBoxLogs.AppendText(TreeViewUtils.TreeViewToText(treeViewDevices));
-        }
-
-
         private void MainForm_Load(object sender, System.EventArgs e)
         {
             this.Text += " - " + ClickOnceVersion();
@@ -157,6 +130,32 @@ namespace HidDemo
 
         }
 
+        private void PopulateDeviceList()
+        {
+            treeViewDevices.Nodes.Clear();
+            //Create our list of HID devices
+            SharpLib.Win32.RawInput.PopulateDeviceList(treeViewDevices);
+            treeViewDevices.CollapseAll();
+            //Hide check boxes
+            //treeViewDevices.Nodes.OfType<TreeNode>().ToList().ForEach(n => TreeViewUtils.HideCheckBox(treeViewDevices,n));
+            //Do it twice because of that bug where the first node we hit is not hidding its checkbox as it should.
+            treeViewDevices.Nodes.OfType<TreeNode>().ToList().ForEach(n => n.Nodes.OfType<TreeNode>().ToList().ForEach(on => TreeViewUtils.HideCheckBox(treeViewDevices, on)));
+            treeViewDevices.Nodes.OfType<TreeNode>().ToList().ForEach(n => n.Nodes.OfType<TreeNode>().ToList().ForEach(on => TreeViewUtils.HideCheckBox(treeViewDevices, on)));
+
+            foreach (TreeNode node in treeViewDevices.Nodes)
+            {
+                Hid.Device device = (Hid.Device)node.Tag;
+                if (!device.IsHid)
+                {
+                    //Do not allow registering mice and keyboards for now
+                    TreeViewUtils.HideCheckBox(treeViewDevices, node);
+                }
+            }
+
+            //Dump our devices to our logs
+            richTextBoxLogs.AppendText(TreeViewUtils.TreeViewToText(treeViewDevices));
+        }
+
         /// <summary>
         /// Check some devices for registration
         /// </summary>
@@ -164,11 +163,13 @@ namespace HidDemo
         {
             uint mceUsageId = (uint)Hid.UsagePage.WindowsMediaCenterRemoteControl << 16 | (uint)Hid.UsageCollection.WindowsMediaCenter.WindowsMediaCenterRemoteControl;
             uint consumerUsageId = (uint)Hid.UsagePage.Consumer << 16 | (uint)Hid.UsageCollection.Consumer.ConsumerControl;
+            uint gamepadUsageId = (uint)Hid.UsagePage.GenericDesktopControls << 16 | (uint)Hid.UsageCollection.GenericDesktop.GamePad;
 
             foreach (TreeNode node in treeViewDevices.Nodes)
             {
                 Hid.Device device = (Hid.Device)node.Tag;
-                if (device.IsHid && (device.UsageId == mceUsageId || device.UsageId == consumerUsageId))
+                if (device.IsHid && 
+                    (device.UsageId == mceUsageId || device.UsageId == consumerUsageId || device.UsageId == gamepadUsageId))
                 {
                     node.Checked = true;
                 }
