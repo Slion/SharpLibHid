@@ -130,6 +130,9 @@ namespace HidDemo
 
         }
 
+        /// <summary>
+        /// Populate our tree view with our devices.
+        /// </summary>
         private void PopulateDeviceList()
         {
             treeViewDevices.Nodes.Clear();

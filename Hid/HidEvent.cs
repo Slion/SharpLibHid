@@ -587,7 +587,7 @@ namespace SharpLib.Hid
                     }
                 }
 
-                if (name == "" || Device.IsGamePad) //Gamepad buttons do not belong to Usage enumeration, they are just ordinal
+                if (name == null || name.Equals("") || Device.IsGamePad) //Gamepad buttons do not belong to Usage enumeration, they are just ordinal
                 {
                     name = usage.ToString("X2");
                 }
