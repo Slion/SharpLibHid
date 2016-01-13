@@ -179,6 +179,7 @@
     <Compile Include="RichTextBoxEx.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="TreeViewUtils.cs" />
     <Content Include="App.ico" />
     <None Include="packages.config" />
     <None Include="Resources\UsbVertical.png" />

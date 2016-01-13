@@ -347,11 +347,80 @@ namespace SharpLib.Hid
             return null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsGamePad
         {
             get
             {
-                return ((UsagePage)iCapabilities.UsagePage == UsagePage.GenericDesktopControls && (UsageCollection.GenericDesktop)iCapabilities.Usage == UsageCollection.GenericDesktop.GamePad);
+                return ((UsagePage)iCapabilities.UsagePage == Hid.UsagePage.GenericDesktopControls && (UsageCollection.GenericDesktop)iCapabilities.Usage == Hid.UsageCollection.GenericDesktop.GamePad);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsMouse
+        {
+            get
+            {
+                return Info.dwType == RawInputDeviceType.RIM_TYPEMOUSE;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsKeyboard
+        {
+            get
+            {
+                return Info.dwType == RawInputDeviceType.RIM_TYPEKEYBOARD;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsHid
+        {
+            get
+            {
+                return Info.dwType == RawInputDeviceType.RIM_TYPEHID;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ushort UsagePage
+        {
+            get
+            {
+                return Info.hid.usUsagePage;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ushort UsageCollection
+        {
+            get
+            {
+                return Info.hid.usUsage;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public uint UsageId
+        {
+            get
+            {                
+                return (uint)(Info.hid.usUsagePage<<16) | Info.hid.usUsage;
             }
         }
 
