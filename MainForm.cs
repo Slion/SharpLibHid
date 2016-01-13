@@ -103,6 +103,16 @@ namespace HidDemo
             treeViewDevices.Nodes.OfType<TreeNode>().ToList().ForEach(n => n.Nodes.OfType<TreeNode>().ToList().ForEach(on => TreeViewUtils.HideCheckBox(treeViewDevices, on)));
             treeViewDevices.Nodes.OfType<TreeNode>().ToList().ForEach(n => n.Nodes.OfType<TreeNode>().ToList().ForEach(on => TreeViewUtils.HideCheckBox(treeViewDevices, on)));
 
+            foreach (TreeNode node in treeViewDevices.Nodes)
+            {
+                Hid.Device device = (Hid.Device)node.Tag;
+                if (!device.IsHid)
+                {
+                    //Do not allow registering mice and keyboards for now
+                    TreeViewUtils.HideCheckBox(treeViewDevices, node);
+                }
+            }
+
             //Dump our devices to our logs
             richTextBoxLogs.AppendText(TreeViewUtils.TreeViewToText(treeViewDevices));
         }

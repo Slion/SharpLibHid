@@ -571,9 +571,23 @@ namespace SharpLib.Hid
                     usageText += ", ";
                 }
 
-                UsagePage usagePage = (UsagePage)UsagePage;
-                string name = Enum.GetName(Utils.UsageType(usagePage), usage);
-                if (name == null || Device.IsGamePad) //Gamepad buttons do not belong to Usage enumeration, they are just ordinal
+                //Try to get a name for that usage
+                string name = "";
+                if (Enum.IsDefined(typeof(Hid.UsagePage), UsagePage))
+                {
+                    UsagePage usagePage = (UsagePage)UsagePage;
+
+                    try
+                    {
+                        name = Enum.GetName(Utils.UsageType(usagePage), usage);
+                    }
+                    catch
+                    {
+
+                    }
+                }
+
+                if (name == "" || Device.IsGamePad) //Gamepad buttons do not belong to Usage enumeration, they are just ordinal
                 {
                     name = usage.ToString("X2");
                 }
