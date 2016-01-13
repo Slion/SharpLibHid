@@ -31,6 +31,7 @@ using SharpLib.Win32;
 //For ClickOnce support
 using System.Deployment.Application;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace HidDemo
 {
@@ -95,71 +96,32 @@ namespace HidDemo
             treeViewDevices.Nodes.Clear();
             //Create our list of HID devices
             SharpLib.Win32.RawInput.PopulateDeviceList(treeViewDevices);
+            treeViewDevices.CollapseAll();
+            //Hide check boxes
+            //treeViewDevices.Nodes.OfType<TreeNode>().ToList().ForEach(n => TreeViewUtils.HideCheckBox(treeViewDevices,n));
+            //Do it twice because of that bug where the first node we hit is not hidding its checkbox as it should.
+            treeViewDevices.Nodes.OfType<TreeNode>().ToList().ForEach(n => n.Nodes.OfType<TreeNode>().ToList().ForEach(on => TreeViewUtils.HideCheckBox(treeViewDevices, on)));
+            treeViewDevices.Nodes.OfType<TreeNode>().ToList().ForEach(n => n.Nodes.OfType<TreeNode>().ToList().ForEach(on => TreeViewUtils.HideCheckBox(treeViewDevices, on)));
 
-            richTextBoxLogs.AppendText(TreeViewToText(treeViewDevices));
+            //Dump our devices to our logs
+            richTextBoxLogs.AppendText(TreeViewUtils.TreeViewToText(treeViewDevices));
         }
 
-        private string TreeNodeToText(TreeNode aTreeNode, uint aDepth)
-        {
-            // Print the node.
-            string res = "\r\n";
-
-            uint depth = aDepth;
-            while (depth>1)
-            {
-                depth--;
-                res += "  ";
-            }
-
-            res += "|-";
-            
-            if (aTreeNode.Nodes.Count > 0)
-            {
-                res += "+";
-            }
-            else
-            {
-                res += "-";
-            }
-
-
-            res += aTreeNode.Text;
-
-            // Print each node recursively.
-            foreach (TreeNode tn in aTreeNode.Nodes)
-            {
-                res += TreeNodeToText(tn, aDepth+1);
-            }
-
-            return res;
-        }
-
-        /// <summary>
-        /// Dumps a Tree View control into a string.
-        /// </summary>
-        /// <param name="aTreeView"></param>
-        /// <returns></returns>
-        private string TreeViewToText(TreeView aTreeView)
-        {
-            // Print each node recursively.
-            string res = "--------------------------------------------------------------------------------------------------------------------------\r\n";
-            res += "+" + aTreeView.Name.Replace("treeView","").Replace("iTreeView", "");
-            TreeNodeCollection nodes = aTreeView.Nodes;
-            foreach (TreeNode n in nodes)
-            {
-                res += TreeNodeToText(n,1);
-            }
-            res += "\r\n--------------------------------------------------------------------------------------------------------------------------\r\n";
-            return res;
-        }
 
         private void MainForm_Load(object sender, System.EventArgs e)
         {
-            this.Text += " - " + ClickOnceVersion(); 
-
-            RegisterHidDevices();
+            this.Text += " - " + ClickOnceVersion();
+            
             PopulateDeviceList();
-		}
+            RegisterHidDevices();
+            CheckDefaultDevices();
+        }
+
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+
+        }
+
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -185,6 +147,27 @@ namespace HidDemo
 
         }
 
+        /// <summary>
+        /// Check some devices for registration
+        /// </summary>
+        void CheckDefaultDevices()
+        {
+            uint mceUsageId = (uint)Hid.UsagePage.WindowsMediaCenterRemoteControl << 16 | (uint)Hid.UsageCollection.WindowsMediaCenter.WindowsMediaCenterRemoteControl;
+            uint consumerUsageId = (uint)Hid.UsagePage.Consumer << 16 | (uint)Hid.UsageCollection.Consumer.ConsumerControl;
+
+            foreach (TreeNode node in treeViewDevices.Nodes)
+            {
+                Hid.Device device = (Hid.Device)node.Tag;
+                if (device.IsHid && (device.UsageId == mceUsageId || device.UsageId == consumerUsageId))
+                {
+                    node.Checked = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Go through our device list and register the devices that are checked.
+        /// </summary>
         void RegisterHidDevices()
 	    {
             // Register the input device to receive the commands from the
@@ -193,12 +176,49 @@ namespace HidDemo
 
             DisposeHandlers();
 
+            //Get our flags
             RadioButton checkedRadioButton = groupBoxRegistrationFlag.Controls.OfType<RadioButton>().FirstOrDefault(r => r.Checked);
             uint flags = uint.Parse((string)checkedRadioButton.Tag, System.Globalization.NumberStyles.HexNumber);
             // See: Const.RIDEV_EXINPUTSINK and Const.RIDEV_INPUTSINK
 
-            RAWINPUTDEVICE[] rid = new RAWINPUTDEVICE[6];
+            //We collect our devices in a dictionary to remove duplicates
+            Dictionary<uint, Hid.Device>  devices = new Dictionary<uint, Hid.Device>();
+            foreach (TreeNode node in treeViewDevices.Nodes)
+            {
+                Hid.Device device = (Hid.Device)node.Tag;
+                if (node.Checked && device.IsHid)
+                {
+                    try
+                    {
+                        devices.Add(device.UsageId, device);
+                    }
+                    catch //(Exception ex)
+                    {
+                        //Just ignore duplicate UsageId
+                        Debug.WriteLine("Similar device already registered!");
+                    }
+                }
+            }
 
+            if (devices.Count==0)
+            {
+                //No device to register for, nothing to do here
+                return;
+            }
+
+            int i = 0;
+            RAWINPUTDEVICE[] rid = new RAWINPUTDEVICE[devices.Count];
+
+            foreach (KeyValuePair<uint,Hid.Device> entry in devices)
+            {                
+                rid[i].usUsagePage = entry.Value.UsagePage;
+                rid[i].usUsage = entry.Value.UsageCollection;
+                rid[i].dwFlags = flags;
+                rid[i].hwndTarget = Handle;
+                i++;
+            }
+
+            /*
             int i = 0;
             rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.WindowsMediaCenterRemoteControl;
             rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.WindowsMediaCenter.WindowsMediaCenterRemoteControl;
@@ -234,6 +254,7 @@ namespace HidDemo
             rid[i].usUsage = (ushort)SharpLib.Hid.UsageCollection.GenericDesktop.GamePad;
             rid[i].dwFlags = flags;
             rid[i].hwndTarget = Handle;
+            */
 
             //i++;
             //rid[i].usUsagePage = (ushort)SharpLib.Hid.UsagePage.GenericDesktopControls;
@@ -246,7 +267,7 @@ namespace HidDemo
             //rid[i].usUsage = (ushort)Hid.UsageCollection.GenericDesktop.Mouse;
             //rid[i].dwFlags = Const.RIDEV_EXINPUTSINK;
             //rid[i].hwndTarget = aHWND;
-           
+
             iHidHandler = new SharpLib.Hid.Handler(rid, checkBoxRepeat.Checked, (int)numericRepeatDelay.Value, (int)numericRepeatSpeed.Value);
             if (!iHidHandler.IsRegistered)
             {
@@ -266,6 +287,11 @@ namespace HidDemo
             iHidParser.OnHidEvent += HandleHidEventThreadSafe;            
         }
 
+        /// <summary>
+        /// Process HID events.
+        /// </summary>
+        /// <param name="aSender"></param>
+        /// <param name="aHidEvent"></param>
         public void HandleHidEventThreadSafe(object aSender, SharpLib.Hid.Event aHidEvent)
         {
             if (aHidEvent.IsStray)
@@ -290,6 +316,10 @@ namespace HidDemo
             }
         }
 
+        /// <summary>
+        /// Hook in HID handler.
+        /// </summary>
+        /// <param name="message"></param>
 		protected override void WndProc(ref Message message)
 		{
             switch (message.Msg)
@@ -466,6 +496,11 @@ namespace HidDemo
         private void buttonClearLogs_Click(object sender, EventArgs e)
         {
             richTextBoxLogs.Text = "";
+        }
+
+        private void treeViewDevices_AfterCheck(object sender, TreeViewEventArgs e)
+        {
+            RegisterHidDevices();
         }
     }
 }

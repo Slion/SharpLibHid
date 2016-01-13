@@ -62,13 +62,13 @@ namespace HidDemo
             this.tabPageTests = new System.Windows.Forms.TabPage();
             this.textBoxTests = new System.Windows.Forms.TextBox();
             this.tabPageLogs = new System.Windows.Forms.TabPage();
+            this.buttonClearLogs = new System.Windows.Forms.Button();
+            this.richTextBoxLogs = new System.Windows.Forms.RichTextBox();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelDevice = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.richTextBoxLogs = new System.Windows.Forms.RichTextBox();
-            this.buttonClearLogs = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabPageMessages.SuspendLayout();
             this.groupBoxRegistrationFlag.SuspendLayout();
@@ -368,10 +368,12 @@ namespace HidDemo
             // 
             this.treeViewDevices.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.treeViewDevices.CheckBoxes = true;
             this.treeViewDevices.Location = new System.Drawing.Point(8, 6);
             this.treeViewDevices.Name = "treeViewDevices";
             this.treeViewDevices.Size = new System.Drawing.Size(713, 554);
             this.treeViewDevices.TabIndex = 0;
+            this.treeViewDevices.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewDevices_AfterCheck);
             // 
             // tabPageTests
             // 
@@ -402,6 +404,31 @@ namespace HidDemo
             this.tabPageLogs.TabIndex = 3;
             this.tabPageLogs.Text = "Logs";
             this.tabPageLogs.UseVisualStyleBackColor = true;
+            // 
+            // buttonClearLogs
+            // 
+            this.buttonClearLogs.Location = new System.Drawing.Point(950, 6);
+            this.buttonClearLogs.Name = "buttonClearLogs";
+            this.buttonClearLogs.Size = new System.Drawing.Size(75, 23);
+            this.buttonClearLogs.TabIndex = 4;
+            this.buttonClearLogs.Text = "Clear";
+            this.buttonClearLogs.UseVisualStyleBackColor = true;
+            this.buttonClearLogs.Click += new System.EventHandler(this.buttonClearLogs_Click);
+            // 
+            // richTextBoxLogs
+            // 
+            this.richTextBoxLogs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.richTextBoxLogs.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBoxLogs.DetectUrls = false;
+            this.richTextBoxLogs.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBoxLogs.Location = new System.Drawing.Point(6, 6);
+            this.richTextBoxLogs.Name = "richTextBoxLogs";
+            this.richTextBoxLogs.ReadOnly = true;
+            this.richTextBoxLogs.Size = new System.Drawing.Size(897, 556);
+            this.richTextBoxLogs.TabIndex = 0;
+            this.richTextBoxLogs.Text = "";
+            this.richTextBoxLogs.WordWrap = false;
             // 
             // statusStrip
             // 
@@ -444,31 +471,6 @@ namespace HidDemo
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
-            // richTextBoxLogs
-            // 
-            this.richTextBoxLogs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.richTextBoxLogs.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBoxLogs.DetectUrls = false;
-            this.richTextBoxLogs.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBoxLogs.Location = new System.Drawing.Point(6, 6);
-            this.richTextBoxLogs.Name = "richTextBoxLogs";
-            this.richTextBoxLogs.ReadOnly = true;
-            this.richTextBoxLogs.Size = new System.Drawing.Size(897, 556);
-            this.richTextBoxLogs.TabIndex = 0;
-            this.richTextBoxLogs.Text = "";
-            this.richTextBoxLogs.WordWrap = false;
-            // 
-            // buttonClearLogs
-            // 
-            this.buttonClearLogs.Location = new System.Drawing.Point(950, 6);
-            this.buttonClearLogs.Name = "buttonClearLogs";
-            this.buttonClearLogs.Size = new System.Drawing.Size(75, 23);
-            this.buttonClearLogs.TabIndex = 4;
-            this.buttonClearLogs.Text = "Clear";
-            this.buttonClearLogs.UseVisualStyleBackColor = true;
-            this.buttonClearLogs.Click += new System.EventHandler(this.buttonClearLogs_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -486,6 +488,7 @@ namespace HidDemo
             this.Text = "HID Demo";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.tabControl.ResumeLayout(false);
             this.tabPageMessages.ResumeLayout(false);
             this.tabPageMessages.PerformLayout();

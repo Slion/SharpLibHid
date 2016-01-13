@@ -220,6 +220,10 @@ namespace SharpLib.Win32
                     node = aTreeView.Nodes.Add(hidDevice.Name, hidDevice.FriendlyName);
                 }
 
+                //Each device root node keeps a reference to our HID device
+                node.Tag = hidDevice;
+
+                //Populate device properties
                 node.Nodes.Add("Manufacturer: " + hidDevice.Manufacturer);
                 node.Nodes.Add("Product ID: 0x" + hidDevice.ProductId.ToString("X4"));
                 node.Nodes.Add("Vendor ID: 0x" + hidDevice.VendorId.ToString("X4"));
