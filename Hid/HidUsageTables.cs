@@ -263,7 +263,11 @@ namespace SharpLib.Hid
             /// <summary>
             /// Notably featured on the OrigenAE RC147 and other MCE remote with basic IR learning capabilities.
             /// </summary>
-            TvPower = 0x65, 
+            TvPower = 0x65,
+            /// <summary>
+            /// Notably featured on Microsoft Remote Keyboard for Windows XP Media Center Edition v1.0
+            /// </summary>
+            Messenger = 0x69
         }
 
         /// <summary>
