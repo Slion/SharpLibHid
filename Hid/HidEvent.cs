@@ -221,6 +221,8 @@ namespace SharpLib.Hid
                 else if (RawInput.header.dwType == RawInputDeviceType.RIM_TYPEMOUSE)
                 {
                     IsMouse = true;
+                    UsagePage = (ushort)Hid.UsagePage.GenericDesktopControls;
+                    UsageCollection = (ushort)Hid.UsageCollection.GenericDesktop.Mouse;
 
                     Debug.WriteLine("WM_INPUT source device is Mouse.");
                     // do mouse handling...
@@ -228,6 +230,8 @@ namespace SharpLib.Hid
                 else if (RawInput.header.dwType == RawInputDeviceType.RIM_TYPEKEYBOARD)
                 {
                     IsKeyboard = true;
+                    UsagePage = (ushort)Hid.UsagePage.GenericDesktopControls;
+                    UsageCollection = (ushort)Hid.UsageCollection.GenericDesktop.Keyboard;
 
                     Debug.WriteLine("WM_INPUT source device is Keyboard.");
                     // do keyboard handling...
@@ -595,7 +599,7 @@ namespace SharpLib.Hid
             }
 
             //If we are a gamepad display axis and dpad values
-            if (Device.IsGamePad)
+            if (Device != null && Device.IsGamePad)
             {
                 //uint dpadUsageValue = GetUsageValue((ushort)Hid.UsagePage.GenericDesktopControls, (ushort)Hid.Usage.GenericDesktop.HatSwitch);
                 //usageText = dpadUsageValue.ToString("X") + " (dpad), " + usageText;
@@ -642,6 +646,18 @@ namespace SharpLib.Hid
                     }
                     usageText += entry.Value.ToString("X") + " ("+ name +")";        
                 }
+            }
+            //Handle keyboard events
+            else if (IsKeyboard)
+            {
+                //Get the virtual key
+                System.Windows.Forms.Keys vKey = (Keys)RawInput.keyboard.VKey;
+                usageText = vKey.ToString();
+
+                //Get the key flag
+                //TODO: this can actually be a flag, fix it
+                RawInputKeyFlag flag = (RawInputKeyFlag)RawInput.keyboard.Flags;
+                usageText += " (" + flag.ToString() + ")";
             }
 
             //Now create our list item

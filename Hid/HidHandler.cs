@@ -129,7 +129,7 @@ namespace SharpLib.Hid
             Event hidEvent = new Event(aMessage, OnHidEventRepeat, ManageRepeats, RepeatDelayInMs, RepeatSpeedInMs);
             hidEvent.DebugWrite();
 
-            if (!hidEvent.IsValid || !hidEvent.IsGeneric)
+            if (!hidEvent.IsValid /*|| !hidEvent.IsGeneric*/)
             {
                 Debug.WriteLine("Skipping HID message.");
                 return;
@@ -137,7 +137,7 @@ namespace SharpLib.Hid
 
             //We want to repeat only a single event at a time.
             //Any other event will interrupt the current repeat.
-            if (ManageRepeats)
+            if (ManageRepeats && hidEvent.IsGeneric)
             {
                 //Discard all outstanding repeats, though we should only ever have only one
                 for (int i = (iHidEvents.Count - 1); i >= 0; i--)
