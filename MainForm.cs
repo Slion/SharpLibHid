@@ -141,7 +141,7 @@ namespace HidDemo
             treeViewDevices.CollapseAll();
             //Hide check boxes
             //treeViewDevices.Nodes.OfType<TreeNode>().ToList().ForEach(n => TreeViewUtils.HideCheckBox(treeViewDevices,n));
-            //Do it twice because of that bug where the first node we hit is not hidding its checkbox as it should.
+            //Do it twice because of that bug where the first node we hit is not hiding its checkbox as it should.
             treeViewDevices.Nodes.OfType<TreeNode>().ToList().ForEach(n => n.Nodes.OfType<TreeNode>().ToList().ForEach(on => TreeViewUtils.HideCheckBox(treeViewDevices, on)));
             treeViewDevices.Nodes.OfType<TreeNode>().ToList().ForEach(n => n.Nodes.OfType<TreeNode>().ToList().ForEach(on => TreeViewUtils.HideCheckBox(treeViewDevices, on)));
 
@@ -150,8 +150,9 @@ namespace HidDemo
                 Hid.Device device = (Hid.Device)node.Tag;
                 if (!device.IsHid)
                 {
+                    //Now allowing mouse and keyboard to register too
                     //Do not allow registering mice and keyboards for now
-                    TreeViewUtils.HideCheckBox(treeViewDevices, node);
+                    //TreeViewUtils.HideCheckBox(treeViewDevices, node);
                 }
             }
 
@@ -200,7 +201,8 @@ namespace HidDemo
             foreach (TreeNode node in treeViewDevices.Nodes)
             {
                 Hid.Device device = (Hid.Device)node.Tag;
-                if (node.Checked && device.IsHid)
+                //Now allowing mouse and keyboard to register too
+                if (node.Checked /*&& device.IsHid*/) 
                 {
                     try
                     {
@@ -325,7 +327,11 @@ namespace HidDemo
             {
                 //We are in the proper thread
                 listViewEvents.Items.Insert(0, aHidEvent.ToListViewItem());
-                toolStripStatusLabelDevice.Text = aHidEvent.Device.FriendlyName;
+                if (aHidEvent.Device != null)
+                {
+                    toolStripStatusLabelDevice.Text = aHidEvent.Device.FriendlyName;
+                }
+                
                 richTextBoxLogs.AppendText(aHidEvent.ToString());
             }
         }

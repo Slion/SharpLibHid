@@ -398,7 +398,25 @@ namespace SharpLib.Hid
         {
             get
             {
-                return Info.hid.usUsagePage;
+                if (Info.dwType == RawInputDeviceType.RIM_TYPEHID)
+                {
+                    //Generic HID
+                    return Info.hid.usUsagePage;
+                }
+                else if (Info.dwType == RawInputDeviceType.RIM_TYPEKEYBOARD)
+                {
+                    //Keyboard
+                    return (ushort)Hid.UsagePage.GenericDesktopControls;
+                }
+                else if (Info.dwType == RawInputDeviceType.RIM_TYPEMOUSE)
+                {
+                    //Mouse
+                    return (ushort)Hid.UsagePage.GenericDesktopControls;
+                }
+
+                //We should never get there
+                Debug.Assert(false);
+                return 0;
             }
         }
 
@@ -409,7 +427,25 @@ namespace SharpLib.Hid
         {
             get
             {
-                return Info.hid.usUsage;
+                if (Info.dwType == RawInputDeviceType.RIM_TYPEHID)
+                {
+                    //Generic HID
+                    return Info.hid.usUsage;
+                }
+                else if (Info.dwType == RawInputDeviceType.RIM_TYPEKEYBOARD)
+                {
+                    //Keyboard
+                    return (ushort)Hid.UsageCollection.GenericDesktop.Keyboard;
+                }
+                else if (Info.dwType == RawInputDeviceType.RIM_TYPEMOUSE)
+                {
+                    //Mouse
+                    return (ushort)Hid.UsageCollection.GenericDesktop.Mouse;
+                }
+
+                //We should never get there
+                Debug.Assert(false);
+                return 0;
             }
         }
 
@@ -419,8 +455,8 @@ namespace SharpLib.Hid
         public uint UsageId
         {
             get
-            {                
-                return (uint)(Info.hid.usUsagePage<<16) | Info.hid.usUsage;
+            {
+                return (uint)(UsagePage<<16) | UsageCollection ;
             }
         }
 
