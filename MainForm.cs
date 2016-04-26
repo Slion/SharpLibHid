@@ -229,7 +229,7 @@ namespace HidDemo
             {                
                 rid[i].usUsagePage = entry.Value.UsagePage;
                 rid[i].usUsage = entry.Value.UsageCollection;
-                rid[i].dwFlags = flags;
+                rid[i].dwFlags = (RawInputDeviceFlags)flags;
                 rid[i].hwndTarget = Handle;
                 i++;
             }
