@@ -37,15 +37,15 @@ namespace SharpLib.Hid
     /// </summary>
     public enum DirectionPadState
     {
-        Rest=-1,
-        Up=0,
-        UpRight=1,
-        Right=2,
-        DownRight=3,
-        Down=4,
-        DownLeft=5,
-        Left=6,
-        UpLeft=7
+        Rest = -1,
+        Up = 0,
+        UpRight = 1,
+        Right = 2,
+        DownRight = 3,
+        Down = 4,
+        DownLeft = 5,
+        Left = 6,
+        UpLeft = 7
     }
 
     /// <summary>
@@ -63,8 +63,52 @@ namespace SharpLib.Hid
         /// If this not a mouse or keyboard event then it's a generic HID event.
         /// </summary>
         public bool IsGeneric { get; private set; }
-        public bool IsButtonDown { get { return Usages.Count == 1 && Usages[0] != 0; } }
-        public bool IsButtonUp { get { return Usages.Count == 0; } }
+
+        /// <summary>
+        /// Check if this event correspond to a button or a key being pushed down.
+        /// </summary>
+        public bool IsButtonDown
+        {
+            get
+            {
+                if (IsGeneric)
+                {
+                    // For generic HID device check that our first usage is not zero
+                    return Usages.Count == 1 && Usages[0] != 0;
+                }
+                else if (IsKeyboard)
+                {
+                    return !IsButtonUp;
+                }
+                //TODO: mouse handling
+                Debug.Assert(false);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Check if this event correspond to a button or a key being released.
+        /// </summary>
+        public bool IsButtonUp
+        {
+            get
+            {
+                if (IsGeneric)
+                {
+                    // Button up event if we do not have any usages
+                    return Usages.Count == 0;
+                } 
+                else if (IsKeyboard)
+                {
+                    // This is a key up event if our break flag is set
+                    return RawInput.keyboard.Flags.HasFlag(RawInputKeyFlags.RI_KEY_BREAK);
+                }
+                //TODO: mouse handling
+                Debug.Assert(false);
+                return false;
+            }
+        }
+
         public bool IsRepeat { get { return RepeatCount != 0; } }
         public uint RepeatCount { get; private set; }
 
@@ -652,12 +696,29 @@ namespace SharpLib.Hid
             {
                 //Get the virtual key
                 System.Windows.Forms.Keys vKey = (Keys)RawInput.keyboard.VKey;
-                usageText = vKey.ToString();
+                usageText = vKey.ToString() + " -";
 
                 //Get the key flag
-                //TODO: this can actually be a flag, fix it
-                RawInputKeyFlag flag = (RawInputKeyFlag)RawInput.keyboard.Flags;
-                usageText += " (" + flag.ToString() + ")";
+                if (IsButtonUp)
+                {
+                    usageText += " UP";
+                }
+                else if (IsButtonDown)
+                {
+                    usageText += " DOWN";
+                }
+
+                if (RawInput.keyboard.Flags.HasFlag(RawInputKeyFlags.RI_KEY_E0))
+                {
+                    usageText += " E0";
+                }
+
+                if (RawInput.keyboard.Flags.HasFlag(RawInputKeyFlags.RI_KEY_E1))
+                {
+                    usageText += " E1";
+                }
+
+                usageText += " ( 0x" + RawInput.keyboard.MakeCode.ToString("X4") + " )";
             }
 
             //Now create our list item

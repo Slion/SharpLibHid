@@ -105,7 +105,7 @@ namespace SharpLib.Hid
             //Setup device removal
             for (int i=0; i<iRawInputDevices.Length; i++)
             {
-                iRawInputDevices[i].dwFlags = Const.RIDEV_REMOVE;
+                iRawInputDevices[i].dwFlags = RawInputDeviceFlags.RIDEV_REMOVE;
                 iRawInputDevices[i].hwndTarget = IntPtr.Zero;
             }
 
