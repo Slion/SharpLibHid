@@ -287,12 +287,12 @@ namespace HidDemo
             // 
             // columnHeaderUsages
             // 
-            this.columnHeaderUsages.Text = "Usages";
+            this.columnHeaderUsages.Text = "Usages / Virtual Key";
             this.columnHeaderUsages.Width = 192;
             // 
             // columnHeaderInputReport
             // 
-            this.columnHeaderInputReport.Text = "Input Report";
+            this.columnHeaderInputReport.Text = "Input Report / Scan Code";
             this.columnHeaderInputReport.Width = 154;
             // 
             // columnHeaderUsagePage

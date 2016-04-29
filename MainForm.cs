@@ -98,6 +98,9 @@ namespace HidDemo
             PopulateDeviceList();
             RegisterHidDevices();
             CheckDefaultDevices();
+
+            // Register for key down event
+            KeyDown += OnKeyDown;
         }
 
         private void MainForm_Shown(object sender, EventArgs e)
@@ -172,8 +175,8 @@ namespace HidDemo
             foreach (TreeNode node in treeViewDevices.Nodes)
             {
                 Hid.Device device = (Hid.Device)node.Tag;
-                if (device.IsHid && 
-                    (device.UsageId == mceUsageId || device.UsageId == consumerUsageId || device.UsageId == gamepadUsageId))
+                if (device.IsKeyboard || (device.IsHid && 
+                    (device.UsageId == mceUsageId || device.UsageId == consumerUsageId || device.UsageId == gamepadUsageId)))
                 {
                     node.Checked = true;
                 }
@@ -344,9 +347,9 @@ namespace HidDemo
 		{
             switch (message.Msg)
             {
-                case Const.WM_KEYDOWN:
+                //case Const.WM_KEYDOWN:
                     //ProcessKeyDown(message.WParam);
-                    break;
+                    //break;
                 case Const.WM_INPUT:
                     //Log that message
                     richTextBoxLogs.AppendText("WM_INPUT: " + message.ToString() + "\r\n");
@@ -359,6 +362,16 @@ namespace HidDemo
             //Is that needed? Check the docs.
 			base.WndProc(ref message);
 		}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
 
         /// <summary>
         /// ClickOnce install update.

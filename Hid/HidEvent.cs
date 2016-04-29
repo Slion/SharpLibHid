@@ -610,6 +610,7 @@ namespace SharpLib.Hid
         public ListViewItem ToListViewItem()
         {
             string usageText = "";
+            string inputReport = null;
 
             foreach (ushort usage in Usages)
             {
@@ -640,6 +641,12 @@ namespace SharpLib.Hid
                     name = usage.ToString("X2");
                 }
                 usageText += name;
+            }
+
+            // Get input report for generic HID events
+            if (IsGeneric)
+            {
+                inputReport = InputReportString();
             }
 
             //If we are a gamepad display axis and dpad values
@@ -718,11 +725,12 @@ namespace SharpLib.Hid
                     usageText += " E1";
                 }
 
-                usageText += " ( 0x" + RawInput.keyboard.MakeCode.ToString("X4") + " )";
+                //Put our scan code into our input report field
+                inputReport = "0x" + RawInput.keyboard.MakeCode.ToString("X4");
             }
 
             //Now create our list item
-            ListViewItem item = new ListViewItem(new[] { usageText, InputReportString(), UsagePage.ToString("X2"), UsageCollection.ToString("X2"), RepeatCount.ToString(), Time.ToString("HH:mm:ss:fff"), IsBackground.ToString()});
+            ListViewItem item = new ListViewItem(new[] { usageText, inputReport, UsagePage.ToString("X2"), UsageCollection.ToString("X2"), RepeatCount.ToString(), Time.ToString("HH:mm:ss:fff"), IsBackground.ToString()});
             return item;
         }
 
