@@ -38,6 +38,7 @@ namespace SharpLib.Hid
         public delegate void HidEventHandler(object aSender, Event aHidEvent);
         public event HidEventHandler OnHidEvent;
         List<Event> iHidEvents;
+        Dictionary<ulong, Event> iKeyDownEvents;
         RAWINPUTDEVICE[] iRawInputDevices;
 
 
@@ -86,6 +87,7 @@ namespace SharpLib.Hid
         {
             iRawInputDevices = new RAWINPUTDEVICE[0];
             iHidEvents = new List<Event>();
+            iKeyDownEvents = new Dictionary<ulong, Event>();
             IsRegistered = false;
             ManageRepeats = aManageRepeats;
             RepeatDelayInMs = aRepeatDelayInMs;
@@ -145,13 +147,45 @@ namespace SharpLib.Hid
                         iHidEvents[i].Dispose();
                         iHidEvents.RemoveAt(i);
                 }
-                //Add our newly created event in our repeat list
+                //Add our newly created event to our repeat list
                 //TODO: instead of a list we could now have a single event since we only support one repeat at a time
                 iHidEvents.Add(hidEvent);
             }
+            else if (hidEvent.IsKeyboard)
+            {
+                //We are dealing with a keyboard event 
+                if (hidEvent.IsButtonDown)
+                {
+                    Event previous;
+                    if (iKeyDownEvents.TryGetValue(hidEvent.KeyId, out previous))
+                    {
+                        // This key is already pushed down
+                        // Increment our repeat count
+                        hidEvent.RepeatCount = previous.RepeatCount+1;
+                        previous.Dispose();                        
+                    }
+
+                    //Add or update our key in our dictionary
+                    iKeyDownEvents[hidEvent.KeyId] = hidEvent;
+                }
+                else if (hidEvent.IsButtonUp)
+                {
+                    Event previous;
+                    if (iKeyDownEvents.TryGetValue(hidEvent.KeyId, out previous))
+                    {
+                        // Key was released just make sure we track that by removing it
+                        previous.Dispose();
+                        iKeyDownEvents.Remove(hidEvent.KeyId);
+                    }                    
+                }
+            }
 
             //Broadcast our events
-            OnHidEvent(this, hidEvent);    
+            //Filter out keyboard repeats unless otherwise specified
+            if (ManageRepeats || !hidEvent.IsRepeat)
+            {
+                OnHidEvent(this, hidEvent);
+            }            
         }
 
         public void OnHidEventRepeat(Event aHidEvent)

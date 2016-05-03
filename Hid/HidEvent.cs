@@ -110,7 +110,19 @@ namespace SharpLib.Hid
         }
 
         public bool IsRepeat { get { return RepeatCount != 0; } }
-        public uint RepeatCount { get; private set; }
+        public uint RepeatCount { get; set; }
+
+        /// <summary>
+        /// Uniquely identify keyboard events.
+        /// Key down and up event will return the same ID.
+        /// </summary>
+        public ulong KeyId
+        {
+            get
+            {
+                return (ulong)RawInput.keyboard.VKey << 32 | (ulong)RawInput.keyboard.MakeCode << 16 | (ulong)(RawInput.keyboard.Flags & ~RawInputKeyFlags.RI_KEY_BREAK);
+            }
+        }
 
         public Device Device { get; private set; }
         public RAWINPUT RawInput { get {return iRawInput;} } 
@@ -158,7 +170,11 @@ namespace SharpLib.Hid
         /// <summary>
         /// Initialize an HidEvent from a WM_INPUT message
         /// </summary>
-        /// <param name="hRawInputDevice">Device Handle as provided by RAWINPUTHEADER.hDevice, typically accessed as rawinput.header.hDevice</param>
+        /// <param name="aMessage"></param>
+        /// <param name="aRepeatDelegate"></param>
+        /// <param name="aRepeat"></param>
+        /// <param name="aRepeatDelayInMs"></param>
+        /// <param name="aRepeatSpeedInMs"></param>
         public Event(Message aMessage, HidEventRepeatDelegate aRepeatDelegate, bool aRepeat, int aRepeatDelayInMs=-1, int aRepeatSpeedInMs=-1 )
         {
             RepeatCount = 0;
@@ -297,8 +313,9 @@ namespace SharpLib.Hid
             }
 
             //We don't want to repeat every events. Key up events for instance must not be repeated.
-            if ( aRepeat &&         //If repeat is enabled
-                (IsButtonDown ||    //and if we are dealing with a button down event
+            if ( aRepeat &&         // If repeat is enabled
+                 IsGeneric &&       // Only generic HID event need repeat management, keyboards repeats are managed by the drivers
+                (IsButtonDown ||    // and if we are dealing with a button down event
                 (GetDirectionPadState() != DirectionPadState.Rest))) //or our dpad is not at rest
             {
                 StartRepeatTimer(iRepeatDelayInMs);
