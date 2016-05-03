@@ -64,6 +64,67 @@ namespace SharpLib.Hid
         /// </summary>
         public bool IsGeneric { get; private set; }
 
+        public Keys VirtualKey {
+            get { return (Keys) RawInput.keyboard.VKey; }
+        }
+
+        public bool HasModifierShift;
+        public bool HasModifierControl;
+        public bool HasModifierAlt;
+        public bool HasModifierWindows;
+
+        /// <summary>
+        /// Tells whether this event is a SHIFT modifier.
+        /// </summary>
+        public bool IsModifierShift
+        {
+            get
+            {
+                return IsKeyboard &&
+                       (VirtualKey == Keys.ShiftKey || VirtualKey == Keys.LShiftKey || VirtualKey == Keys.RShiftKey);
+            }
+        }
+
+        /// <summary>
+        /// Tells whether this event is a CONTROL modifier.
+        /// </summary>
+        public bool IsModifierControl
+        {
+            get
+            {
+                return IsKeyboard &&
+                       (VirtualKey == Keys.ControlKey || VirtualKey == Keys.LControlKey ||
+                        VirtualKey == Keys.RControlKey);
+            }
+        }
+
+        /// <summary>
+        /// Tells whether this event is a ALT modifier.
+        /// </summary>
+        public bool IsModifierAlt
+        {
+            get
+            {
+                return IsKeyboard && (VirtualKey == Keys.Menu || VirtualKey == Keys.LMenu || VirtualKey == Keys.RMenu);
+            }
+        }
+
+        /// <summary>
+        /// Tells whether this event is a WINDOWS modifier.
+        /// </summary>
+        public bool IsModifierWindows
+        {
+            get { return IsKeyboard && (VirtualKey == Keys.LWin || VirtualKey == Keys.RWin); }
+        }
+
+        /// <summary>
+        /// Tells whether this is a modifier key.
+        /// </summary>
+        public bool IsModifier
+        {
+            get { return IsModifierShift || IsModifierControl || IsModifierAlt || IsModifierWindows; }
+        }
+
         /// <summary>
         /// Check if this event correspond to a button or a key being pushed down.
         /// </summary>
@@ -292,6 +353,48 @@ namespace SharpLib.Hid
                     IsKeyboard = true;
                     UsagePage = (ushort)Hid.UsagePage.GenericDesktopControls;
                     UsageCollection = (ushort)Hid.UsageCollection.GenericDesktop.Keyboard;
+
+                    // Precise ALT key - work out if we are left or right ALT
+                    if (iRawInput.keyboard.VKey == (ushort) Keys.Menu)
+                    {
+                        if (RawInput.keyboard.Flags.HasFlag(RawInputKeyFlags.RI_KEY_E0))
+                        {
+                            iRawInput.keyboard.VKey = (ushort) Keys.RMenu;
+                        }
+                        else
+                        {
+                            iRawInput.keyboard.VKey = (ushort) Keys.LMenu;
+                        }
+                    }
+
+                    // Precise CTRL key - work out if we are left or right CTRL
+                    if (iRawInput.keyboard.VKey == (ushort)Keys.ControlKey)
+                    {
+                        if (RawInput.keyboard.Flags.HasFlag(RawInputKeyFlags.RI_KEY_E0))
+                        {
+                            iRawInput.keyboard.VKey = (ushort)Keys.RControlKey;
+                        }
+                        else
+                        {
+                            iRawInput.keyboard.VKey = (ushort)Keys.LControlKey;
+                        }
+                    }
+
+                    // Precise SHIFT key - work out if we are left or right SHIFT
+                    if (iRawInput.keyboard.VKey == (ushort)Keys.ShiftKey)
+                    {
+                        if (RawInput.keyboard.MakeCode == 0x0036)
+                        {
+                            iRawInput.keyboard.VKey = (ushort)Keys.RShiftKey;
+                        }
+                        else
+                        {
+                            Debug.Assert(RawInput.keyboard.MakeCode == 0x002A);
+                            iRawInput.keyboard.VKey = (ushort)Keys.LShiftKey;
+                        }
+
+                    }
+
 
                     Debug.WriteLine("WM_INPUT source device is Keyboard.");
                     // do keyboard handling...
@@ -741,6 +844,27 @@ namespace SharpLib.Hid
                 {
                     usageText += " E1";
                 }
+
+                if (HasModifierShift)
+                {
+                    usageText += " SHIFT";
+                }
+
+                if (HasModifierControl)
+                {
+                    usageText += " CTRL";
+                }
+
+                if (HasModifierAlt)
+                {
+                    usageText += " ALT";
+                }
+
+                if (HasModifierWindows)
+                {
+                    usageText += " WIN";
+                }
+
 
                 //Put our scan code into our input report field
                 inputReport = "0x" + RawInput.keyboard.MakeCode.ToString("X4");

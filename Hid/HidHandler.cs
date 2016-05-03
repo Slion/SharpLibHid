@@ -26,6 +26,7 @@ using System.Text;
 using Microsoft.Win32.SafeHandles;
 using SharpLib.Win32;
 using System.Collections.Generic;
+using System.Linq;
 
 
 namespace SharpLib.Hid
@@ -38,6 +39,7 @@ namespace SharpLib.Hid
         public delegate void HidEventHandler(object aSender, Event aHidEvent);
         public event HidEventHandler OnHidEvent;
         List<Event> iHidEvents;
+        //TODO: Consider using only the VirtualKey as key since we now resolve left and right modifiers internally
         Dictionary<ulong, Event> iKeyDownEvents;
         RAWINPUTDEVICE[] iRawInputDevices;
 
@@ -153,6 +155,11 @@ namespace SharpLib.Hid
             }
             else if (hidEvent.IsKeyboard)
             {
+                hidEvent.HasModifierShift = !hidEvent.IsModifier && HasModifierShift;
+                hidEvent.HasModifierControl = !hidEvent.IsModifier && HasModifierControl;
+                hidEvent.HasModifierAlt = !hidEvent.IsModifier && HasModifierAlt;
+                hidEvent.HasModifierWindows = !hidEvent.IsModifier && HasModifierWindows;
+
                 //We are dealing with a keyboard event 
                 if (hidEvent.IsButtonDown)
                 {
@@ -193,6 +200,51 @@ namespace SharpLib.Hid
             //Broadcast our events
             OnHidEvent(this, aHidEvent);    
         }
+
+        /// <summary>
+        /// Checks if SHIFT modifier is enabled.
+        /// </summary>
+        public bool HasModifierShift
+        {
+            get
+            {
+                return iKeyDownEvents.Values.Any(hidEvent => hidEvent.IsModifierShift);
+            }
+        }
+
+        /// <summary>
+        /// Checks if CTRL modifier is enabled.
+        /// </summary>
+        public bool HasModifierControl
+        {
+            get
+            {
+                return iKeyDownEvents.Values.Any(hidEvent => hidEvent.IsModifierControl);
+            }
+        }
+
+        /// <summary>
+        /// Checks if ALT modifier is enabled.
+        /// </summary>
+        public bool HasModifierAlt
+        {
+            get
+            {
+                return iKeyDownEvents.Values.Any(hidEvent => hidEvent.IsModifierAlt);
+            }
+        }
+
+        /// <summary>
+        /// Checks if WINDOWS modifier is enabled.
+        /// </summary>
+        public bool HasModifierWindows
+        {
+            get
+            {
+                return iKeyDownEvents.Values.Any(hidEvent => hidEvent.IsModifierWindows);
+            }
+        }
+
 
     }
 
