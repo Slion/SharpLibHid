@@ -284,6 +284,7 @@ namespace HidDemo
             this.listViewEvents.TabIndex = 3;
             this.listViewEvents.UseCompatibleStateImageBehavior = false;
             this.listViewEvents.View = System.Windows.Forms.View.Details;
+            this.listViewEvents.Enabled = false;
             // 
             // columnHeaderUsages
             // 
