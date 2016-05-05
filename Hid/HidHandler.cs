@@ -43,11 +43,17 @@ namespace SharpLib.Hid
         Dictionary<ulong, Event> iKeyDownEvents;
         RAWINPUTDEVICE[] iRawInputDevices;
 
-
         public bool IsRegistered { get; private set; }
         public bool ManageRepeats { get; private set; }
         public int RepeatDelayInMs { get; private set; }
         public int RepeatSpeedInMs { get; private set; }
+
+        /// <summary>
+        /// Provide a collection of keyboard keys currently pushed down.
+        /// </summary>
+        public Dictionary<ulong, Event> KeyDownEvents {
+            get { return iKeyDownEvents;}
+        }
 
         /// <summary>
         /// Create an HID handler.
@@ -169,7 +175,8 @@ namespace SharpLib.Hid
                         // This key is already pushed down
                         // Increment our repeat count
                         hidEvent.RepeatCount = previous.RepeatCount+1;
-                        previous.Dispose();                        
+                        // Discard our previous instance
+                        previous.Dispose();           
                     }
 
                     //Add or update our key in our dictionary
@@ -187,8 +194,9 @@ namespace SharpLib.Hid
                 }
             }
 
-            //Broadcast our events
-            //Filter out keyboard repeats unless otherwise specified
+            // Broadcast our events
+            // Filter out keyboard repeats unless otherwise specified.
+            // Only keyboard repeats coming from drivers come through here.
             if (ManageRepeats || !hidEvent.IsRepeat)
             {
                 OnHidEvent(this, hidEvent);
@@ -197,7 +205,8 @@ namespace SharpLib.Hid
 
         public void OnHidEventRepeat(Event aHidEvent)
         {
-            //Broadcast our events
+            // Generic HID repeats generated using timer go through here.  
+            // Broadcast our events
             OnHidEvent(this, aHidEvent);    
         }
 
