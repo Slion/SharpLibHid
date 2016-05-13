@@ -26,9 +26,10 @@ using System.Text;
 using Microsoft.Win32.SafeHandles;
 using SharpLib.Win32;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Timers;
 using SharpLib.Hid.Usage;
-
+using System.Reflection;
 
 namespace SharpLib.Hid
 {
@@ -51,7 +52,7 @@ namespace SharpLib.Hid
     /// <summary>
     /// Represent a HID event.
     /// TODO: Rename this into HidRawInput?
-    /// </summary>
+    /// </summary>    
     public class Event : IDisposable
     {
         public bool IsValid { get; private set; }
@@ -189,10 +190,79 @@ namespace SharpLib.Hid
         public RAWINPUT RawInput { get {return iRawInput;} } 
         private RAWINPUT iRawInput;
 
+        /// <summary>
+        /// Usage Page
+        /// </summary>
         public ushort UsagePage { get; private set; }
+
+        /// <summary>
+        /// Usage Page as enumeration.
+        /// </summary>
+        public UsagePage UsagePageEnum {get { return (UsagePage) UsagePage; } }
+
+        /// <summary>
+        /// Provides the name of our usage page.
+        /// </summary>
+        public string UsagePageName()
+        {            
+            return UsagePageEnum.ToString();
+        }
+
+        /// <summary>
+        /// Provides name and value of our usage page as a string.
+        /// </summary>
+        public string UsagePageNameAndValue()
+        {
+            return string.Format("{0} (0x{1})", UsagePageName(), UsagePage.ToString("X4"));
+        }
+
+        /// <summary>
+        /// Usage Collection
+        /// </summary>
         public ushort UsageCollection { get; private set; }
-        public uint UsageId { get { return ((uint)UsagePage << 16 | (uint)UsageCollection); } }
+
+        /// <summary>
+        /// Provides the name of our usage collection.
+        /// </summary>
+        public string UsageCollectionName()
+        {
+                Type collectionType = Utils.UsageCollectionType(UsagePageEnum);
+                return Enum.GetName(collectionType, UsageCollection);                
+        }
+
+        /// <summary>
+        /// Provides name and value of our usage collection as a string.
+        /// </summary>
+        public string UsageCollectionNameAndValue()
+        {
+                return string.Format("{0} (0x{1})", UsageCollectionName(), UsageCollection.ToString("X4"));
+        }
+
         public List<ushort> Usages { get; private set; }
+
+        /// <summary>
+        /// Provides name of the usage at the given index.
+        /// </summary>
+        /// <param name="aIndex">Index of the usage concerned.</param>
+        /// <returns></returns>
+        public string UsageName(int aIndex)
+        {
+            Type usageType = Utils.UsageType(UsagePageEnum);
+            return Enum.GetName(usageType, Usages[aIndex]);
+        }
+
+        /// <summary>
+        /// Provides name and value of the usage at the given index.
+        /// </summary>
+        /// <param name="aIndex">Index of the usage concerned.</param>
+        /// <returns></returns>
+        public string UsageNameAndValue(int aIndex)
+        {
+            return string.Format("{0} (0x{1})", UsageName(aIndex), Usages[aIndex].ToString("X4"));
+        }
+
+        public uint UsageId { get { return ((uint)UsagePage << 16 | (uint)UsageCollection); } }
+        
         /// <summary>
         /// Sorted in the same order as Device.InputValueCapabilities.
         /// </summary>
@@ -675,33 +745,132 @@ namespace SharpLib.Hid
             string res = "";            
             if (!IsValid)
             {
-                res += "==== WARNING: Invalid HidEvent\r\n";
+                res += "HID Event Invalid";
                 return res;
             }
 
-            res += "==================== HID Event ====================" + "\r\n";
+            res += "HID Event";
+            if (IsButtonDown) res += ", DOWN";
+            if (IsButtonUp) res += ", UP";
 
-            if (Device != null)
+            if (IsGeneric)
             {
-                res += Device.ToString();
+                res += ", Generic";
+                for (int i = 0; i < Usages.Count; i++)
+                {
+                    res += ", Usage: " + UsageNameAndValue(i);
+                }
+                res += ", UsagePage: " + UsagePageNameAndValue();
+                res += ", UsageCollection: " + UsageCollectionNameAndValue();
+                res += ", Input Report: 0x" + InputReportString();
+            }
+            else if (IsKeyboard)
+            {
+                res += ", Keyboard";
+                res += ", Virtual Key: " + VirtualKey;
+            }
+            else if (IsMouse)
+            {
+                res += ", Mouse";
             }
 
-            if (IsGeneric) res += "==== Generic\r\n";
-            if (IsKeyboard) res += "==== Keyboard\r\n";
-            if (IsMouse) res += "==== Mouse\r\n";
-            res += "==== Foreground: " + IsForeground.ToString() + "\r\n";
-            res += "==== UsagePage: 0x" + UsagePage.ToString("X4") + "\r\n";
-            res += "==== UsageCollection: 0x" + UsageCollection.ToString("X4") + "\r\n";
-            res += "==== InputReport: 0x" + InputReportString() + "\r\n";
-            foreach (ushort usage in Usages)
-            {
-                res += "==== Usage: 0x" + usage.ToString("X4") + "\r\n";
-            }
-
-            res += "===================================================" + "\r\n";
+            if (IsBackground) res += ", Background";
+            if (IsRepeat) res += ", Repeat: " + RepeatCount;
 
             return res;
         }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string ToLog(uint aDepth=0)
+        {
+            string res = "";
+            if (!IsValid)
+            {
+                res += "WARNING: Invalid HID Event";
+            }
+
+            //Compute our prefix and indent
+            const string KPrefix = "   ";
+            string prefix = "";
+            for (uint i = 0; i<aDepth; i++)
+            {
+                prefix += KPrefix;
+            }
+            string indent = prefix + KPrefix;
+            //
+
+            //Open our HID Event block
+            res += "[HID Event]" + "\r\n";
+
+            // Log our debug string too to give a quick overview
+            res += indent + "String: " + ToString() + "\r\n";
+
+            //For each properties of our HID Event
+            foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(this))
+            {
+                string propertyName = property.Name;
+                object value = property.GetValue(this);
+
+                if (value != null)
+                {
+                    //Check if our property value object type has a method of the same name has this one.
+                    Type type = value.GetType();
+                    MethodInfo method = type.GetMethod(System.Reflection.MethodBase.GetCurrentMethod().Name);
+                    if (method != null && method.GetParameters().Length == 1 && method.GetParameters()[0].ParameterType == aDepth.GetType())
+                    {
+                        object[] parameters = new object[] { aDepth+1 };
+                        res += method.Invoke(value, parameters);
+                    }
+                    //Make special case for some properties
+                    else if (propertyName.Equals("InputReport"))
+                    {
+                        res += string.Format("{0}{1}: {2}\r\n", indent, propertyName, InputReportString());
+                    }
+                    else if (propertyName.Equals("UsagePage"))
+                    {
+                        res += string.Format("{0}{1}: {2} (0x{3})\r\n", indent, propertyName, UsagePageEnum, UsagePage.ToString("X4"));
+                    }
+                    else if (propertyName.Equals("UsageCollection"))
+                    {
+                        res += string.Format("{0}{1}: {2}\r\n", indent, propertyName, UsageCollectionNameAndValue());
+                    }
+                    else if (propertyName.Equals("Usages"))
+                    {
+                        for (int i=0;i<Usages.Count;i++)
+                        {                            
+                            res += string.Format("{0}{1}: {2}\r\n", indent, propertyName, UsageNameAndValue(i));
+                        }
+                    }
+                    else if (propertyName.Equals("UsageValues"))
+                    {
+                        //Just give the count
+                        res += string.Format("{0}{1}: {2}\r\n", indent, "UsageValues count", UsageValues.Count);
+                    }
+                    else if (   propertyName.Equals("RawInput")
+                                || propertyName.Equals("UsagePageEnum"))
+                    {
+                        //Skip those
+                    }
+                    else
+                    {
+                        res += string.Format("{0}{1}: {2}\r\n", indent, propertyName, value);
+                    }
+                }
+                else
+                {
+                    // Special case for NULL values
+                    res += string.Format("{0}{1}: NULL\r\n", indent, propertyName);
+                }
+            }
+            //Close our HID Event block
+            res += "[/HID Event]" + "\r\n";
+            return res;
+        }
+
 
         /// <summary>
         /// 
@@ -871,7 +1040,7 @@ namespace SharpLib.Hid
             }
 
             //Now create our list item
-            ListViewItem item = new ListViewItem(new[] { usageText, inputReport, UsagePage.ToString("X2"), UsageCollection.ToString("X2"), RepeatCount.ToString(), Time.ToString("HH:mm:ss:fff"), IsBackground.ToString()});
+            ListViewItem item = new ListViewItem(new[] { usageText, inputReport, UsagePageNameAndValue(), UsageCollectionNameAndValue(), RepeatCount.ToString(), Time.ToString("HH:mm:ss:fff"), IsBackground.ToString()});
             return item;
         }
 
