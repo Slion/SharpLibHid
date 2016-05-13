@@ -83,7 +83,8 @@ namespace HidDemo
             // 
             // buttonClear
             // 
-            this.buttonClear.Location = new System.Drawing.Point(950, 5);
+            this.buttonClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonClear.Location = new System.Drawing.Point(1208, 6);
             this.buttonClear.Name = "buttonClear";
             this.buttonClear.Size = new System.Drawing.Size(75, 23);
             this.buttonClear.TabIndex = 3;
@@ -103,7 +104,7 @@ namespace HidDemo
             this.tabControl.Location = new System.Drawing.Point(12, 27);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(1039, 594);
+            this.tabControl.Size = new System.Drawing.Size(1297, 594);
             this.tabControl.TabIndex = 4;
             // 
             // tabPageMessages
@@ -120,17 +121,18 @@ namespace HidDemo
             this.tabPageMessages.Location = new System.Drawing.Point(4, 22);
             this.tabPageMessages.Name = "tabPageMessages";
             this.tabPageMessages.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageMessages.Size = new System.Drawing.Size(1031, 568);
+            this.tabPageMessages.Size = new System.Drawing.Size(1289, 568);
             this.tabPageMessages.TabIndex = 0;
             this.tabPageMessages.Text = "Messages";
             this.tabPageMessages.UseVisualStyleBackColor = true;
             // 
             // groupBoxRegistrationFlag
             // 
+            this.groupBoxRegistrationFlag.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxRegistrationFlag.Controls.Add(this.radioButtonNone);
             this.groupBoxRegistrationFlag.Controls.Add(this.radioButtonExInputSink);
             this.groupBoxRegistrationFlag.Controls.Add(this.radioButtonInputSink);
-            this.groupBoxRegistrationFlag.Location = new System.Drawing.Point(860, 169);
+            this.groupBoxRegistrationFlag.Location = new System.Drawing.Point(1118, 170);
             this.groupBoxRegistrationFlag.Name = "groupBoxRegistrationFlag";
             this.groupBoxRegistrationFlag.Size = new System.Drawing.Size(165, 102);
             this.groupBoxRegistrationFlag.TabIndex = 10;
@@ -177,10 +179,11 @@ namespace HidDemo
             // 
             // checkBoxUseSingleHandler
             // 
+            this.checkBoxUseSingleHandler.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxUseSingleHandler.AutoSize = true;
             this.checkBoxUseSingleHandler.Checked = true;
             this.checkBoxUseSingleHandler.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxUseSingleHandler.Location = new System.Drawing.Point(908, 131);
+            this.checkBoxUseSingleHandler.Location = new System.Drawing.Point(1166, 132);
             this.checkBoxUseSingleHandler.Name = "checkBoxUseSingleHandler";
             this.checkBoxUseSingleHandler.Size = new System.Drawing.Size(117, 17);
             this.checkBoxUseSingleHandler.TabIndex = 9;
@@ -190,8 +193,9 @@ namespace HidDemo
             // 
             // labelRepeatSpeed
             // 
+            this.labelRepeatSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelRepeatSpeed.AutoSize = true;
-            this.labelRepeatSpeed.Location = new System.Drawing.Point(908, 96);
+            this.labelRepeatSpeed.Location = new System.Drawing.Point(1166, 97);
             this.labelRepeatSpeed.Name = "labelRepeatSpeed";
             this.labelRepeatSpeed.Size = new System.Drawing.Size(60, 13);
             this.labelRepeatSpeed.TabIndex = 8;
@@ -199,8 +203,9 @@ namespace HidDemo
             // 
             // labelRepeatDelay
             // 
+            this.labelRepeatDelay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelRepeatDelay.AutoSize = true;
-            this.labelRepeatDelay.Location = new System.Drawing.Point(907, 70);
+            this.labelRepeatDelay.Location = new System.Drawing.Point(1165, 71);
             this.labelRepeatDelay.Name = "labelRepeatDelay";
             this.labelRepeatDelay.Size = new System.Drawing.Size(56, 13);
             this.labelRepeatDelay.TabIndex = 7;
@@ -208,7 +213,8 @@ namespace HidDemo
             // 
             // numericRepeatSpeed
             // 
-            this.numericRepeatSpeed.Location = new System.Drawing.Point(971, 94);
+            this.numericRepeatSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericRepeatSpeed.Location = new System.Drawing.Point(1229, 95);
             this.numericRepeatSpeed.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -231,7 +237,8 @@ namespace HidDemo
             // 
             // numericRepeatDelay
             // 
-            this.numericRepeatDelay.Location = new System.Drawing.Point(971, 68);
+            this.numericRepeatDelay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericRepeatDelay.Location = new System.Drawing.Point(1229, 69);
             this.numericRepeatDelay.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -254,8 +261,9 @@ namespace HidDemo
             // 
             // checkBoxRepeat
             // 
+            this.checkBoxRepeat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxRepeat.AutoSize = true;
-            this.checkBoxRepeat.Location = new System.Drawing.Point(950, 45);
+            this.checkBoxRepeat.Location = new System.Drawing.Point(1208, 46);
             this.checkBoxRepeat.Name = "checkBoxRepeat";
             this.checkBoxRepeat.Size = new System.Drawing.Size(61, 17);
             this.checkBoxRepeat.TabIndex = 4;
@@ -266,8 +274,9 @@ namespace HidDemo
             // listViewEvents
             // 
             this.listViewEvents.Alignment = System.Windows.Forms.ListViewAlignment.Left;
-            this.listViewEvents.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.listViewEvents.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewEvents.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.listViewEvents.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderUsages,
@@ -277,34 +286,34 @@ namespace HidDemo
             this.columnHeaderRepeat,
             this.columnHeaderTime,
             this.columnBackground});
+            this.listViewEvents.Enabled = false;
             this.listViewEvents.GridLines = true;
             this.listViewEvents.Location = new System.Drawing.Point(8, 6);
             this.listViewEvents.Name = "listViewEvents";
-            this.listViewEvents.Size = new System.Drawing.Size(845, 554);
+            this.listViewEvents.Size = new System.Drawing.Size(1104, 554);
             this.listViewEvents.TabIndex = 3;
             this.listViewEvents.UseCompatibleStateImageBehavior = false;
             this.listViewEvents.View = System.Windows.Forms.View.Details;
-            this.listViewEvents.Enabled = false;
             // 
             // columnHeaderUsages
             // 
             this.columnHeaderUsages.Text = "Usages / Virtual Key";
-            this.columnHeaderUsages.Width = 192;
+            this.columnHeaderUsages.Width = 211;
             // 
             // columnHeaderInputReport
             // 
             this.columnHeaderInputReport.Text = "Input Report / Scan Code";
-            this.columnHeaderInputReport.Width = 154;
+            this.columnHeaderInputReport.Width = 145;
             // 
             // columnHeaderUsagePage
             // 
             this.columnHeaderUsagePage.Text = "Usage Page";
-            this.columnHeaderUsagePage.Width = 87;
+            this.columnHeaderUsagePage.Width = 259;
             // 
             // columnHeaderUsageCollection
             // 
             this.columnHeaderUsageCollection.Text = "Usage Collection";
-            this.columnHeaderUsageCollection.Width = 116;
+            this.columnHeaderUsageCollection.Width = 223;
             // 
             // columnHeaderRepeat
             // 
@@ -330,14 +339,15 @@ namespace HidDemo
             this.tabPageDevices.Location = new System.Drawing.Point(4, 22);
             this.tabPageDevices.Name = "tabPageDevices";
             this.tabPageDevices.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageDevices.Size = new System.Drawing.Size(1031, 568);
+            this.tabPageDevices.Size = new System.Drawing.Size(1289, 568);
             this.tabPageDevices.TabIndex = 1;
             this.tabPageDevices.Text = "Devices";
             this.tabPageDevices.UseVisualStyleBackColor = true;
             // 
             // buttonRefresh
             // 
-            this.buttonRefresh.Location = new System.Drawing.Point(813, 64);
+            this.buttonRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonRefresh.Location = new System.Drawing.Point(1208, 64);
             this.buttonRefresh.Name = "buttonRefresh";
             this.buttonRefresh.Size = new System.Drawing.Size(75, 23);
             this.buttonRefresh.TabIndex = 3;
@@ -347,7 +357,8 @@ namespace HidDemo
             // 
             // buttonTreeViewExpandAll
             // 
-            this.buttonTreeViewExpandAll.Location = new System.Drawing.Point(813, 6);
+            this.buttonTreeViewExpandAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonTreeViewExpandAll.Location = new System.Drawing.Point(1208, 6);
             this.buttonTreeViewExpandAll.Name = "buttonTreeViewExpandAll";
             this.buttonTreeViewExpandAll.Size = new System.Drawing.Size(75, 23);
             this.buttonTreeViewExpandAll.TabIndex = 2;
@@ -357,7 +368,8 @@ namespace HidDemo
             // 
             // buttonTreeViewCollapseAll
             // 
-            this.buttonTreeViewCollapseAll.Location = new System.Drawing.Point(813, 35);
+            this.buttonTreeViewCollapseAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonTreeViewCollapseAll.Location = new System.Drawing.Point(1208, 35);
             this.buttonTreeViewCollapseAll.Name = "buttonTreeViewCollapseAll";
             this.buttonTreeViewCollapseAll.Size = new System.Drawing.Size(75, 23);
             this.buttonTreeViewCollapseAll.TabIndex = 1;
@@ -367,12 +379,13 @@ namespace HidDemo
             // 
             // treeViewDevices
             // 
-            this.treeViewDevices.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.treeViewDevices.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.treeViewDevices.CheckBoxes = true;
             this.treeViewDevices.Location = new System.Drawing.Point(8, 6);
             this.treeViewDevices.Name = "treeViewDevices";
-            this.treeViewDevices.Size = new System.Drawing.Size(713, 554);
+            this.treeViewDevices.Size = new System.Drawing.Size(1194, 554);
             this.treeViewDevices.TabIndex = 0;
             this.treeViewDevices.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewDevices_AfterCheck);
             // 
@@ -381,17 +394,20 @@ namespace HidDemo
             this.tabPageTests.Controls.Add(this.textBoxTests);
             this.tabPageTests.Location = new System.Drawing.Point(4, 22);
             this.tabPageTests.Name = "tabPageTests";
-            this.tabPageTests.Size = new System.Drawing.Size(1031, 568);
+            this.tabPageTests.Size = new System.Drawing.Size(1289, 568);
             this.tabPageTests.TabIndex = 2;
             this.tabPageTests.Text = "Tests";
             this.tabPageTests.UseVisualStyleBackColor = true;
             // 
             // textBoxTests
             // 
+            this.textBoxTests.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxTests.Location = new System.Drawing.Point(4, 4);
             this.textBoxTests.Multiline = true;
             this.textBoxTests.Name = "textBoxTests";
-            this.textBoxTests.Size = new System.Drawing.Size(887, 499);
+            this.textBoxTests.Size = new System.Drawing.Size(1282, 561);
             this.textBoxTests.TabIndex = 0;
             // 
             // tabPageLogs
@@ -401,14 +417,15 @@ namespace HidDemo
             this.tabPageLogs.Location = new System.Drawing.Point(4, 22);
             this.tabPageLogs.Name = "tabPageLogs";
             this.tabPageLogs.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageLogs.Size = new System.Drawing.Size(1031, 568);
+            this.tabPageLogs.Size = new System.Drawing.Size(1289, 568);
             this.tabPageLogs.TabIndex = 3;
             this.tabPageLogs.Text = "Logs";
             this.tabPageLogs.UseVisualStyleBackColor = true;
             // 
             // buttonClearLogs
             // 
-            this.buttonClearLogs.Location = new System.Drawing.Point(950, 6);
+            this.buttonClearLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonClearLogs.Location = new System.Drawing.Point(1208, 6);
             this.buttonClearLogs.Name = "buttonClearLogs";
             this.buttonClearLogs.Size = new System.Drawing.Size(75, 23);
             this.buttonClearLogs.TabIndex = 4;
@@ -418,15 +435,16 @@ namespace HidDemo
             // 
             // richTextBoxLogs
             // 
-            this.richTextBoxLogs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.richTextBoxLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBoxLogs.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.richTextBoxLogs.DetectUrls = false;
             this.richTextBoxLogs.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.richTextBoxLogs.Location = new System.Drawing.Point(6, 6);
             this.richTextBoxLogs.Name = "richTextBoxLogs";
             this.richTextBoxLogs.ReadOnly = true;
-            this.richTextBoxLogs.Size = new System.Drawing.Size(897, 556);
+            this.richTextBoxLogs.Size = new System.Drawing.Size(1196, 556);
             this.richTextBoxLogs.TabIndex = 0;
             this.richTextBoxLogs.Text = "";
             this.richTextBoxLogs.WordWrap = false;
@@ -437,7 +455,7 @@ namespace HidDemo
             this.toolStripStatusLabelDevice});
             this.statusStrip.Location = new System.Drawing.Point(0, 624);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(1063, 22);
+            this.statusStrip.Size = new System.Drawing.Size(1321, 22);
             this.statusStrip.TabIndex = 5;
             this.statusStrip.Text = "statusStrip1";
             // 
@@ -454,7 +472,7 @@ namespace HidDemo
             this.aboutToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(1063, 24);
+            this.menuStrip.Size = new System.Drawing.Size(1321, 24);
             this.menuStrip.TabIndex = 6;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -477,7 +495,7 @@ namespace HidDemo
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.AutoScroll = true;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(1063, 646);
+            this.ClientSize = new System.Drawing.Size(1321, 646);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip);
             this.Controls.Add(this.tabControl);

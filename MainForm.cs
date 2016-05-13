@@ -335,7 +335,7 @@ namespace HidDemo
                     toolStripStatusLabelDevice.Text = aHidEvent.Device.FriendlyName;
                 }
                 
-                richTextBoxLogs.AppendText(aHidEvent.ToString());
+                richTextBoxLogs.AppendText(aHidEvent.ToLog());
             }
         }
 

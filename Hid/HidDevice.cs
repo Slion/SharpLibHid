@@ -467,16 +467,46 @@ namespace SharpLib.Hid
         override public string ToString()
         {
             string res = "";
-            res += "==================== HID Device ====================" + "\r\n";
-            res += "==== Name: " + Name + "\r\n";
-            res += "==== Manufacturer: " + Manufacturer + "\r\n";
-            res += "==== Product: " + Product + "\r\n";
-            res += "==== VendorID: 0x" + VendorId.ToString("X4") + "\r\n";
-            res += "==== ProductID: 0x" + ProductId.ToString("X4") + "\r\n";
-            res += "==== Version: " + Version.ToString() + "\r\n";
-            res += "====================================================" + "\r\n";
+            res += "HID Device: ";
+            res += FriendlyName;
+            //res += ", Manufacturer: " + Manufacturer;
+            //res += ", Product: " + Product;
+            //res += ", VendorID: 0x" + VendorId.ToString("X4");
+            //res += ", ProductID: 0x" + ProductId.ToString("X4");
+            //res += ", Version: " + Version.ToString();
+
             return res;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string ToLog(uint aDepth=0)
+        {
+            string res = "";
+
+            const string KPrefix = "   ";
+            string prefix = "";
+            for (uint i = 0; i < aDepth; i++)
+            {
+                prefix += KPrefix;
+            }
+
+            string indent = prefix + KPrefix;
+
+            res += prefix + "[HID Device]" + "\r\n";
+            res += indent + "String: " + ToString() + "\r\n";
+            res += indent + "Name: " + Name + "\r\n";
+            res += indent + "Manufacturer: " + Manufacturer + "\r\n";
+            res += indent + "Product: " + Product + "\r\n";
+            res += indent + "VendorID: 0x" + VendorId.ToString("X4") + "\r\n";
+            res += indent + "ProductID: 0x" + ProductId.ToString("X4") + "\r\n";
+            res += indent + "Version: " + Version.ToString() + "\r\n";
+            res += prefix + "[/HID Device]" + "\r\n";
+            return res;
+        }
+
 
         /// <summary>
         /// Print information about this device to our debug output.
