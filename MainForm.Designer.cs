@@ -298,12 +298,12 @@ namespace HidDemo
             // columnHeaderUsages
             // 
             this.columnHeaderUsages.Text = "Usages / Virtual Key";
-            this.columnHeaderUsages.Width = 211;
+            this.columnHeaderUsages.Width = 190;
             // 
             // columnHeaderInputReport
             // 
             this.columnHeaderInputReport.Text = "Input Report / Scan Code";
-            this.columnHeaderInputReport.Width = 145;
+            this.columnHeaderInputReport.Width = 226;
             // 
             // columnHeaderUsagePage
             // 
@@ -388,6 +388,7 @@ namespace HidDemo
             this.treeViewDevices.Size = new System.Drawing.Size(1194, 554);
             this.treeViewDevices.TabIndex = 0;
             this.treeViewDevices.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewDevices_AfterCheck);
+            this.treeViewDevices.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeViewDevices_KeyDown);
             // 
             // tabPageTests
             // 

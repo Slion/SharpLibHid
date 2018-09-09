@@ -535,5 +535,18 @@ namespace HidDemo
         {
             RegisterHidDevices();
         }
+
+        private void treeViewDevices_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Allow copying text from node
+            if (e.KeyData == (Keys.Control | Keys.C))
+            {
+                if (treeViewDevices.SelectedNode != null)
+                {
+                    Clipboard.SetText(treeViewDevices.SelectedNode.Text);
+                }
+                e.SuppressKeyPress = true;
+            }
+        }
     }
 }
