@@ -29,7 +29,7 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">.\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <TargetFrameworkProfile />
-    <PublishUrl>ftp://lenclud%40monroe.dreamhost.com/publish.slions.net/HidDemo/</PublishUrl>
+    <PublishUrl>sftp://lenclud%40monroe.dreamhost.com/publish.slions.net/HidDemo/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -116,7 +116,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>84AF563A1FF6870D58E5EDF4BDD2CDC3D7D4D7A7</ManifestCertificateThumbprint>
@@ -181,7 +181,6 @@
     </Compile>
     <Compile Include="TreeViewUtils.cs" />
     <Content Include="App.ico" />
-    <None Include="HidDemo_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Resources\UsbVertical.png" />
   </ItemGroup>
