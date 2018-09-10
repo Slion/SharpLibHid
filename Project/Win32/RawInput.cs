@@ -21,9 +21,183 @@ using System;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Windows.Forms;
+using Microsoft.Win32.SafeHandles;
+using System.IO;
+using System.Text;
 
 namespace SharpLib.Win32
 {
+    public class Extra
+    {
+        static public partial class Const
+        {
+            // Flags controlling what is included in the device information set built by SetupDiGetClassDevs
+            public const int DIGCF_DEFAULT = 0x00000001;       // only valid with DIGCF_DEVICEINTERFACE
+            public const int DIGCF_PRESENT = 0x00000002;
+            public const int DIGCF_ALLCLASSES = 0x00000004;
+            public const int DIGCF_PROFILE = 0x00000008;
+            public const int DIGCF_DEVICEINTERFACE = 0x00000010;
+
+            public static Guid GUID_DEVINTERFACE_KEYBOARD = new Guid("884b96c3-56ef-11d1-bc8c-00a0c91405dd");
+            public static Guid GUID_DEVINTERFACE_MOUSE = new Guid("378DE44C-56EF-11D1-BC8C-00A0C91405DD");
+
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SP_DEVINFO_DATA
+        {
+            public uint cbSize;
+            public Guid ClassGuid;
+            public uint DevInst;
+            public IntPtr Reserved;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SP_DEVICE_INTERFACE_DATA
+        {
+            public int cbSize;
+            public Guid InterfaceClassGuid;
+            public int Flags;
+            public IntPtr RESERVED;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct SP_DEVICE_INTERFACE_DETAIL_DATA
+        {
+            public UInt32 cbSize;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 512)]
+            public string DevicePath;
+        }
+
+
+        static public partial class Function
+        {
+
+            [DllImport(@"hid.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            public static extern void HidD_GetHidGuid(out Guid gHid);
+
+
+            [DllImport("hid.dll")]
+            public extern static bool HidD_SetOutputReport(
+                IntPtr HidDeviceObject,
+                byte[] lpReportBuffer,
+                uint ReportBufferLength);
+
+
+            // --------------------------------------------------------------------------------
+            [DllImport(@"setupapi.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            public static extern IntPtr SetupDiCreateDeviceInfoList(
+              ref Guid ClassGuid,
+              IntPtr hwndParent
+              );
+
+            [DllImport(@"setupapi.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            public static extern IntPtr SetupDiCreateDeviceInfoList(
+            IntPtr ClassGuid,
+            IntPtr hwndParent
+            );
+            // --------------------------------------------------------------------------------
+
+            [DllImport(@"setupapi.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            public static extern Boolean SetupDiEnumDeviceInfo(
+            IntPtr DeviceInfoSet,
+            UInt32 MemberIndex,
+            ref SP_DEVINFO_DATA DeviceInfoData
+            );
+
+            // --------------------------------------------------------------------------------
+
+            // Not tested
+            [DllImport("setupapi.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            static extern int CM_Get_Device_ID(int dnDevInst, StringBuilder Buffer, int BufferLen, int ulFlags);
+
+            // --------------------------------------------------------------------------------
+
+            [DllImport(@"setupapi.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            public static extern IntPtr SetupDiGetClassDevs(
+                ref Guid ClassGuid,
+                [MarshalAs(UnmanagedType.LPTStr)] string Enumerator,
+                IntPtr hwndParent,
+                UInt32 Flags
+                );
+
+            [DllImport(@"setupapi.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            public static extern IntPtr SetupDiGetClassDevs(
+                IntPtr ClassGuid,
+                [MarshalAs(UnmanagedType.LPTStr)] string Enumerator,
+                IntPtr hwndParent,
+                UInt32 Flags
+                );
+
+            // --------------------------------------------------------------------------------
+
+            [DllImport(@"setupapi.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            public static extern Boolean SetupDiEnumDeviceInterfaces(
+                IntPtr hDevInfo,
+                IntPtr devInvo,
+                ref Guid interfaceClassGuid,
+                UInt32 memberIndex,
+                ref SP_DEVICE_INTERFACE_DATA deviceInterfaceData
+            );
+
+            [DllImport(@"setupapi.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            public static extern Boolean SetupDiEnumDeviceInterfaces(
+                IntPtr hDevInfo,
+                ref SP_DEVINFO_DATA devInvo,
+                ref Guid interfaceClassGuid,
+                UInt32 memberIndex,
+                ref SP_DEVICE_INTERFACE_DATA deviceInterfaceData
+            );
+
+            // --------------------------------------------------------------------------------
+
+            [DllImport(@"setupapi.dll", SetLastError = true)]
+            public static extern Boolean SetupDiGetDeviceInterfaceDetail(
+                IntPtr hDevInfo,
+                ref SP_DEVICE_INTERFACE_DATA deviceInterfaceData,
+                IntPtr deviceInterfaceDetailData,
+                UInt32 deviceInterfaceDetailDataSize,
+                out UInt32 requiredSize,
+                IntPtr deviceInfoData
+            );
+
+            [DllImport(@"setupapi.dll", SetLastError = true)]
+            public static extern Boolean SetupDiGetDeviceInterfaceDetail(
+                IntPtr hDevInfo,
+                ref SP_DEVICE_INTERFACE_DATA deviceInterfaceData,
+                ref SP_DEVICE_INTERFACE_DETAIL_DATA deviceInterfaceDetailData,
+                UInt32 deviceInterfaceDetailDataSize,
+                out UInt32 requiredSize,
+                IntPtr deviceInfoData
+            );
+
+
+            [DllImport(@"setupapi.dll", SetLastError = true)]
+            public static extern Boolean SetupDiGetDeviceInterfaceDetail(
+            IntPtr hDevInfo,
+            ref SP_DEVICE_INTERFACE_DATA deviceInterfaceData,
+            ref SP_DEVICE_INTERFACE_DETAIL_DATA deviceInterfaceDetailData,
+            UInt32 deviceInterfaceDetailDataSize,
+            out UInt32 requiredSize,
+            ref SP_DEVINFO_DATA deviceInfoData
+            );
+
+            [DllImport("setupapi.dll", SetLastError = true, CharSet = CharSet.Auto)]
+            public static extern bool SetupDiGetDeviceInstanceId(
+            IntPtr DeviceInfoSet,
+            ref SP_DEVINFO_DATA DeviceInfoData,
+            StringBuilder DeviceInstanceId,
+            int DeviceInstanceIdSize,
+            out int RequiredSize
+            );
+
+            [DllImport(@"setupapi.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            public static extern Boolean SetupDiDestroyDeviceInfoList(IntPtr hDevInfo);
+        }
+    }
+
+
+
     /// <summary>
     /// Provide some utility functions for raw input handling.
     /// </summary>
@@ -50,7 +224,7 @@ namespace SharpLib.Win32
                 Win32.Function.GetRawInputData(aRawInputHandle, Const.RID_INPUT, IntPtr.Zero, ref dwSize, sizeOfHeader);
 
                 //Allocate a large enough buffer
-                 rawInputBuffer = Marshal.AllocHGlobal((int)dwSize);
+                rawInputBuffer = Marshal.AllocHGlobal((int)dwSize);
 
                 //Now read our RAWINPUT data
                 if (Win32.Function.GetRawInputData(aRawInputHandle, Const.RID_INPUT, rawInputBuffer, ref dwSize, (uint)Marshal.SizeOf(typeof(RAWINPUTHEADER))) != dwSize)
@@ -107,7 +281,7 @@ namespace SharpLib.Win32
                 Marshal.FreeHGlobal(deviceInfoBuffer);
             }
 
-            
+
             return success;
         }
 
@@ -177,7 +351,7 @@ namespace SharpLib.Win32
             //Get our list of devices
             RAWINPUTDEVICELIST[] ridList = null;
             uint deviceCount = 0;
-            int res = Win32.Function.GetRawInputDeviceList(ridList, ref deviceCount,(uint)Marshal.SizeOf(typeof(RAWINPUTDEVICELIST)));
+            int res = Win32.Function.GetRawInputDeviceList(ridList, ref deviceCount, (uint)Marshal.SizeOf(typeof(RAWINPUTDEVICELIST)));
             if (res == -1)
             {
                 //Just give up then

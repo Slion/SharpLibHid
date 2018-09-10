@@ -32,6 +32,7 @@ namespace HidDemo
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.buttonClear = new System.Windows.Forms.Button();
             this.tabControl = new System.Windows.Forms.TabControl();
@@ -69,6 +70,9 @@ namespace HidDemo
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStripDevice = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.deviceNodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyNodeTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl.SuspendLayout();
             this.tabPageMessages.SuspendLayout();
             this.groupBoxRegistrationFlag.SuspendLayout();
@@ -79,6 +83,7 @@ namespace HidDemo
             this.tabPageLogs.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
+            this.contextMenuStripDevice.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonClear
@@ -389,6 +394,7 @@ namespace HidDemo
             this.treeViewDevices.TabIndex = 0;
             this.treeViewDevices.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewDevices_AfterCheck);
             this.treeViewDevices.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeViewDevices_KeyDown);
+            this.treeViewDevices.MouseUp += new System.Windows.Forms.MouseEventHandler(this.treeViewDevices_MouseUp);
             // 
             // tabPageTests
             // 
@@ -491,6 +497,28 @@ namespace HidDemo
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
+            // contextMenuStripDevice
+            // 
+            this.contextMenuStripDevice.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyNodeTextToolStripMenuItem,
+            this.deviceNodeToolStripMenuItem});
+            this.contextMenuStripDevice.Name = "contextMenuStripDevice";
+            this.contextMenuStripDevice.Size = new System.Drawing.Size(181, 70);
+            // 
+            // deviceNodeToolStripMenuItem
+            // 
+            this.deviceNodeToolStripMenuItem.Name = "deviceNodeToolStripMenuItem";
+            this.deviceNodeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deviceNodeToolStripMenuItem.Text = "Properties";
+            this.deviceNodeToolStripMenuItem.Click += new System.EventHandler(this.deviceNodeToolStripMenuItem_Click);
+            // 
+            // copyNodeTextToolStripMenuItem
+            // 
+            this.copyNodeTextToolStripMenuItem.Name = "copyNodeTextToolStripMenuItem";
+            this.copyNodeTextToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.copyNodeTextToolStripMenuItem.Text = "Copy";
+            this.copyNodeTextToolStripMenuItem.Click += new System.EventHandler(this.copyNodeTextToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -524,6 +552,7 @@ namespace HidDemo
             this.statusStrip.PerformLayout();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
+            this.contextMenuStripDevice.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -566,5 +595,9 @@ namespace HidDemo
         private System.Windows.Forms.TabPage tabPageLogs;
         private System.Windows.Forms.RichTextBox richTextBoxLogs;
         private System.Windows.Forms.Button buttonClearLogs;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripDevice;
+        private System.ComponentModel.IContainer components;
+        private System.Windows.Forms.ToolStripMenuItem deviceNodeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyNodeTextToolStripMenuItem;
     }
 }
