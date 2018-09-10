@@ -1,3 +1,6 @@
+[![NuGet Badge](https://buildstats.info/nuget/SharpLibHid)](https://www.nuget.org/packages/SharpLibHid/)
+<img align="right" src="https://slions.visualstudio.com/GitHub%20builds/_apis/build/status/SharpLibHid" />
+
 <img align="right" src="/Publish/usb.png">
 
 # SharpLibHid
