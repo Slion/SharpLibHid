@@ -2,15 +2,18 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>SharpLibHid</id>
-        <version>1.4.2</version>
+        <version>1.4.3</version>
         <title>C# HID Library</title>
         <authors>Stéphane Lenclud</authors>
         <owners>Stéphane Lenclud</owners>
         <licenseUrl>http://www.gnu.org/copyleft/gpl.html</licenseUrl>
-        <projectUrl>https://sharplibhid.codeplex.com/</projectUrl>
+        <projectUrl>https://github.com/Slion/SharpLibHid</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>C# HID library designed to handle raw input. Most useful to support IR remote control and gamepad inputs.</description>
-        <releaseNotes>v.1.4.2
+        <releaseNotes>v1.4.3
+		Adding pinvoke declarations supporting HID Demo device properties dialog.
+		
+v1.4.2
 Debug and Log rework.
 Adding HID Event convenient methods.
 
@@ -62,10 +65,10 @@ Adding support for optional event repeat.</releaseNotes>
         <language />
         <tags>HID USB RawInput GamePad Input IR remote control</tags>
         <dependencies>
-            <dependency id="SharpLibWin32" version="0.0.9" />
+            <dependency id="SharpLibWin32" version="0.1.5" />
         </dependencies>
     </metadata>
     <files>
-        <file src="bin\x86\Release\SharpLibHid.dll" target="lib\net40\SharpLibHid.dll" />
+        <file src="..\Project\bin\x86\Release\SharpLibHid.dll" target="lib\net40\SharpLibHid.dll" />
     </files>
 </package>

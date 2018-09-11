@@ -27,9 +27,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("SharpLibHid")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Slions")]
 [assembly: AssemblyProduct("SharpLibHid")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
