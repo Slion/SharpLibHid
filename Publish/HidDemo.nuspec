@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- This NuGet package is designed to be used from MSBuild.
+	 Paths won't match when trying to open it with NuGet Package Manager.
+ -->
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>HidDemo</id>
+        <version>$version$</version>
+        <title>HID Demo</title>
+        <authors>Stephane Lenclud</authors>
+        <iconUrl>http://publish.slions.net/HidDemo/favicon.ico</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Windows HID and raw input demo.</description>
+        <copyright>Copyright (c) 2018, Stephane Lenclud</copyright>
+        <language>en-US</language>
+    </metadata>
+    <files>
+        <file src="DeltaCompressionDotNet.dll" target="lib\net45\DeltaCompressionDotNet.dll" />
+        <file src="DeltaCompressionDotNet.MsDelta.dll" target="lib\net45\DeltaCompressionDotNet.MsDelta.dll" />
+        <file src="DeltaCompressionDotNet.PatchApi.dll" target="lib\net45\DeltaCompressionDotNet.PatchApi.dll" />
+        <file src="HidDemo.exe" target="lib\net45\HidDemo.exe" />
+        <file src="HidDemo.exe.config" target="lib\net45\HidDemo.exe.config" />
+        <file src="Mono.Cecil.dll" target="lib\net45\Mono.Cecil.dll" />
+        <file src="Mono.Cecil.Mdb.dll" target="lib\net45\Mono.Cecil.Mdb.dll" />
+        <file src="Mono.Cecil.Pdb.dll" target="lib\net45\Mono.Cecil.Pdb.dll" />
+        <file src="Mono.Cecil.Rocks.dll" target="lib\net45\Mono.Cecil.Rocks.dll" />
+        <file src="NuGet.Squirrel.dll" target="lib\net45\NuGet.Squirrel.dll" />
+        <file src="SharpCompress.dll" target="lib\net45\SharpCompress.dll" />
+        <file src="SharpLibHid.dll" target="lib\net45\SharpLibHid.dll" />
+		<file src="SharpLibWin32.dll" target="lib\net45\SharpLibWin32.dll" />
+        <file src="Splat.dll" target="lib\net45\Splat.dll" />
+        <file src="Squirrel.dll" target="lib\net45\Squirrel.dll" />
+    </files>
+</package>

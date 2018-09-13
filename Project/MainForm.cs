@@ -33,13 +33,14 @@ using System.Deployment.Application;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+using System.Reflection;
 
 namespace HidDemo
 {
-	/// <summary>
-	/// MainForm for our HID demo.
-	/// </summary>
-	public partial class MainForm : System.Windows.Forms.Form
+    /// <summary>
+    /// MainForm for our HID demo.
+    /// </summary>
+    public partial class MainForm : System.Windows.Forms.Form
 	{
         /// <summary>
         /// Can be used to register for WM_INPUT messages and parse them.
@@ -63,38 +64,20 @@ namespace HidDemo
 		}
 
 
-		/// <summary>
-		/// The main entry point for the application.
-		/// </summary>
-		[STAThread]
-		static void Main()
-		{
-            Application.EnableVisualStyles();
-			Application.Run(new MainForm());
-		}
-
         /// <summary>
-        /// Get a ClickOnce version string if any otherwise otherwise return a default string.
+        /// Provides version number as a string.
         /// </summary>
-        /// <returns>ClickOnce version string or place holder instead.</returns>
-        public static string ClickOnceVersion()
+        /// <returns>Version string.</returns>
+        public static string Version()
         {
-            //Check if we are running a Click Once deployed application
-            if (ApplicationDeployment.IsNetworkDeployed)
-            {
-                //This is a proper Click Once installation, fetch and show our version number
-                return "v" + ApplicationDeployment.CurrentDeployment.CurrentVersion;
-            }
-            else
-            {
-                //Not a proper Click Once installation, assuming development build then
-                return "development";
-            }
+            var assembly = Assembly.GetExecutingAssembly();
+            var versionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+            return "v" + versionInfo.ProductVersion;
         }
 
         private void MainForm_Load(object sender, System.EventArgs e)
         {
-            this.Text += " - " + ClickOnceVersion();
+            this.Text += " - " + Version();
             
             PopulateDeviceList();
             RegisterHidDevices();
@@ -107,7 +90,7 @@ namespace HidDemo
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
-
+            TrySquirrelUpdate(true);
         }
 
 
@@ -500,81 +483,6 @@ namespace HidDemo
 
         }
 
-        /// <summary>
-        /// ClickOnce install update.
-        /// </summary>
-        private void InstallUpdateSyncWithInfo()
-        {
-            UpdateCheckInfo info = null;
-
-            if (ApplicationDeployment.IsNetworkDeployed)
-            {
-                ApplicationDeployment ad = ApplicationDeployment.CurrentDeployment;
-
-                try
-                {
-                    info = ad.CheckForDetailedUpdate();
-                }
-                catch (DeploymentDownloadException dde)
-                {
-                    MessageBox.Show("The new version of the application cannot be downloaded at this time. \n\nPlease check your network connection, or try again later. Error: " + dde.Message);
-                    return;
-                }
-                catch (InvalidDeploymentException ide)
-                {
-                    MessageBox.Show("Cannot check for a new version of the application. The ClickOnce deployment is corrupt. Please redeploy the application and try again. Error: " + ide.Message);
-                    return;
-                }
-                catch (InvalidOperationException ioe)
-                {
-                    MessageBox.Show("This application cannot be updated. It is likely not a ClickOnce application. Error: " + ioe.Message);
-                    return;
-                }
-
-                if (info.UpdateAvailable)
-                {
-                    Boolean doUpdate = true;
-
-                    if (!info.IsUpdateRequired)
-                    {
-                        DialogResult dr = MessageBox.Show("An update is available. Would you like to update the application now?", "Update Available", MessageBoxButtons.OKCancel);
-                        if (!(DialogResult.OK == dr))
-                        {
-                            doUpdate = false;
-                        }
-                    }
-                    else
-                    {
-                        // Display a message that the app MUST reboot. Display the minimum required version.
-                        MessageBox.Show("This application has detected a mandatory update from your current " +
-                            "version to version " + info.MinimumRequiredVersion.ToString() +
-                            ". The application will now install the update and restart.",
-                            "Update Available", MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
-                    }
-
-                    if (doUpdate)
-                    {
-                        try
-                        {
-                            ad.Update();
-                            MessageBox.Show("The application has been upgraded, and will now restart.");
-                            Application.Restart();
-                        }
-                        catch (DeploymentDownloadException dde)
-                        {
-                            MessageBox.Show("Cannot install the latest version of the application. \n\nPlease check your network connection, or try again later. Error: " + dde);
-                            return;
-                        }
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("You are already running the latest version.", "Application up-to-date");
-                }
-            }
-        }
-
 
         private void buttonClear_Click(object sender, EventArgs e)
 		{
@@ -618,8 +526,8 @@ namespace HidDemo
 
         private void updateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //Check for ClickOnce update.
-            InstallUpdateSyncWithInfo();
+            //Check for Squirrel update.
+            TrySquirrelUpdate(false);
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)

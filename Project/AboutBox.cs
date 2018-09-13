@@ -17,20 +17,18 @@ namespace HidDemo
             this.Text = String.Format("About {0}", AssemblyTitle);
             this.labelProductName.Text = AssemblyProduct;
             //this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
-            this.labelVersion.Text = MainForm.ClickOnceVersion();
+            this.labelVersion.Text = MainForm.Version();
             this.labelCopyright.Text = AssemblyCopyright;
             this.labelCompanyName.Text = AssemblyCompany;
             //this.textBoxDescription.Text = AssemblyDescription;
             textBoxDescription.SelectedText = AssemblyDescription + "\n";
             textBoxDescription.SelectedText = "Source code available on ";
-            textBoxDescription.InsertLink("CodePlex", "https://sharplibhid.codeplex.com/");
+            textBoxDescription.InsertLink("GitHub", "https://github.com/Slion/SharpLibHid");
             textBoxDescription.SelectedText = ".\nFeel free to use our ";
             textBoxDescription.InsertLink("NuGet package\n", "https://www.nuget.org/packages/SharpLibHid/");
-            textBoxDescription.SelectedText = ".\nClickOnce installer available on ";
+            textBoxDescription.SelectedText = ".\nInstaller available on ";
             textBoxDescription.InsertLink("slions.net\n", "http://publish.slions.net/HidDemo/");
             textBoxDescription.SelectedText = ".\n";
-
-
         }
 
         #region Assembly Attribute Accessors

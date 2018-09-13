@@ -8,6 +8,8 @@ namespace RichTextBoxLinks
 {
     /// <summary>
     /// See: http://www.codeproject.com/Articles/9196/Links-with-arbitrary-text-in-a-RichTextBox
+    /// SL: That stuff is broken in .NET Framework 4.7.1.
+    /// We switched back to .NET Framework 4.5 for now.
     /// </summary>
 	public class RichTextBoxEx : RichTextBox
 	{
