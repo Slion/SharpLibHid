@@ -469,6 +469,12 @@ namespace HidDemo
                     iHidParser.ProcessInput(ref message);
                     break;
             }
+            
+            if (message.Msg == NativeMethods.WM_SHOWME)
+            {
+                ShowMe();
+            }
+
             //Is that needed? Check the docs.
 			base.WndProc(ref message);
 		}
@@ -656,6 +662,22 @@ namespace HidDemo
         {
             // Just copy current node text
             Clipboard.SetText(treeViewDevices.SelectedNode.Text);
+        }
+
+        // Helpers to ensure Single Instance of this app
+
+        private void ShowMe()
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                WindowState = FormWindowState.Normal;
+            }
+            // get our current "TopMost" value (ours will always be false though)
+            bool top = TopMost;
+            // make our form jump to the top of everything
+            TopMost = true;
+            // set it back to whatever it was
+            TopMost = top;
         }
     }
 }

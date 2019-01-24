@@ -25,13 +25,21 @@ using System.Security.Principal;
 using Squirrel;
 using System.Configuration;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace HidDemo
 {
     static class Program
     {
-        //WARNING: This is assuming we have a single instance of our program.
-        //That is what we want but we should enforce it somehow.
+
+        // Using mutex to make sure only a single instance of this app is running at a time.
+        // if an running instance is identified (matching guid below) the running instance is brought to 
+        // the front.
+
+        // The guid value is defined in the AssemblyInfo.cs file
+        static Mutex mutex = new Mutex(true, "{1182CC56-112C-4713-ABCB-B7B33D0F98A0}");
+
         public static MainForm iFormMain;
 
         public static string SettingsFilePath;
@@ -48,9 +56,12 @@ namespace HidDemo
         [STAThread]
         static void Main()
         {
-            //
-            SettingsFilePath = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath;
-            SettingsBackupFilePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\..\\last.config";
+            if (mutex.WaitOne(TimeSpan.Zero, true))
+            {
+
+                //
+                SettingsFilePath = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath;
+                SettingsBackupFilePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\..\\last.config";
 
 #if !DEBUG
             // SL: Do Squirrel admin stuff.
@@ -91,15 +102,21 @@ namespace HidDemo
                   });
             }
 #endif
-            RestoreSettings(SettingsBackupFilePath, SettingsFilePath);
+                RestoreSettings(SettingsBackupFilePath, SettingsFilePath);
 
-            Application.ApplicationExit += new EventHandler(OnApplicationExit);
-            //
-            Application.EnableVisualStyles(); // Otherwise it looks like Windows 95
-            //Application.SetCompatibleTextRenderingDefault(false);
-            //
-            iFormMain = new MainForm();
-            Application.Run(iFormMain);
+                Application.ApplicationExit += new EventHandler(OnApplicationExit);
+                //
+                Application.EnableVisualStyles(); // Otherwise it looks like Windows 95
+                                                  //Application.SetCompatibleTextRenderingDefault(false);
+                                                  //
+                iFormMain = new MainForm();
+                Application.Run(iFormMain);
+            }
+            else
+            {
+                // Bring the current running instance to the front
+                NativeMethods.PostMessage((IntPtr)NativeMethods.HWND_BROADCAST, NativeMethods.WM_SHOWME, IntPtr.Zero, IntPtr.Zero);
+            }
         }
 
 
@@ -189,5 +206,15 @@ namespace HidDemo
         {
 
         }
+    }
+
+    internal class NativeMethods
+    {
+        public const int HWND_BROADCAST = 0xffff;
+        public static readonly int WM_SHOWME = RegisterWindowMessage("WM_SHOWME");
+        [DllImport("user32")]
+        public static extern bool PostMessage(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam);
+        [DllImport("user32")]
+        public static extern int RegisterWindowMessage(string message);
     }
 }

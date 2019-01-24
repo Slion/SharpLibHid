@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System.Resources;
 //
 // Copyright (C) 2014-2015 Stéphane Lenclud.
@@ -77,4 +78,5 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyKeyFile("")]
 [assembly: AssemblyKeyName("")]
 [assembly: NeutralResourcesLanguage("en")]
+[assembly: Guid("1182CC56-112C-4713-ABCB-B7B33D0F98A0")]
 
