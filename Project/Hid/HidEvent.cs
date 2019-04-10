@@ -66,7 +66,7 @@ namespace SharpLib.Hid
         public bool IsGeneric { get; private set; }
 
         public Keys VirtualKey {
-            get { return (Keys) RawInput.keyboard.VKey; }
+            get { return (Keys) RawInput.data.keyboard.VKey; }
         }
 
         public bool HasModifierShift;
@@ -163,7 +163,7 @@ namespace SharpLib.Hid
                 else if (IsKeyboard)
                 {
                     // This is a key up event if our break flag is set
-                    return RawInput.keyboard.Flags.HasFlag(RawInputKeyFlags.RI_KEY_BREAK);
+                    return RawInput.data.keyboard.Flags.HasFlag(RawInputKeyFlags.RI_KEY_BREAK);
                 }
                 //TODO: mouse handling
                 Debug.Assert(false);
@@ -182,7 +182,7 @@ namespace SharpLib.Hid
         {
             get
             {
-                return (ulong)RawInput.keyboard.VKey << 32 | (ulong)RawInput.keyboard.MakeCode << 16 | (ulong)(RawInput.keyboard.Flags & ~RawInputKeyFlags.RI_KEY_BREAK);
+                return (ulong)RawInput.data.keyboard.VKey << 32 | (ulong)RawInput.data.keyboard.MakeCode << 16 | (ulong)(RawInput.data.keyboard.Flags & ~RawInputKeyFlags.RI_KEY_BREAK);
             }
         }
 
@@ -380,31 +380,31 @@ namespace SharpLib.Hid
                     UsagePage = Device.Info.hid.usUsagePage;
                     UsageCollection = Device.Info.hid.usUsage;
 
-                    if (!(RawInput.hid.dwSizeHid > 1     //Make sure our HID msg size more than 1. In fact the first ushort is irrelevant to us for now
-                        && RawInput.hid.dwCount > 0))    //Check that we have at least one HID msg
+                    if (!(RawInput.data.hid.dwSizeHid > 1     //Make sure our HID msg size more than 1. In fact the first ushort is irrelevant to us for now
+                        && RawInput.data.hid.dwCount > 0))    //Check that we have at least one HID msg
                     {
                         return;
                     }
 
                     //Allocate a buffer for one HID input
-                    InputReport = new byte[RawInput.hid.dwSizeHid];
+                    InputReport = new byte[RawInput.data.hid.dwSizeHid];
 
-                    Debug.WriteLine("Raw input contains " + RawInput.hid.dwCount + " HID input report(s)");
+                    Debug.WriteLine("Raw input contains " + RawInput.data.hid.dwCount + " HID input report(s)");
 
                     //For each HID input report in our raw input
-                    for (int i = 0; i < RawInput.hid.dwCount; i++)
+                    for (int i = 0; i < RawInput.data.hid.dwCount; i++)
                     {
                         //Compute the address from which to copy our HID input
                         int hidInputOffset = 0;
                         unsafe
                         {
                             byte* source = (byte*)rawInputBuffer;
-                            source += sizeof(RAWINPUTHEADER) + sizeof(RAWHID) + (RawInput.hid.dwSizeHid * i);
+                            source += sizeof(RAWINPUTHEADER) + sizeof(RAWHID) + (RawInput.data.hid.dwSizeHid * i);
                             hidInputOffset = (int)source;
                         }
                         
                         //Copy HID input into our buffer
-                        Marshal.Copy(new IntPtr(hidInputOffset), InputReport, 0, (int)RawInput.hid.dwSizeHid);
+                        Marshal.Copy(new IntPtr(hidInputOffset), InputReport, 0, (int)RawInput.data.hid.dwSizeHid);
                         //
                         ProcessInputReport(InputReport);
                     }
@@ -425,42 +425,42 @@ namespace SharpLib.Hid
                     UsageCollection = (ushort)Hid.UsageCollection.GenericDesktop.Keyboard;
 
                     // Precise ALT key - work out if we are left or right ALT
-                    if (iRawInput.keyboard.VKey == (ushort) Keys.Menu)
+                    if (iRawInput.data.keyboard.VKey == (ushort) Keys.Menu)
                     {
-                        if (RawInput.keyboard.Flags.HasFlag(RawInputKeyFlags.RI_KEY_E0))
+                        if (RawInput.data.keyboard.Flags.HasFlag(RawInputKeyFlags.RI_KEY_E0))
                         {
-                            iRawInput.keyboard.VKey = (ushort) Keys.RMenu;
+                            iRawInput.data.keyboard.VKey = (ushort) Keys.RMenu;
                         }
                         else
                         {
-                            iRawInput.keyboard.VKey = (ushort) Keys.LMenu;
+                            iRawInput.data.keyboard.VKey = (ushort) Keys.LMenu;
                         }
                     }
 
                     // Precise CTRL key - work out if we are left or right CTRL
-                    if (iRawInput.keyboard.VKey == (ushort)Keys.ControlKey)
+                    if (iRawInput.data.keyboard.VKey == (ushort)Keys.ControlKey)
                     {
-                        if (RawInput.keyboard.Flags.HasFlag(RawInputKeyFlags.RI_KEY_E0))
+                        if (RawInput.data.keyboard.Flags.HasFlag(RawInputKeyFlags.RI_KEY_E0))
                         {
-                            iRawInput.keyboard.VKey = (ushort)Keys.RControlKey;
+                            iRawInput.data.keyboard.VKey = (ushort)Keys.RControlKey;
                         }
                         else
                         {
-                            iRawInput.keyboard.VKey = (ushort)Keys.LControlKey;
+                            iRawInput.data.keyboard.VKey = (ushort)Keys.LControlKey;
                         }
                     }
 
                     // Precise SHIFT key - work out if we are left or right SHIFT
-                    if (iRawInput.keyboard.VKey == (ushort)Keys.ShiftKey)
+                    if (iRawInput.data.keyboard.VKey == (ushort)Keys.ShiftKey)
                     {
-                        if (RawInput.keyboard.MakeCode == 0x0036)
+                        if (RawInput.data.keyboard.MakeCode == 0x0036)
                         {
-                            iRawInput.keyboard.VKey = (ushort)Keys.RShiftKey;
+                            iRawInput.data.keyboard.VKey = (ushort)Keys.RShiftKey;
                         }
                         else
                         {
-                            Debug.Assert(RawInput.keyboard.MakeCode == 0x002A);
-                            iRawInput.keyboard.VKey = (ushort)Keys.LShiftKey;
+                            Debug.Assert(RawInput.data.keyboard.MakeCode == 0x002A);
+                            iRawInput.data.keyboard.VKey = (ushort)Keys.LShiftKey;
                         }
 
                     }
@@ -991,7 +991,7 @@ namespace SharpLib.Hid
             else if (IsKeyboard)
             {
                 //Get the virtual key
-                System.Windows.Forms.Keys vKey = (Keys)RawInput.keyboard.VKey;
+                System.Windows.Forms.Keys vKey = (Keys)RawInput.data.keyboard.VKey;
                 usageText = vKey.ToString() + " -";
 
                 //Get the key flag
@@ -1004,12 +1004,12 @@ namespace SharpLib.Hid
                     usageText += " DOWN";
                 }
 
-                if (RawInput.keyboard.Flags.HasFlag(RawInputKeyFlags.RI_KEY_E0))
+                if (RawInput.data.keyboard.Flags.HasFlag(RawInputKeyFlags.RI_KEY_E0))
                 {
                     usageText += " E0";
                 }
 
-                if (RawInput.keyboard.Flags.HasFlag(RawInputKeyFlags.RI_KEY_E1))
+                if (RawInput.data.keyboard.Flags.HasFlag(RawInputKeyFlags.RI_KEY_E1))
                 {
                     usageText += " E1";
                 }
@@ -1036,7 +1036,7 @@ namespace SharpLib.Hid
 
 
                 //Put our scan code into our input report field
-                inputReport = "0x" + RawInput.keyboard.MakeCode.ToString("X4");
+                inputReport = "0x" + RawInput.data.keyboard.MakeCode.ToString("X4");
             }
 
             //Now create our list item
