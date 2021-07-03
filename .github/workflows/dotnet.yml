@@ -24,6 +24,6 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore SharpLibHid.sln
     - name: Build
-      run: dotnet build SharpLibHid.sln --no-restore
+      run: dotnet build SharpLibHid.sln
     - name: Test
       run: dotnet test SharpLibHid.sln --no-build --verbosity normal 
