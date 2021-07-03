@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{18FA05C9-7B93-40D6-81DC-ED8B9744ADB4}</ProjectGuid>
+    <ProjectGuid>{0213EC29-9EA8-4EA5-A09F-4AB04709F30C}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>OculusDemo</RootNamespace>
     <AssemblyName>OculusDemo</AssemblyName>
@@ -32,7 +32,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SharpLibWin32, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -62,9 +61,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpLibHid.csproj">
-      <Project>{4f3f96e6-668a-488e-ba0c-ed249aface9e}</Project>
-      <Name>SharpLibHid</Name>
+    <ProjectReference Include="..\Hid\Hid.csproj">
+      <Project>{a3f75ebd-dc1e-4547-858c-d0f378390975}</Project>
+      <Name>Hid</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
