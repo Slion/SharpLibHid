@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("OculusDemo")]
+[assembly: AssemblyTitle("HidDemo")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("OculusDemo")]
+[assembly: AssemblyProduct("HidDemo")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("0213ec29-9ea8-4ea5-a09f-4ab04709f30c")]
+[assembly: Guid("b0d1e916-b6c4-48f5-bb31-26cc865fc036")]
 
 // Version information for an assembly consists of the following four values:
 //

@@ -19,15 +19,12 @@
 
 
 using System;
-using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
-using System.Text;
-using Microsoft.Win32.SafeHandles;
 using SharpLib.Win32;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Windows.Forms;
 
 namespace SharpLib.Hid
 {
