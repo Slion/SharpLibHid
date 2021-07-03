@@ -21,6 +21,8 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+    - name: Clean
+      run: dotnet clean SharpLibHid.sln --configuration Debug && dotnet nuget locals all --clear 
     - name: Restore dependencies
       run: dotnet restore SharpLibHid.sln
     - name: Build
