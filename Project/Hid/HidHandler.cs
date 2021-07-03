@@ -42,6 +42,7 @@ namespace SharpLib.Hid
         //TODO: Consider using only the VirtualKey as key since we now resolve left and right modifiers internally
         Dictionary<ulong, Event> iKeyDownEvents;
         RAWINPUTDEVICE[] iRawInputDevices;
+        Dictionary<IntPtr, Device> iDevices = new Dictionary<IntPtr, Device>();
 
         public bool IsRegistered { get; private set; }
         public bool ManageRepeats { get; private set; }
@@ -107,6 +108,15 @@ namespace SharpLib.Hid
         /// </summary>
         public void Dispose()
         {
+            //Free up cached devices if any
+            foreach (Device d in iDevices.Values)
+            {
+                d.Dispose();
+            }
+
+            iDevices.Clear();
+
+
             if (!IsRegistered)
             {
                 return;
@@ -124,6 +134,31 @@ namespace SharpLib.Hid
             IsRegistered = false;
         }
 
+
+        /// <summary>
+        /// Enable caching of HID devices.
+        /// In fact our work on Oculus Rift S has shown creating our device is rather slow.
+        /// At least in respect to Oculus Rift S high frequency HID events.
+        /// </summary>
+        /// <param name="aHandle">Handle of the HID device we need to fetch</param>
+        /// <returns></returns>
+        public Device FetchDevice(IntPtr aHandle)
+        {
+            Device device = null;
+
+            // Try fetch matching device from our cache
+            if (!iDevices.TryGetValue(aHandle, out device))
+            {   
+                // Device not found in our cache, just create it then
+                device = new Device(aHandle);
+                // Then make sure we cache it
+                iDevices.Add(aHandle, device);
+            }
+
+            return device;
+        }
+
+
         /// <summary>
         /// Process a WM_INPUT message.
         /// </summary>
@@ -136,8 +171,8 @@ namespace SharpLib.Hid
                 return;
             }
 
-            Event hidEvent = new Event(aMessage, OnHidEventRepeat, ManageRepeats, RepeatDelayInMs, RepeatSpeedInMs);
-            hidEvent.DebugWrite();
+            Event hidEvent = new Event(this, aMessage, OnHidEventRepeat, ManageRepeats, RepeatDelayInMs, RepeatSpeedInMs);
+            //hidEvent.DebugWrite();
 
             if (!hidEvent.IsValid /*|| !hidEvent.IsGeneric*/)
             {

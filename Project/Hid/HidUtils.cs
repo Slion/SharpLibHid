@@ -43,6 +43,9 @@ namespace SharpLib.Hid
                 case UsagePage.WindowsMediaCenterRemoteControl:
                     return typeof(UsageCollection.WindowsMediaCenter);
 
+                case UsagePage.VirtualRealityControls:
+                    return typeof(UsageCollection.VirtualReality);
+                  
                 default:
                     return null;
             }

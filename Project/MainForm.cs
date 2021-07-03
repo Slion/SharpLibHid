@@ -81,7 +81,7 @@ namespace HidDemo
             
             PopulateDeviceList();
             RegisterHidDevices();
-            CheckDefaultDevices();
+            //CheckDefaultDevices();
 
             // Register for key down event
             KeyDown += OnKeyDown;
