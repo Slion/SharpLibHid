@@ -29,7 +29,6 @@ using Hid = SharpLib.Hid;
 using SharpLib.Win32;
 
 //For ClickOnce support
-using System.Deployment.Application;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
