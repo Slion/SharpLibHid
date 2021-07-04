@@ -39,6 +39,7 @@
     
     <PackageReleaseNotes>
       v1.5.0
+      Fix crash with generic HID devices when using 64-bits architecture.
       Add virtual reality usage collection.
       Performance optimizations to cope with high volume of HID input reports coming from Oculus Rift S.
       Upgrade to SharpLibWin32 v0.2.1.

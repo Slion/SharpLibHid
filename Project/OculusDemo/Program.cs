@@ -13,10 +13,9 @@ namespace OculusDemo
 {
     class Program
     {
-        
-
         static void Main(string[] args)
         {
+            //Console.WriteLine("Hello World!");
             Program prog = new Program();
             prog.Execute();
         }

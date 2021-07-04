@@ -395,16 +395,17 @@ namespace SharpLib.Hid
                     for (int i = 0; i < RawInput.data.hid.dwCount; i++)
                     {
                         //Compute the address from which to copy our HID input
-                        int hidInputOffset = 0;
+                        
                         unsafe
                         {
+                            void* hidInputOffset = null;
                             byte* source = (byte*)rawInputBuffer;
                             source += sizeof(RAWINPUTHEADER) + sizeof(RAWHID) + (RawInput.data.hid.dwSizeHid * i);
-                            hidInputOffset = (int)source;
+                            hidInputOffset = source;
+                            //Copy HID input into our buffer
+                            Marshal.Copy(new IntPtr(hidInputOffset), InputReport, 0, (int)RawInput.data.hid.dwSizeHid);
                         }
-                        
-                        //Copy HID input into our buffer
-                        Marshal.Copy(new IntPtr(hidInputOffset), InputReport, 0, (int)RawInput.data.hid.dwSizeHid);
+
                         //
                         ProcessInputReport(InputReport);
                     }
