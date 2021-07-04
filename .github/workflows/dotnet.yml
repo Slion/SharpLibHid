@@ -30,6 +30,6 @@ jobs:
     - name: Test
       run: dotnet test SharpLibHid.sln --no-build --verbosity normal
     - name: Publish Nuget
-      run: dotnet nuget push ./Hid/bin/Release/SharpLibHid.1.5.0.nupkg --skip-duplicate -k ${{ secrets.NUGET_TOKEN }} --source https://api.nuget.org/v3/index.json 
+      run: dotnet nuget push './Hid/bin/Release/SharpLibHid.*.nupkg' --skip-duplicate -k ${{ secrets.NUGET_TOKEN }} --source https://api.nuget.org/v3/index.json 
       #env:
       #   NUGET_APIKEY: ${{ secrets.NUGET_TOKEN }}
