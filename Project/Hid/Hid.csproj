@@ -4,29 +4,104 @@
     
     <!--
     We support multiple target frameworks:
-      netstandard2.0: Needed to be consumed by UWP apps such as our Xbox Game Bar Widget.
-      net462: Needed to be consumed by .NET Framework apps such as our STR3AMUP! WCF implementation. 
-      net5.0-windows10.0.19041.0: Nice to have and a pain to configure, could help us in the future, I don't quite understand why UWP app can't consume it, apparently.
+      netstandard2.0: Needed to be consumed by UWP apps.
+      net462: Needed to be consumed by .NET Framework apps.
     -->
     <TargetFrameworks>net40;net48</TargetFrameworks>
     <!--<TargetFrameworks>netstandard2.0</TargetFrameworks>-->
     <!--netstandard2.0;net5.0; netcoreapp3.1;-->
-    <UseWindowsForms>true</UseWindowsForms>
+    <UseWindowsForms>true</UseWindowsForms>    
     <Version>1.4.6</Version>
     <Authors>Stéphane Lenclud</Authors>
-    <Description>HID library</Description>
     <Copyright>(c)2021 Stéphane Lenclud</Copyright>
     <RootNamespace>SharpLib.Hid</RootNamespace>
     <AssemblyName>SharpLib.Hid</AssemblyName>
-    <PackageId>SharpLib.Hid</PackageId>
+    <Title>C# HID Library for Windows Forms applications</Title>
+    <Description>C# HID library designed to handle raw input. Most useful to support IR remote control and gamepad inputs on Windows Forms applications.</Description>
     <Company>Slions</Company>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>  
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>    
     <LangVersion>8.0</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
   </PropertyGroup>
 
 
+  <PropertyGroup>
+
+    <!--
+    For properties mapping with nuspec see:
+    https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets#pack-target
+    -->
+    <PackageId>SharpLibHid</PackageId>
+    <PackageTags>HID USB RawInput GamePad Input IR remote control</PackageTags>
+    <PackageLicenseUrl>http://www.gnu.org/copyleft/gpl.html</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Slion/SharpLibHid</PackageProjectUrl>
+    
+    <PackageReleaseNotes>
+      v1.5.0
+      Add virtual reality usage collection.
+      Performance optimizations to cope with high volume of HID input reports coming from Oculus Rift S.
+      Upgrade to SharpLibWin32 v0.2.1.
+
+      v1.4.3
+      Adding pinvoke declarations supporting HID Demo device properties dialog.
+
+      v1.4.2
+      Debug and Log rework.
+      Adding HID Event convenient methods.
+
+      v1.4.1
+      Keyboard modifiers and repeats  management.
+
+      v1.4.0
+      Adding support for keyboards.
+      Switched to .NET Framework 4.0.
+
+      v1.3.1
+      Adding TvPower usage present on MCE remotes with basic IR learning capabilities.
+
+      v1.3.0
+      Registration and Parser functionalities can now be used independently.
+
+      v1.2.1
+      Upgrading to SharpLibWin32 v0.0.4.
+
+      v1.2.0
+      Adding dependency on SharpLibWin32.
+
+      v1.1.0
+      Adding support for gamepad dpad repeat events.
+      Adding support for custom repeat delay and speed.
+
+      v1.0.7
+      Fixing framework folder name.
+
+      v1.0.6
+      Project URL updated.
+
+      v1.0.5
+      Fixing HID Demo crash on Surface Pro 3. Adding usage enumeration for GenericDevice.
+
+      v1.0.4
+      Build configuration fix.
+
+      v1.0.3
+      x86 Build.
+
+      v1.0.2
+      Adding missing public keyword for some of our Usage enumerations.
+
+      v1.0.1
+      Adding ThinkPad specific usages.
+      Adding support for optional event repeat.
+    </PackageReleaseNotes>
+
+
+  
+</PropertyGroup>
+  
+  
+  
   <ItemGroup>
     <Compile Remove="Properties\**" />
     <EmbeddedResource Remove="Properties\**" />
