@@ -21,8 +21,9 @@ namespace HidDemo
             this.labelCopyright.Text = AssemblyCopyright;
             this.labelCompanyName.Text = AssemblyCompany;
             //this.textBoxDescription.Text = AssemblyDescription;
+            // That's apparent broken from Framework 4.7.1 that's why we stick to 4.6.1 for now 
             textBoxDescription.SelectedText = AssemblyDescription + "\n";
-            textBoxDescription.SelectedText = "Source code available on ";
+            textBoxDescription.SelectedText = "Source code available on ";            
             textBoxDescription.InsertLink("GitHub", "https://github.com/Slion/SharpLibHid");
             textBoxDescription.SelectedText = ".\nFeel free to use our ";
             textBoxDescription.InsertLink("NuGet package\n", "https://www.nuget.org/packages/SharpLibHid/");

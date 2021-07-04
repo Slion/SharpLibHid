@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
       <OutputType>WinExe</OutputType>
-      <TargetFramework>net48</TargetFramework>
+      <TargetFramework>net461</TargetFramework>
       <UseWindowsForms>true</UseWindowsForms>
       <Authors>Stéphane Lenclud</Authors>
       <Description>HID Demo</Description>
@@ -13,6 +13,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="squirrel.windows" Version="2.0.1" />
+    <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Hid\Hid.csproj" />
