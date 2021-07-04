@@ -10,6 +10,7 @@
       <AssemblyName>HidDemo</AssemblyName>
       <PackageId>HidDemo</PackageId>
       <Company>Slions</Company>
+      <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="squirrel.windows" Version="2.0.1" />
