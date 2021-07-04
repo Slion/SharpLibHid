@@ -11,7 +11,7 @@
     <!--<TargetFrameworks>netstandard2.0</TargetFrameworks>-->
     <!--netstandard2.0;net5.0; netcoreapp3.1;-->
     <UseWindowsForms>true</UseWindowsForms>    
-    <Version>1.4.6</Version>
+    <Version>1.5.0</Version>
     <Authors>Stéphane Lenclud</Authors>
     <Copyright>(c)2021 Stéphane Lenclud</Copyright>
     <RootNamespace>SharpLib.Hid</RootNamespace>
