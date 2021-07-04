@@ -28,6 +28,6 @@ jobs:
     - name: Test
       run: dotnet test SharpLibHid.sln --no-build --verbosity normal
     - name: Publish Nuget
-      run: dotnet nuget push ./Project/Hid/bin/Release/*.nupkg -k ${NUGET_TOKEN}
+      run: dotnet nuget push ./Project/Hid/bin/Release/*.nupkg -k ${NUGET_APIKEY}
       env:
-         GITHUB_TOKEN: ${{ secrets.NUGET_TOKEN }}
+         NUGET_APIKEY: ${{ secrets.NUGET_TOKEN }}
