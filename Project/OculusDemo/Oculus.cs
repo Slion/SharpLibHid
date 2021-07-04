@@ -1,4 +1,9 @@
-﻿using System;
+﻿///
+/// Most of that stuff was taken from OpenHMD:
+/// https://github.com/OpenHMD/OpenHMD/tree/master/src/drv_oculus_rift_s
+///
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -304,9 +309,11 @@ namespace Oculus.Rift.S
 
 
 
-
+    /// <summary>
+    /// We made this a class rather than a struct so that we can work with object reference rather than making copies.
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct ControllerState
+    public unsafe class ControllerState
     {
         public const int MAX_LOG_SIZE = 1024;
 
@@ -318,14 +325,16 @@ namespace Oculus.Rift.S
         * other bits, unknown */
         public byte log_flags;
         public int log_bytes;
-        //byte[] log = new byte[MAX_LOG_SIZE];
-        public fixed byte log[MAX_LOG_SIZE];
+        byte[] log = new byte[MAX_LOG_SIZE];
+        //public fixed byte log[MAX_LOG_SIZE];
 
         public bool imu_time_valid;
         public uint imu_timestamp;
         public ushort imu_unknown_varying2;
-        public fixed short raw_accel[3];
-        public fixed short raw_gyro[3];
+        //public fixed short raw_accel[3];
+        public short[] raw_accel = new short[3];
+        //public fixed short raw_gyro[3];
+        public short[] raw_gyro = new short[3];
 
         /* 0x8, 0x0c 0x0d or 0xe block */
         public byte mask08;
@@ -345,7 +354,9 @@ namespace Oculus.Rift.S
         public byte capsense_trigger;
 
         public byte extra_bytes_len;
-        public fixed byte extra_bytes[48];
+        //public fixed byte extra_bytes[48];
+        public short[] extra_bytes = new short[48];
+
 
 
         public string Dump()

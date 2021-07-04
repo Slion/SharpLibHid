@@ -126,14 +126,19 @@ namespace OculusDemo
                 return;
             }
 
+            // Parse our raw input report into our controller report class.
+            // TODO: Avoid instantiating a new object every time.
             ControllerReport report = Utils.ParseControllerInputReport(aHidEvent.InputReport);
 
+            // Check if we have a valid device ID
             if (report.device_id != 0)
             {
+                // Check if we already meat this device
                 ControllerState state;
                 int position = Console.WindowTop + iControllers.Count * 20;
                 if (!iControllers.TryGetValue(report.device_id, out state))
                 {
+                    // That's a new device, create a state object for it then and add it to our collection
                     state = new ControllerState();
                     state.device_id = report.device_id;
                     iControllers.Add(report.device_id, state);
@@ -141,18 +146,12 @@ namespace OculusDemo
                     iPosition.Add(report.device_id, position);
                 }
 
-
-
+                // Now that we have our state object for this device, we need to update it with the incoming input report
                 Utils.UpdateControllerState(ref state, report);
-
-                // TODO: Find a way to get a reference of that object so we don't have to update all the time
-                // Maybe turn our struct into a class
-                iControllers[state.device_id] = state;
-
             }
 
-
-            // Don't update our prints too often to avoid lags
+            // Print our controller states in our console
+            // However we do not update our prints too often to avoid lags
             if (iStopWatch.ElapsedMilliseconds >= 33)
             {
                 foreach (var ctrl in iControllers.Values)
