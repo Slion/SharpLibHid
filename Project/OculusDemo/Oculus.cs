@@ -390,9 +390,11 @@ namespace Oculus.Rift.S
         /// </summary>
         /// <param name="aInputReport"></param>
         /// <returns></returns>
-        public unsafe static ControllerReport ParseControllerInputReport(byte[] aInputReport)
+        public unsafe static ControllerReport ParseControllerInputReport(byte[] aInputReport, ControllerReport report)
         {
-            ControllerReport report = new ControllerReport();
+            // TODO: reset ctrl report
+
+
             var size = aInputReport.Length;
 
             // Apparently that fixed stuff allow use to do some pointer arithmetics

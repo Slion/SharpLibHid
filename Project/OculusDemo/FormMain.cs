@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Hid = SharpLib.Hid;
+using MicroInput = SharpLib.MicroInput;
 using Oculus.Rift.S;
 
 namespace OculusDemo
@@ -29,6 +30,11 @@ namespace OculusDemo
         // To not print stuff too often
         Stopwatch iStopWatch = new Stopwatch();
 
+        // Used to generate actual keyboard inputs
+        MicroInput.Client iClient = new MicroInput.Client();
+
+        //
+        ControllerReport iCtrlReport = new ControllerReport();
 
 
         public FormMain()
@@ -36,6 +42,7 @@ namespace OculusDemo
             InitializeComponent();
             CreateHandler();
             iStopWatch.Start();
+            iClient.Open();
         }
 
         void CreateHandler()
@@ -99,6 +106,14 @@ namespace OculusDemo
         }
 
 
+        // Avoid sending our micro controllers input when not needed
+        bool isDownTrigger = false;
+        bool isDownGrip = false;
+        bool isDownForward = false;
+        bool isDownBackward = false;
+        bool isDownLeft = false;
+        bool isDownRight = false;
+
 
 
 
@@ -128,40 +143,141 @@ namespace OculusDemo
 
             // Parse our raw input report into our controller report class.
             // TODO: Avoid instantiating a new object every time.
-            ControllerReport report = Utils.ParseControllerInputReport(aHidEvent.InputReport);
+            Utils.ParseControllerInputReport(aHidEvent.InputReport, iCtrlReport);
 
             // Check if we have a valid device ID
-            if (report.device_id != 0)
+            if (iCtrlReport.device_id != 0)
             {
                 // Check if we already meat this device
                 ControllerState state;
                 int position = Console.WindowTop + iControllers.Count * 20;
-                if (!iControllers.TryGetValue(report.device_id, out state))
+                if (!iControllers.TryGetValue(iCtrlReport.device_id, out state))
                 {
                     // That's a new device, create a state object for it then and add it to our collection
                     state = new ControllerState();
-                    state.device_id = report.device_id;
-                    iControllers.Add(report.device_id, state);
+                    state.device_id = iCtrlReport.device_id;
+                    iControllers.Add(iCtrlReport.device_id, state);
                     //Console.WriteLine("Found new device: 0x" + report.device_id.ToString("X"));
-                    iPosition.Add(report.device_id, position);
+                    iPosition.Add(iCtrlReport.device_id, position);
                 }
 
                 // Now that we have our state object for this device, we need to update it with the incoming input report
-                Utils.UpdateControllerState(ref state, report);
+                Utils.UpdateControllerState(ref state, iCtrlReport);
             }
 
             // Print our controller states in our console
             // However we do not update our prints too often to avoid lags
-            if (iStopWatch.ElapsedMilliseconds >= 33)
+            if (iStopWatch.ElapsedMilliseconds >= 10) // 33?
             {
                 foreach (var ctrl in iControllers.Values)
                 {
                     var position = iPosition[ctrl.device_id];
-                    Console.SetCursorPosition(Console.WindowLeft, position);
-                    Console.WriteLine(ctrl.Dump());
+                    //Console.SetCursorPosition(Console.WindowLeft, position);
+                    //Console.WriteLine(ctrl.Dump());
+
+                    // Quick and dirty mapping to keyboard input for MWO
+                    if (ctrl.device_id == 0xCE156735BF2F1676) // // Right controller
+                    {   
+                        // Throttle
+                        if (ctrl.joystick_y>10000)
+                        {
+                            // Moving forward
+                            if (!isDownForward)
+                            {
+                                isDownForward = true;
+                                isDownBackward = false;
+                                iClient.KeyboardPress((ushort)MicroInput.Keyboard.Key.W, 0);
+                                iClient.KeyboardRelease((ushort)MicroInput.Keyboard.Key.S, 0);
+                            }
+                        }
+                        else if (ctrl.joystick_y < -10000)
+                        {
+                            // Moving backward
+                            if (!isDownBackward)
+                            {
+                                isDownForward = false;
+                                isDownBackward = true;
+                                iClient.KeyboardPress((ushort)MicroInput.Keyboard.Key.S, 0);
+                                iClient.KeyboardRelease((ushort)MicroInput.Keyboard.Key.W, 0);
+                            }
+                        }
+                        else
+                        {
+                            if (isDownForward || isDownBackward)
+                            {
+                                isDownForward = false;
+                                isDownBackward = false;
+                                iClient.KeyboardRelease((ushort)MicroInput.Keyboard.Key.S, 0);
+                                iClient.KeyboardRelease((ushort)MicroInput.Keyboard.Key.W, 0);
+                            }
+                        }
+                        
+                        // Rotation
+                        if (ctrl.joystick_x > 15000)
+                        {
+                            // Moving right
+                            if (!isDownRight)
+                            {
+                                isDownLeft = false;
+                                isDownRight = true;
+                                iClient.KeyboardPress((ushort)MicroInput.Keyboard.Key.D, 0);
+                                iClient.KeyboardRelease((ushort)MicroInput.Keyboard.Key.A, 0);
+                            }
+                        }
+                        else if (ctrl.joystick_x < -15000)
+                        {
+                            // Moving left
+                            if (!isDownLeft)
+                            {
+                                isDownLeft = true;
+                                isDownRight = false;                                
+                                iClient.KeyboardPress((ushort)MicroInput.Keyboard.Key.A, 0);
+                                iClient.KeyboardRelease((ushort)MicroInput.Keyboard.Key.D, 0);
+                            }
+                        }
+                        else
+                        {
+                            if (isDownRight || isDownLeft)
+                            {
+                                isDownLeft = false;
+                                isDownRight = false;
+                                iClient.KeyboardRelease((ushort)MicroInput.Keyboard.Key.D, 0);
+                                iClient.KeyboardRelease((ushort)MicroInput.Keyboard.Key.A, 0);
+                            }
+                        }
+
+    
+                        //Target
+                        if (ctrl.trigger<3072 && !isDownTrigger)
+                        {
+                            isDownTrigger = true;
+                            iClient.KeyboardPress((ushort)MicroInput.Keyboard.Key.R, 0);
+                        }
+                        else if (isDownTrigger)
+                        {
+                            isDownTrigger = false;
+                            iClient.KeyboardRelease((ushort)MicroInput.Keyboard.Key.R, 0);
+                        }
+                  
+                        if (ctrl.grip < 3072 && !isDownGrip)
+                        {
+                            isDownGrip = true;
+                            iClient.KeyboardPress((ushort)MicroInput.Keyboard.Key.CAPS_LOCK, 0);
+                        }
+                        else if (isDownGrip)
+                        {
+                            isDownGrip = false;
+                            iClient.KeyboardRelease((ushort)MicroInput.Keyboard.Key.CAPS_LOCK, 0);
+                        }
+
+
+                    }
+
                 }
                 iStopWatch.Restart();
             }
+
+
 
         }
     }
