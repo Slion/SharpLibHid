@@ -1,7 +1,9 @@
 [![NuGet Badge](https://buildstats.info/nuget/SharpLibHid)](https://www.nuget.org/packages/SharpLibHid/)
-<img align="right" src="https://slions.visualstudio.com/GitHub%20builds/_apis/build/status/SharpLibHid" />
-
+![Build status](https://github.com/slion/sharplibhid/actions/workflows/dotnet.yml/badge.svg)
 <img align="right" src="/Publish/usb.png">
+<!--
+<img align="right" src="https://slions.visualstudio.com/GitHub%20builds/_apis/build/status/SharpLibHid" />
+-->
 
 # SharpLibHid
 
