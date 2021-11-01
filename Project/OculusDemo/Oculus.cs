@@ -357,6 +357,26 @@ namespace Oculus.Rift.S
         //public fixed byte extra_bytes[48];
         public short[] extra_bytes = new short[48];
 
+        public bool ButtonA() 
+        {
+            return (buttons & 0x01) == 0x01;
+        }
+
+        public bool ButtonB()
+        {
+            return (buttons & 0x02) == 0x02;
+        }
+
+        public bool ButtonStick()
+        {
+            return (buttons & 0x04) == 0x04;
+        }
+
+        public bool ButtonMenu()
+        {
+            return (buttons & 0x08) == 0x08;
+        }
+
 
 
         public string Dump()
@@ -386,11 +406,10 @@ namespace Oculus.Rift.S
     class Utils
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="aInputReport"></param>
         /// <returns></returns>
-        public unsafe static ControllerReport ParseControllerInputReport(byte[] aInputReport, ControllerReport report)
+        public unsafe static void ParseControllerInputReport(byte[] aInputReport, ControllerReport aReport)
         {
             // TODO: reset ctrl report
 
@@ -401,22 +420,22 @@ namespace Oculus.Rift.S
             fixed (byte* ptr = aInputReport)
             {
                 byte* buf = ptr;
-                report.id = buf[0];
-                report.device_id = *(ulong*)(buf + 1);
-                report.data_len = buf[9];
-                report.num_info = 0;
-                report.extra_bytes_len = 0;
-                report.flags = 0;
-                report.log[0] = 0;
-                report.log[1] = 0;
-                report.log[2] = 0;
+                aReport.id = buf[0];
+                aReport.device_id = *(ulong*)(buf + 1);
+                aReport.data_len = buf[9];
+                aReport.num_info = 0;
+                aReport.extra_bytes_len = 0;
+                aReport.flags = 0;
+                aReport.log[0] = 0;
+                aReport.log[1] = 0;
+                aReport.log[2] = 0;
 
 
-                if (report.data_len < 4)
+                if (aReport.data_len < 4)
                 {
                     //if (report.data_len != 0)
                     //LOGW("Controller report with data len %u - please report it", report->data_len);
-                    return report; // No more to read
+                    return; // No more to read
                 }
 
                 /* Advance the buffer pointer to the end of the common header.
@@ -425,28 +444,28 @@ namespace Oculus.Rift.S
                 buf += 10;
                 size -= 10;
 
-                if (report.data_len > size)
+                if (aReport.data_len > size)
                 {
                     //LOGW("Controller report with data len %u > packet size 62 - please report it", report->data_len);
-                    report.data_len = (byte)size;
+                    aReport.data_len = (byte)size;
                 }
 
-                byte avail = report.data_len;
+                byte avail = aReport.data_len;
 
-                report.flags = buf[0];
-                report.log[0] = buf[1];
-                report.log[1] = buf[2];
-                report.log[2] = buf[3];
+                aReport.flags = buf[0];
+                aReport.log[0] = buf[1];
+                aReport.log[1] = buf[2];
+                aReport.log[2] = buf[3];
                 buf += 4;
                 avail -= 4;
 
                 /* While we have at least 2 bytes (type + at least 1 byte data), read a block */
                 // sizeof(report->info) / sizeof(report->info[0]) == 8
-                while (avail > 1 && report.num_info < 8)
+                while (avail > 1 && aReport.num_info < 8)
                 {
                     //rift_s_controller_info_block_t* info = report->info + report->num_info;
 
-                    ref InfoBlock info = ref report.info[report.num_info];
+                    ref InfoBlock info = ref aReport.info[aReport.num_info];
 
                     byte block_size = 0;
                     info.block_id = buf[0];
@@ -485,22 +504,20 @@ namespace Oculus.Rift.S
 
                     buf += block_size;
                     avail -= block_size;
-                    report.num_info++;
+                    aReport.num_info++;
                 }
 
                 if (avail > 0)
                 {
                     //assert(avail < sizeof(report->extra_bytes));
-                    report.extra_bytes_len = avail;
+                    aReport.extra_bytes_len = avail;
                     //memcpy(report->extra_bytes, buf, avail);
-                    fixed (byte* eb = report.extra_bytes)
+                    fixed (byte* eb = aReport.extra_bytes)
                     {
                         Buffer.MemoryCopy(eb, buf, avail, avail);
                     }
                 }
             }
-
-            return report;
         }
 
         /// <summary>

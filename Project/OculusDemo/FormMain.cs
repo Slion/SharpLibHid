@@ -11,8 +11,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Hid = SharpLib.Hid;
-using MicroInput = SharpLib.MicroInput;
 using Oculus.Rift.S;
+using GregsStack.InputSimulatorStandard;
+using GregsStack.InputSimulatorStandard.Native;
+using System.Threading;
 
 namespace OculusDemo
 {
@@ -31,10 +33,19 @@ namespace OculusDemo
         Stopwatch iStopWatch = new Stopwatch();
 
         // Used to generate actual keyboard inputs
-        MicroInput.Client iClient = new MicroInput.Client();
+        InputSimulator iInputSim = new InputSimulator();
 
         //
         ControllerReport iCtrlReport = new ControllerReport();
+
+        //
+        Mutex iMutex = new Mutex();
+
+        // AZERTY mapping
+        VirtualKeyCode iLeft = VirtualKeyCode.VK_Q;
+        VirtualKeyCode iRight = VirtualKeyCode.VK_D;
+        VirtualKeyCode iUp = VirtualKeyCode.VK_Z;
+        VirtualKeyCode iDown = VirtualKeyCode.VK_S;
 
 
         public FormMain()
@@ -42,7 +53,6 @@ namespace OculusDemo
             InitializeComponent();
             CreateHandler();
             iStopWatch.Start();
-            iClient.Open();
         }
 
         void CreateHandler()
@@ -113,6 +123,8 @@ namespace OculusDemo
         bool isDownBackward = false;
         bool isDownLeft = false;
         bool isDownRight = false;
+        bool isDownButtonStick = false;
+        bool isDownButtonMenu = false;
 
 
 
@@ -141,8 +153,9 @@ namespace OculusDemo
                 return;
             }
 
+            iMutex.WaitOne();
+
             // Parse our raw input report into our controller report class.
-            // TODO: Avoid instantiating a new object every time.
             Utils.ParseControllerInputReport(aHidEvent.InputReport, iCtrlReport);
 
             // Check if we have a valid device ID
@@ -165,119 +178,178 @@ namespace OculusDemo
                 Utils.UpdateControllerState(ref state, iCtrlReport);
             }
 
-            // Print our controller states in our console
-            // However we do not update our prints too often to avoid lags
-            if (iStopWatch.ElapsedMilliseconds >= 10) // 33?
+            
+            // Do not update our prints too often to avoid lags
+            bool updatePrints = iStopWatch.ElapsedMilliseconds >= 100;
+
+            foreach (var ctrl in iControllers.Values)
             {
-                foreach (var ctrl in iControllers.Values)
+                // Quick and dirty mapping to keyboard input for MWO
+                if (ctrl.device_id == 0xCE156735BF2F1676) // // Right controller
                 {
                     var position = iPosition[ctrl.device_id];
-                    //Console.SetCursorPosition(Console.WindowLeft, position);
-                    //Console.WriteLine(ctrl.Dump());
-
-                    // Quick and dirty mapping to keyboard input for MWO
-                    if (ctrl.device_id == 0xCE156735BF2F1676) // // Right controller
-                    {   
-                        // Throttle
-                        if (ctrl.joystick_y>10000)
-                        {
-                            // Moving forward
-                            if (!isDownForward)
-                            {
-                                isDownForward = true;
-                                isDownBackward = false;
-                                iClient.KeyboardPress((ushort)MicroInput.Keyboard.Key.W, 0);
-                                iClient.KeyboardRelease((ushort)MicroInput.Keyboard.Key.S, 0);
-                            }
-                        }
-                        else if (ctrl.joystick_y < -10000)
-                        {
-                            // Moving backward
-                            if (!isDownBackward)
-                            {
-                                isDownForward = false;
-                                isDownBackward = true;
-                                iClient.KeyboardPress((ushort)MicroInput.Keyboard.Key.S, 0);
-                                iClient.KeyboardRelease((ushort)MicroInput.Keyboard.Key.W, 0);
-                            }
-                        }
-                        else
-                        {
-                            if (isDownForward || isDownBackward)
-                            {
-                                isDownForward = false;
-                                isDownBackward = false;
-                                iClient.KeyboardRelease((ushort)MicroInput.Keyboard.Key.S, 0);
-                                iClient.KeyboardRelease((ushort)MicroInput.Keyboard.Key.W, 0);
-                            }
-                        }
+                    if (updatePrints)
+                    {
+                        // Print our controller states in our console
+                        Console.SetCursorPosition(Console.WindowLeft, position);
+                        Console.WriteLine(ctrl.Dump());
+                        iStopWatch.Restart();
+                    }
                         
-                        // Rotation
-                        if (ctrl.joystick_x > 15000)
+
+                    // Throttle
+                    if (ctrl.joystick_y>10000)
+                    {
+                        // Moving forward
+                        if (!isDownForward)
                         {
-                            // Moving right
-                            if (!isDownRight)
-                            {
-                                isDownLeft = false;
-                                isDownRight = true;
-                                iClient.KeyboardPress((ushort)MicroInput.Keyboard.Key.D, 0);
-                                iClient.KeyboardRelease((ushort)MicroInput.Keyboard.Key.A, 0);
-                            }
+                            isDownForward = true;
+                            isDownBackward = false;
+                            //
+                            iInputSim.Keyboard.KeyDown(iUp);
+                            iInputSim.Keyboard.KeyUp(iDown);
                         }
-                        else if (ctrl.joystick_x < -15000)
+                    }
+                    else if (ctrl.joystick_y < -10000)
+                    {
+                        // Moving backward
+                        if (!isDownBackward)
                         {
-                            // Moving left
-                            if (!isDownLeft)
-                            {
-                                isDownLeft = true;
-                                isDownRight = false;                                
-                                iClient.KeyboardPress((ushort)MicroInput.Keyboard.Key.A, 0);
-                                iClient.KeyboardRelease((ushort)MicroInput.Keyboard.Key.D, 0);
-                            }
+                            isDownForward = false;
+                            isDownBackward = true;
+                            //
+                            iInputSim.Keyboard.KeyDown(iDown);
+                            iInputSim.Keyboard.KeyUp(iUp);
                         }
-                        else
+                    }
+                    else
+                    {
+                        if (isDownForward || isDownBackward)
                         {
-                            if (isDownRight || isDownLeft)
-                            {
-                                isDownLeft = false;
-                                isDownRight = false;
-                                iClient.KeyboardRelease((ushort)MicroInput.Keyboard.Key.D, 0);
-                                iClient.KeyboardRelease((ushort)MicroInput.Keyboard.Key.A, 0);
-                            }
+                            isDownForward = false;
+                            isDownBackward = false;
+                            //
+                            iInputSim.Keyboard.KeyUp(iDown);
+                            iInputSim.Keyboard.KeyUp(iUp);
+                        }
+                    }
+                        
+                    // Rotation
+                    if (ctrl.joystick_x > 15000)
+                    {
+                        // Moving right
+                        if (!isDownRight)
+                        {
+                            isDownLeft = false;
+                            isDownRight = true;
+                            //
+                            iInputSim.Keyboard.KeyDown(iRight);
+                            iInputSim.Keyboard.KeyUp(iLeft);
+                        }
+                    }
+                    else if (ctrl.joystick_x < -15000)
+                    {
+                        // Moving left
+                        if (!isDownLeft)
+                        {
+                            // We used those to measure our input lag by comparing the time the event is sent here and the time it is received in HidDemo
+                            //Console.WriteLine("\nLeft down: " + aHidEvent.Time.ToString("HH:mm:ss:fff"));
+                            isDownLeft = true;
+                            isDownRight = false;
+                            //
+                            iInputSim.Keyboard.KeyDown(iLeft);
+                            iInputSim.Keyboard.KeyUp(iRight);
+                        }
+                    }
+                    else
+                    {
+                        if (isDownRight)
+                        {
+                            // Use that to debug input lag
+                            //Console.WriteLine("Right up: " + aHidEvent.Time.ToString("HH:mm:ss:fff"));
+                            isDownRight = false;
+                            iInputSim.Keyboard.KeyUp(iRight);
                         }
 
-    
-                        //Target
-                        if (ctrl.trigger<3072 && !isDownTrigger)
+                        if (isDownLeft)
                         {
-                            isDownTrigger = true;
-                            iClient.KeyboardPress((ushort)MicroInput.Keyboard.Key.R, 0);
+                            // Use that to debug input lag
+                            //Console.WriteLine("Left up: " + aHidEvent.Time.ToString("HH:mm:ss:fff"));
+                            isDownLeft = false;
+                            iInputSim.Keyboard.KeyUp(iLeft);
                         }
-                        else if (isDownTrigger)
-                        {
-                            isDownTrigger = false;
-                            iClient.KeyboardRelease((ushort)MicroInput.Keyboard.Key.R, 0);
-                        }
-                  
-                        if (ctrl.grip < 3072 && !isDownGrip)
-                        {
-                            isDownGrip = true;
-                            iClient.KeyboardPress((ushort)MicroInput.Keyboard.Key.CAPS_LOCK, 0);
-                        }
-                        else if (isDownGrip)
-                        {
-                            isDownGrip = false;
-                            iClient.KeyboardRelease((ushort)MicroInput.Keyboard.Key.CAPS_LOCK, 0);
-                        }
-
-
                     }
 
+    
+                    //Target
+                    if (ctrl.trigger<3072)
+                    {
+                        if (!isDownTrigger)
+                        {
+                            isDownTrigger = true;
+                            iInputSim.Keyboard.KeyDown(VirtualKeyCode.VK_R);
+                        }
+                    }
+                    else if (isDownTrigger)
+                    {
+                        isDownTrigger = false;
+                        iInputSim.Keyboard.KeyUp(VirtualKeyCode.VK_R);
+                    }
+
+                    // Push-to-talk
+                    if (ctrl.grip < 512)
+                    {
+                        if (!isDownGrip)
+                        {
+                            //Console.WriteLine("down   ");
+                            isDownGrip = true;
+                            iInputSim.Keyboard.KeyDown(VirtualKeyCode.CAPITAL);
+                        }
+                    }
+                    else if (isDownGrip)
+                    {
+                        //Console.WriteLine("up   ");
+                        isDownGrip = false;
+                        iInputSim.Keyboard.KeyUp(VirtualKeyCode.CAPITAL);
+                    }
+
+                    // Third weapon
+                    if (ctrl.ButtonStick())
+                    {
+                        if (!isDownButtonStick)
+                        {
+                            //Console.WriteLine("down   ");
+                            isDownButtonStick = true;
+                            iInputSim.Keyboard.KeyDown(VirtualKeyCode.VK_3);
+                        }
+                    }
+                    else if (isDownButtonStick)
+                    {
+                        //Console.WriteLine("up   ");
+                        isDownButtonStick = false;
+                        iInputSim.Keyboard.KeyUp(VirtualKeyCode.VK_3);
+                    }
+
+                    // Battlegrid
+                    if (ctrl.ButtonMenu())
+                    {
+                        if (!isDownButtonMenu)
+                        {
+                            //Console.WriteLine("down   ");
+                            isDownButtonMenu = true;
+                            iInputSim.Keyboard.KeyDown(VirtualKeyCode.VK_B);
+                        }
+                    }
+                    else if (isDownButtonMenu)
+                    {
+                        //Console.WriteLine("up   ");
+                        isDownButtonMenu = false;
+                        iInputSim.Keyboard.KeyUp(VirtualKeyCode.VK_B);
+                    }
                 }
-                iStopWatch.Restart();
             }
 
-
+            iMutex.ReleaseMutex();
 
         }
     }
