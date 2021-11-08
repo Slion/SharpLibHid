@@ -192,7 +192,46 @@ namespace OculusDemo
                     {
                         // Print our controller states in our console
                         Console.SetCursorPosition(Console.WindowLeft, position);
+                        //Console.Clear();
+                        string blank = "                                      ";
                         Console.WriteLine(ctrl.Dump());
+                        if (isDownForward)
+                        {
+                            Console.WriteLine("Up");
+                        }
+                        else 
+                        {
+                            Console.WriteLine(blank);
+                        }
+
+                        if (isDownBackward)
+                        {
+                            Console.WriteLine("Down");
+                        }
+                        else
+                        {
+                            Console.WriteLine(blank);
+                        }
+
+
+                        if (isDownLeft)
+                        {
+                            Console.WriteLine("Left");
+                        }
+                        else
+                        {
+                            Console.WriteLine(blank);
+                        }
+
+                        if (isDownRight)
+                        {
+                            Console.WriteLine("Right");
+                        }
+                        else
+                        {
+                            Console.WriteLine(blank);
+                        }
+
                         iStopWatch.Restart();
                     }
                         
@@ -348,6 +387,8 @@ namespace OculusDemo
                     }
                 }
             }
+
+
 
             iMutex.ReleaseMutex();
 
