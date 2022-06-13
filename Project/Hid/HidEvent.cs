@@ -693,9 +693,42 @@ namespace SharpLib.Hid
             aHidEvent.OnHidEventRepeat(aHidEvent);
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool HasDirectionPad()
+        {
+            int index = GetValueCapabilitiesIndex((ushort)Hid.UsagePage.GenericDesktopControls, (ushort)GenericDesktop.HatSwitch);
+            if (index < 0)
+            {
+                //No hat switch found
+                return false;
+            }
+
+            HIDP_VALUE_CAPS caps = Device.InputValueCapabilities[index];
+            if (caps.IsRange)
+            {
+                //Defensive
+                return false;
+            }
+
+            // Make sure we can interpret it has DPad
+            if ((caps.LogicalMax - caps.LogicalMin) != ((int)DirectionPadState.UpLeft))
+            {
+                // That was needed for our Virpil Alpha otherwise for some reason we would get twist axis Z in there
+                return false;
+            }
+
+            // I guess we have a DPad then
+            return true;
+        }
+
         /// <summary>
         /// Provide the state of the dpad or hat switch if any.
         /// If no dpad is found we return 'at rest'.
+        /// Successfully tested with Razer Junglecat too.
         /// </summary>
         /// <returns></returns>
         public DirectionPadState GetDirectionPadState()
@@ -926,7 +959,7 @@ namespace SharpLib.Hid
                     }
                 }
 
-                if (name == null || name.Equals("") || Device.IsGamePad) //Gamepad buttons do not belong to Usage enumeration, they are just ordinal
+                if (name == null || name.Equals("") || Device.IsGamePad || Device.IsJoystick) //Gamepad buttons do not belong to Usage enumeration, they are just ordinal
                 {
                     name = usage.ToString("X2");
                 }
@@ -940,7 +973,7 @@ namespace SharpLib.Hid
             }
 
             //If we are a gamepad display axis and dpad values
-            if (Device != null && Device.IsGamePad)
+            if (Device != null && (Device.IsGamePad || Device.IsJoystick))
             {
                 //uint dpadUsageValue = GetUsageValue((ushort)Hid.UsagePage.GenericDesktopControls, (ushort)Hid.Usage.GenericDesktop.HatSwitch);
                 //usageText = dpadUsageValue.ToString("X") + " (dpad), " + usageText;
@@ -957,8 +990,11 @@ namespace SharpLib.Hid
                     usageText += ", ";
                 }
 
-                usageText += GetDirectionPadState().ToString();
-
+                if (HasDirectionPad())
+                {
+                    usageText += GetDirectionPadState().ToString();
+                }
+                
                 //For each axis
                 foreach (KeyValuePair<HIDP_VALUE_CAPS, uint> entry in UsageValues)
                 {
@@ -985,7 +1021,7 @@ namespace SharpLib.Hid
                         //Add a separator
                         usageText += ", ";
                     }
-                    usageText += entry.Value.ToString("X") + " ("+ name +")";        
+                    usageText += entry.Value.ToString() + " ("+ name +")";        
                 }
             }
             //Handle keyboard events

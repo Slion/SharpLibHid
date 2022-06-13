@@ -36,6 +36,7 @@ using System.Reflection;
 
 namespace HidDemo
 {
+
     /// <summary>
     /// MainForm for our HID demo.
     /// </summary>
@@ -55,6 +56,12 @@ namespace HidDemo
         private Hid.Handler iHidParser;
 
         public delegate void OnHidEventDelegate(object aSender, Hid.Event aHidEvent);
+
+        // Avoid logging too many events otherwise we just hang when testing high frequency device like Virpil joysticks and Oculus Rift S
+        DateTime iLogPeriodStartTime;
+        int iEventCount;
+        const int KMaxEventPerPeriod = 10;
+        const int KPeriodDurationInMs = 100;
 
 		public MainForm()
 		{
@@ -437,14 +444,35 @@ namespace HidDemo
             }
             else
             {
-                //We are in the proper thread
-                listViewEvents.Items.Insert(0, aHidEvent.ToListViewItem());
+                //We are in the proper thread                
+
+                // Check if our log period has expired
+                if (aHidEvent.Time > iLogPeriodStartTime.AddMilliseconds(KPeriodDurationInMs))
+                {
+                    // Our period has expired, reset our period start time and number of allowed event logs in that period
+                    iLogPeriodStartTime = aHidEvent.Time; // Mark the time of the last event we logged
+                    iEventCount = 0;
+                }
+
+                // Status label show last device no matter what
                 if (aHidEvent.Device != null)
                 {
                     toolStripStatusLabelDevice.Text = aHidEvent.Device.FriendlyName;
                 }
-                
-                richTextBoxLogs.AppendText(aHidEvent.ToLog());
+
+                // Check if we are still allowed to log events in that period of time
+                if (iEventCount < KMaxEventPerPeriod) // Avoid spamming too many events
+                {
+                    // We can log that event
+                    iEventCount++; // Make sure we count it
+                    listViewEvents.Items.Insert(0, aHidEvent.ToListViewItem());
+                    richTextBoxLogs.AppendText(aHidEvent.ToLog());
+                }
+                else 
+                {
+                    // Status label also tells us if we are receiving high amount of events
+                    toolStripStatusLabelDevice.Text += $" - More than {KMaxEventPerPeriod} events per {KPeriodDurationInMs}ms, skipping some!";
+                }
             }
         }
 
@@ -465,7 +493,11 @@ namespace HidDemo
                     //Returning zero means we processed that message.
                     message.Result = new IntPtr(0);
                     //iHidHandler.ProcessInput(ref message);
-                    iHidParser.ProcessInput(ref message);
+                    if (iHidParser!=null) // Can be the case when disabling with high event frequency device
+                    {
+                        iHidParser.ProcessInput(ref message);
+                    }
+                    
                     break;
             }
             //Is that needed? Check the docs.

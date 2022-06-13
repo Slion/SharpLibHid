@@ -71,8 +71,8 @@ namespace HidDemo
             this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripDevice = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.deviceNodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyNodeTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deviceNodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl.SuspendLayout();
             this.tabPageMessages.SuspendLayout();
             this.groupBoxRegistrationFlag.SuspendLayout();
@@ -291,8 +291,8 @@ namespace HidDemo
             this.columnHeaderRepeat,
             this.columnHeaderTime,
             this.columnBackground});
-            this.listViewEvents.Enabled = false;
             this.listViewEvents.GridLines = true;
+            this.listViewEvents.HideSelection = false;
             this.listViewEvents.Location = new System.Drawing.Point(8, 6);
             this.listViewEvents.Name = "listViewEvents";
             this.listViewEvents.Size = new System.Drawing.Size(1104, 554);
@@ -503,21 +503,21 @@ namespace HidDemo
             this.copyNodeTextToolStripMenuItem,
             this.deviceNodeToolStripMenuItem});
             this.contextMenuStripDevice.Name = "contextMenuStripDevice";
-            this.contextMenuStripDevice.Size = new System.Drawing.Size(181, 70);
-            // 
-            // deviceNodeToolStripMenuItem
-            // 
-            this.deviceNodeToolStripMenuItem.Name = "deviceNodeToolStripMenuItem";
-            this.deviceNodeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.deviceNodeToolStripMenuItem.Text = "Properties";
-            this.deviceNodeToolStripMenuItem.Click += new System.EventHandler(this.deviceNodeToolStripMenuItem_Click);
+            this.contextMenuStripDevice.Size = new System.Drawing.Size(128, 48);
             // 
             // copyNodeTextToolStripMenuItem
             // 
             this.copyNodeTextToolStripMenuItem.Name = "copyNodeTextToolStripMenuItem";
-            this.copyNodeTextToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.copyNodeTextToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.copyNodeTextToolStripMenuItem.Text = "Copy";
             this.copyNodeTextToolStripMenuItem.Click += new System.EventHandler(this.copyNodeTextToolStripMenuItem_Click);
+            // 
+            // deviceNodeToolStripMenuItem
+            // 
+            this.deviceNodeToolStripMenuItem.Name = "deviceNodeToolStripMenuItem";
+            this.deviceNodeToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.deviceNodeToolStripMenuItem.Text = "Properties";
+            this.deviceNodeToolStripMenuItem.Click += new System.EventHandler(this.deviceNodeToolStripMenuItem_Click);
             // 
             // MainForm
             // 

@@ -353,9 +353,25 @@ namespace SharpLib.Hid
         {
             get
             {
-                return ((UsagePage)iCapabilities.UsagePage == Hid.UsagePage.GenericDesktopControls && (UsageCollection.GenericDesktop)iCapabilities.Usage == Hid.UsageCollection.GenericDesktop.GamePad);
+                return ((UsagePage)iCapabilities.UsagePage == Hid.UsagePage.GenericDesktopControls 
+                    && (UsageCollection.GenericDesktop)iCapabilities.Usage == Hid.UsageCollection.GenericDesktop.GamePad);
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsJoystick
+        {
+            get
+            {
+                return ((UsagePage)iCapabilities.UsagePage == Hid.UsagePage.GenericDesktopControls
+                    && (UsageCollection.GenericDesktop)iCapabilities.Usage == Hid.UsageCollection.GenericDesktop.Joystick);
+            }
+        }
+
+
+        //TODO: Implement IsRemoteControl       
 
         /// <summary>
         /// 
