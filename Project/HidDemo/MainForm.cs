@@ -61,7 +61,7 @@ namespace HidDemo
         DateTime iLogPeriodStartTime;
         int iEventCount;
         const int KMaxEventPerPeriod = 10;
-        const int KPeriodDurationInMs = 100;
+        const int KPeriodDurationInMs = 500;
 
 		public MainForm()
 		{
