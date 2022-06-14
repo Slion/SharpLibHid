@@ -613,20 +613,23 @@ namespace SharpLib.Hid
         }
 
         /// <summary>
-        /// 
+        /// Search our device for the first input matching the given usage page and usage.
+        /// Typically used to access axis on a joystick or gamepad.
         /// </summary>
         /// <param name="aUsagePage"></param>
         /// <param name="aUsage"></param>
         /// <returns></returns>
         public int GetValueCapabilitiesIndex(ushort aUsagePage, ushort aUsage)
         {
-            int i = -1;
+            const int KErrNotFound = -1;
+
             //Make sure we have a device with input value capabilities
             if (Device == null || Device.InputValueCapabilities == null)
             {
-                return i;
+                return KErrNotFound;
             }
 
+            int i = KErrNotFound;
             //Search our value capabilities for the first one matching usage and usage page
             foreach (HIDP_VALUE_CAPS caps in Device.InputValueCapabilities)
             {
@@ -644,7 +647,7 @@ namespace SharpLib.Hid
                 }
             }
 
-            return i;
+            return KErrNotFound;
         }
 
 
@@ -717,7 +720,7 @@ namespace SharpLib.Hid
             // Make sure we can interpret it has DPad
             if ((caps.LogicalMax - caps.LogicalMin) != ((int)DirectionPadState.UpLeft))
             {
-                // That was needed for our Virpil Alpha otherwise for some reason we would get twist axis Z in there
+                // Defensive
                 return false;
             }
 
