@@ -46,6 +46,8 @@ namespace OculusDemo
         VirtualKeyCode iRight = VirtualKeyCode.VK_D;
         VirtualKeyCode iUp = VirtualKeyCode.VK_Z;
         VirtualKeyCode iDown = VirtualKeyCode.VK_S;
+        VirtualKeyCode iKeyTrigger = VirtualKeyCode.VK_S;
+        VirtualKeyCode iKeyGrip = VirtualKeyCode.VK_S;
 
 
         public FormMain()
@@ -274,7 +276,7 @@ namespace OculusDemo
                     }
                         
                     // Rotation
-                    if (ctrl.joystick_x > 15000)
+                    if (ctrl.joystick_x > 18000)
                     {
                         // Moving right
                         if (!isDownRight)
@@ -286,7 +288,7 @@ namespace OculusDemo
                             iInputSim.Keyboard.KeyUp(iLeft);
                         }
                     }
-                    else if (ctrl.joystick_x < -15000)
+                    else if (ctrl.joystick_x < -18000)
                     {
                         // Moving left
                         if (!isDownLeft)
@@ -302,19 +304,14 @@ namespace OculusDemo
                     }
                     else
                     {
-                        if (isDownRight)
+                        if (isDownRight || isDownLeft)
                         {
                             // Use that to debug input lag
                             //Console.WriteLine("Right up: " + aHidEvent.Time.ToString("HH:mm:ss:fff"));
                             isDownRight = false;
-                            iInputSim.Keyboard.KeyUp(iRight);
-                        }
-
-                        if (isDownLeft)
-                        {
-                            // Use that to debug input lag
-                            //Console.WriteLine("Left up: " + aHidEvent.Time.ToString("HH:mm:ss:fff"));
                             isDownLeft = false;
+
+                            iInputSim.Keyboard.KeyUp(iRight);
                             iInputSim.Keyboard.KeyUp(iLeft);
                         }
                     }
@@ -326,13 +323,19 @@ namespace OculusDemo
                         if (!isDownTrigger)
                         {
                             isDownTrigger = true;
-                            iInputSim.Keyboard.KeyDown(VirtualKeyCode.VK_R);
+                            iInputSim.Keyboard.KeyDown(VirtualKeyCode.VK_3);
+                            iInputSim.Keyboard.KeyDown(VirtualKeyCode.VK_4);
+                            iInputSim.Keyboard.KeyDown(VirtualKeyCode.VK_5);
+                            iInputSim.Keyboard.KeyDown(VirtualKeyCode.VK_6);
                         }
                     }
                     else if (isDownTrigger)
                     {
                         isDownTrigger = false;
-                        iInputSim.Keyboard.KeyUp(VirtualKeyCode.VK_R);
+                        iInputSim.Keyboard.KeyUp(VirtualKeyCode.VK_3);
+                        iInputSim.Keyboard.KeyUp(VirtualKeyCode.VK_4);
+                        iInputSim.Keyboard.KeyUp(VirtualKeyCode.VK_5);
+                        iInputSim.Keyboard.KeyUp(VirtualKeyCode.VK_6);
                     }
 
                     // Push-to-talk
@@ -359,14 +362,14 @@ namespace OculusDemo
                         {
                             //Console.WriteLine("down   ");
                             isDownButtonStick = true;
-                            iInputSim.Keyboard.KeyDown(VirtualKeyCode.VK_3);
+                            iInputSim.Keyboard.KeyDown(VirtualKeyCode.VK_R);
                         }
                     }
                     else if (isDownButtonStick)
                     {
                         //Console.WriteLine("up   ");
                         isDownButtonStick = false;
-                        iInputSim.Keyboard.KeyUp(VirtualKeyCode.VK_3);
+                        iInputSim.Keyboard.KeyUp(VirtualKeyCode.VK_R);
                     }
 
                     // Battlegrid
