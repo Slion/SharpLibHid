@@ -11,7 +11,7 @@
     <!--<TargetFrameworks>netstandard2.0</TargetFrameworks>-->
     <!--netstandard2.0;net5.0; netcoreapp3.1;-->
     <UseWindowsForms>true</UseWindowsForms>    
-    <Version>1.5.0</Version>
+    <Version>1.5.1</Version>
     <Authors>Stéphane Lenclud</Authors>
     <Copyright>(c)2021 Stéphane Lenclud</Copyright>
     <RootNamespace>SharpLib.Hid</RootNamespace>
@@ -33,11 +33,15 @@
     https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets#pack-target
     -->
     <PackageId>SharpLibHid</PackageId>
-    <PackageTags>HID USB RawInput GamePad Input IR remote control</PackageTags>
+    <PackageTags>HID USB RawInput GamePad Joystick Input IR remote control</PackageTags>
     <PackageLicenseUrl>http://www.gnu.org/copyleft/gpl.html</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/Slion/SharpLibHid</PackageProjectUrl>
     
     <PackageReleaseNotes>
+      v1.5.1
+      Joysticks supported to same level as GamePads.
+	  Add function to check if dpad is available.
+	  
       v1.5.0
       Fix crash with generic HID devices when using 64-bits architecture.
       Add virtual reality usage collection.
