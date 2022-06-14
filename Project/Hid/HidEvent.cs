@@ -519,7 +519,7 @@ namespace SharpLib.Hid
         /// Typically fetches values of a joystick/gamepad axis and dpad directions.
         /// </summary>
         /// <param name="aInputReport"></param>
-        private void GetUsageValues(byte[] aInputReport)
+        private /*unsafe*/ void GetUsageValues(byte[] aInputReport)
         {
             if (Device.InputValueCapabilities == null)
             {
@@ -534,8 +534,32 @@ namespace SharpLib.Hid
                     continue;
                 }
 
-                //Now fetch and add our usage value
                 uint usageValue = 0;
+
+
+                // Was trying to fix: https://github.com/Slion/SharpLibHid/issues/15
+                // No joy
+                // Check report count
+                /*
+                if (caps.ReportCount > 1)
+                {
+                    Trace.TraceWarning("WARNING: Multiple report not supported");
+                }
+
+                fixed (byte* report = aInputReport)
+                {
+                    var res = Windows.Win32.PInvoke.HidP_GetUsageValueArray(Windows.Win32.Devices.HumanInterfaceDevice.HIDP_REPORT_TYPE.HidP_Input, caps.UsagePage, caps.LinkCollection, caps.NotRange.Usage, (byte*)usageValue, sizeof(uint), Device.PreParsedData, report, (uint)aInputReport.Length);
+                    uint err = (uint)res.Value;
+                    Trace.TraceWarning("RES: " + res.Value.ToString("X"));
+                    if (err==(uint)Win32.HidStatus.HIDP_STATUS_NOT_VALUE_ARRAY)
+                    {
+                        Trace.TraceWarning("Not good");
+                    }
+                }
+                */
+
+                //Now fetch and add our usage value
+                
                 Win32.HidStatus status = Win32.Function.HidP_GetUsageValue(Win32.HIDP_REPORT_TYPE.HidP_Input, caps.UsagePage, caps.LinkCollection, caps.NotRange.Usage, ref usageValue, Device.PreParsedData, aInputReport, (uint)aInputReport.Length);
                 if (status == Win32.HidStatus.HIDP_STATUS_SUCCESS)
                 {
