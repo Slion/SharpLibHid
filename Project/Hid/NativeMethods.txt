@@ -1,5 +1,4 @@
 ﻿
 
 HidP_GetUsageValueArray
-
-
+HidD_GetProductString

@@ -141,11 +141,7 @@ namespace SharpLib.Hid
             }
 
             //Get product string
-            StringBuilder productString = new StringBuilder(256);
-            if (Win32.Function.HidD_GetProductString(handle, productString, productString.Capacity))
-            {
-                Product = productString.ToString();
-            }
+            GetProductString(handle);
 
             //Get attributes
             Win32.HIDD_ATTRIBUTES attributes = new Win32.HIDD_ATTRIBUTES();
@@ -206,6 +202,25 @@ namespace SharpLib.Hid
             }
         }
 
+        /// <summary>
+        /// 
+        /// See: https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/hidsdi/nf-hidsdi-hidd_getproductstring
+        /// </summary>
+        private unsafe void GetProductString(SafeHandle aHandle)
+        {
+            // The API returns "NULL-terminated wide character string", on Windows I guess that means 16-bits characters.
+            const int KBufferSize = 256; // Allocate a buffer big enough for 128 characters which is already more than the max 126 characters an USB device can provide.
+            byte[] buffer = new byte[KBufferSize]; // We use new and fixed rather than stackalloc as it makes it easier to convert to string later
+            fixed (byte* ptr = buffer)
+            {
+                if (Windows.Win32.PInvoke.HidD_GetProductString(aHandle, ptr, (uint)buffer.Length) == Windows.Win32.K.TRUE)
+                {
+                    // Assuming our wide character string is Unicode encoded we convert our buffer to a string object.
+                    // Also make sure we remove null characters at the end.
+                    Product = System.Text.Encoding.Unicode.GetString(buffer).TrimEnd('\0');
+                }
+            }            
+        }
 
         /// <summary>
         /// Useful for gamepads.

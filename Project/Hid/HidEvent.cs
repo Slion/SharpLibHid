@@ -237,6 +237,9 @@ namespace SharpLib.Hid
                 return string.Format("{0} (0x{1})", UsageCollectionName(), UsageCollection.ToString("X4"));
         }
 
+        /// <summary>
+        /// For Joysticks and Gamepads this is the list of buttons that are pushed.
+        /// </summary>
         public List<ushort> Usages { get; private set; }
 
         /// <summary>
