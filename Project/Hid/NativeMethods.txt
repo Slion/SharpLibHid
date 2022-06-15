@@ -2,3 +2,4 @@
 
 HidP_GetUsageValueArray
 HidD_GetProductString
+HidD_GetManufacturerString

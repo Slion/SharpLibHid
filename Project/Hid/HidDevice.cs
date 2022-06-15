@@ -134,11 +134,7 @@ namespace SharpLib.Hid
             }
 
             //Get manufacturer string
-            StringBuilder manufacturerString = new StringBuilder(256);
-            if (Win32.Function.HidD_GetManufacturerString(handle, manufacturerString, manufacturerString.Capacity))
-            {
-                Manufacturer = manufacturerString.ToString();
-            }
+            GetManufacturerString(handle);
 
             //Get product string
             GetProductString(handle);
@@ -198,6 +194,26 @@ namespace SharpLib.Hid
                 if (status != HidStatus.HIDP_STATUS_SUCCESS || valueCapabilitiesLength != Capabilities.NumberInputValueCaps)
                 {
                     throw new Exception("HidDevice: HidP_GetValueCaps failed: " + status.ToString());
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// See: https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/hidsdi/nf-hidsdi-hidd_getmanufacturerstring
+        /// </summary>
+        private unsafe void GetManufacturerString(SafeHandle aHandle)
+        {
+            // The API returns "NULL-terminated wide character string", on Windows I guess that means 16-bits characters.
+            const int KBufferSize = 256; // Allocate a buffer big enough for 128 characters which is already more than the max 126 characters an USB device can provide.
+            byte[] buffer = new byte[KBufferSize]; // We use new and fixed rather than stackalloc as it makes it easier to convert to string later
+            fixed (byte* ptr = buffer)
+            {
+                if (Windows.Win32.PInvoke.HidD_GetManufacturerString(aHandle, ptr, (uint)buffer.Length) == Windows.Win32.K.TRUE)
+                {
+                    // Assuming our wide character string is Unicode encoded we convert our buffer to a string object.
+                    // Also make sure we remove null characters at the end.
+                    Manufacturer = System.Text.Encoding.Unicode.GetString(buffer).TrimEnd('\0');
                 }
             }
         }
