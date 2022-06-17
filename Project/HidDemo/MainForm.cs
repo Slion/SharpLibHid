@@ -308,11 +308,11 @@ namespace HidDemo
             uint index = 0;
 
             // Get a handle to a list of devices matching the given device path/id.            
-            //SetupDiDestroyDeviceInfoListSafeHandle hDevInfo = PInvoke.SetupDiGetClassDevs(null, aDevicePath, new HWND(0), Extra.Const.DIGCF_ALLCLASSES | Extra.Const.DIGCF_DEVICEINTERFACE);
+            SetupDiDestroyDeviceInfoListSafeHandle hDevInfo = PInvoke.SetupDiGetClassDevs(null, aDevicePath, new HWND(0), Extra.Const.DIGCF_ALLCLASSES | Extra.Const.DIGCF_DEVICEINTERFACE);
 
-            // This should give us all devices present or not but it won't work somehow
+            // List all devices present
             // See: https://stackoverflow.com/questions/956669/does-setupdigetclassdevs-work-with-device-instance-ids-as-documented
-            SetupDiDestroyDeviceInfoListSafeHandle hDevInfo = PInvoke.SetupDiGetClassDevs(null, (string)null, new HWND(0), Extra.Const.DIGCF_ALLCLASSES | Extra.Const.DIGCF_PRESENT);
+            //SetupDiDestroyDeviceInfoListSafeHandle hDevInfo = PInvoke.SetupDiGetClassDevs(null, (string)null, new HWND(0), Extra.Const.DIGCF_ALLCLASSES | Extra.Const.DIGCF_PRESENT);
             if (hDevInfo.IsInvalid)
             {
                 Trace.WriteLine("SetupDiGetClassDevs error: " + GetLastError.String());
@@ -335,77 +335,49 @@ namespace HidDemo
             bool keepGoing = false;
             do
             {
-                /*
-                keepGoing = HIDImports.SetupDiEnumDeviceInfo(hDevInfo, index, ref deviceInfoData);
-                if (!keepGoing)
-                {
-                    Debug.Print(Marshal.GetLastWin32Error().ToString());
-                    break;
-                }
-                */
+                Trace.WriteLine("SetupDiEnumDeviceInfo index: " + index);
 
                 // Get interface data for device at the given index and matching that class
-                keepGoing = PInvoke.SetupDiEnumDeviceInterfaces(hDevInfo, null, null, index, &deviceInterfaceData);
+                keepGoing = PInvoke.SetupDiEnumDeviceInfo(hDevInfo, index, &deviceInfoData);
                 if (!keepGoing)
                 {
-                    Trace.WriteLine("SetupDiEnumDeviceInterfaces error: " + GetLastError.String());
+                    Trace.WriteLine("SetupDiEnumDeviceInfo error: " + GetLastError.String());
                     break;
                 }
 
-                UInt32 size = 0;
-
-                // Get the buffer size for this device detail instance (returned in the size parameter)
-                PInvoke.SetupDiGetDeviceInterfaceDetail(hDevInfo, &deviceInterfaceData, null, 0, &size, null);
-
-                // Create a detail struct and set its size
-                var deviceInterfaceDetail = new SP_DEVICE_INTERFACE_DETAIL_DATA();
-                //SL: does not make sense, fix it
-                //On Win x86, cbSize = 5, On x64, cbSize = 8 i
-                deviceInterfaceDetail.cbSize = (IntPtr.Size == 8) ? (uint)8 : (uint)5;
-
-                // TODO: Fixed that fixed size buffer size defined in SP_DEVICE_INTERFACE_DETAIL_DATA
-                // Actually get the detail struct
-                if (PInvoke.SetupDiGetDeviceInterfaceDetail(hDevInfo, &deviceInterfaceData, (SP_DEVICE_INTERFACE_DETAIL_DATA_W*)&deviceInterfaceDetail, size, &size, &deviceInfoData))
+                // It's a match, just open that system dialog. 
+                // Get Device instance path          
+                char[] buffer = new char[512];
+                fixed (char* ptr = buffer)
                 {
-                    // Check that current device is matching requested device
-                    if (deviceInterfaceDetail.DevicePath.ToString().ToLower() == aDevicePath.ToLower())
-                    {
-                        // It's a match, just open that system dialog. 
-                        // Get Device instance path          
-                        char[] buffer = new char[512];
-                        fixed (char* ptr = buffer)
-                        {
-                            var deviceInstanceId = new PWSTR(ptr);
+                    var deviceInstanceId = new PWSTR(ptr);
                         
 
-                            uint requiredSize = 0;
-                            PInvoke.SetupDiGetDeviceInstanceId(hDevInfo, &deviceInfoData, deviceInstanceId, 512, &requiredSize);
+                    uint requiredSize = 0;
+                    PInvoke.SetupDiGetDeviceInstanceId(hDevInfo, &deviceInfoData, deviceInstanceId, 512, &requiredSize);
 
-                            // Define command line parameters before running our process
-                            string parameters = "devmgr.dll,DeviceProperties_RunDLL /MachineName \"\"  /DeviceID ";
-                            // Add double quote
-                            parameters += "\"" + deviceInstanceId + "\"";
-                            //Debug.Print(parameters);
-                            System.Diagnostics.ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo("rundll32.exe", parameters);
+                    if (deviceInstanceId.ToString().ToLower() == aDevicePath.ToLower())
+                    {
+                        // Define command line parameters before running our process
+                        string parameters = "devmgr.dll,DeviceProperties_RunDLL /MachineName \"\"  /DeviceID ";
+                        // Add double quote
+                        parameters += "\"" + deviceInstanceId + "\"";
+                        //Debug.Print(parameters);
+                        ProcessStartInfo procStartInfo = new ProcessStartInfo("rundll32.exe", parameters);
 
-                            // The following commands are needed to redirect the standard output.
-                            // This means that it will be redirected to the Process.StandardOutput StreamReader.
-                            //procStartInfo.RedirectStandardOutput = true;
-                            //procStartInfo.UseShellExecute = false;
-                            // Do not create the black window.
-                            //procStartInfo.CreateNoWindow = true;
-                            //
-                            Process.Start(procStartInfo);
+                        // The following commands are needed to redirect the standard output.
+                        // This means that it will be redirected to the Process.StandardOutput StreamReader.
+                        //procStartInfo.RedirectStandardOutput = true;
+                        //procStartInfo.UseShellExecute = false;
+                        // Do not create the black window.
+                        //procStartInfo.CreateNoWindow = true;
+                        //
+                        Process.Start(procStartInfo);
 
-                            return true;
-                        }
-
-                    }
+                        return true;
+                    }                                           
                 }
-                else
-                {
-                    //Debug.Print(Marshal.GetLastWin32Error().ToString());
-                }
+                     
                 index++;
             } while (keepGoing);
 
@@ -824,10 +796,10 @@ namespace HidDemo
             // https://docs.microsoft.com/en-us/windows-hardware/drivers/install/determining-the-parent-of-a-device
             // https://docs.microsoft.com/en-us/windows-hardware/drivers/install/retrieving-device-relations
             // https://docs.microsoft.com/en-us/windows/win32/api/setupapi/nf-setupapi-setupdigetdevicepropertyw
-            //string parent = "BTHLEDevice\\{00001812-0000-1000-8000-00805f9b34fb}_Dev_VID&021532_PID&070a_REV&0001_e889516bc56f\\8&ab05448&1&0017";
-            //string deviceInstanceId = "8&ab05448&1&0017";
-            //Guid GUID_DEVINTERFACE_BT = new Guid("E0CBF06C-CD8B-4647-BB8A-263B43F0F974");
-            //OpenPropertiesDialog(parent);
+            string parent = "BTHLEDevice\\{00001812-0000-1000-8000-00805f9b34fb}_Dev_VID&021532_PID&070a_REV&0001_e889516bc56f\\8&ab05448&1&0017";
+            string deviceInstanceId = "8&ab05448&1&0017";
+            Guid GUID_DEVINTERFACE_BT = new Guid("E0CBF06C-CD8B-4647-BB8A-263B43F0F974");
+            OpenPropertiesDialog(parent);
 
             // Then show our properties dialog
             OpenPropertiesDialog(device);
