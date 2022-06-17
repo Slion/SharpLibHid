@@ -139,6 +139,8 @@ namespace SharpLib.Hid
             //Get product string
             GetProductString(handle);
 
+            
+
             //Get attributes
             Win32.HIDD_ATTRIBUTES attributes = new Win32.HIDD_ATTRIBUTES();
             if (Win32.Function.HidD_GetAttributes(handle, ref attributes))

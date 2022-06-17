@@ -21,9 +21,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+
 namespace SharpLib.Hid
 {
-    static class Utils
+    public static class Utils
     {
         /// <summary>
         /// Provide the type for the usage collection corresponding to the given usage page.
@@ -85,6 +86,38 @@ namespace SharpLib.Hid
                     return null;
             }
         }
+    }
+}
+
+// From: https://stackoverflow.com/a/38021136/3969362
+// TODO: Move those else where
+namespace SharpLib.ToEnum
+{
+    public static class Extensions
+    {
+        /// <summary>
+        /// Extension method to return an enum value of type T for the given string.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static T ToEnum<T>(this string value)
+        {
+            return (T)System.Enum.Parse(typeof(T), value, true);
+        }
+
+        /// <summary>
+        /// Extension method to return an enum value of type T for the given int.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static T ToEnum<T>(this int value)
+        {
+            var name = System.Enum.GetName(typeof(T), value);
+            return name.ToEnum<T>();
+        }
 
     }
+
 }

@@ -20,8 +20,9 @@
     <Description>C# HID library designed to handle raw input. Most useful to support IR remote control and gamepad inputs on Windows Forms applications.</Description>
     <Company>Slions</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>    
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Platforms>AnyCPU;x64</Platforms>
 
   </PropertyGroup>
 

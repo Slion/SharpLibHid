@@ -1,5 +1,24 @@
 ﻿
 
+// DLLs
+Hid.*
+setupapi.*
+Kernel32.*
+User32.*
+
+// Functions we actually used
 HidP_GetUsageValueArray
 HidD_GetProductString
 HidD_GetManufacturerString
+SetupDiGetDevicePropertyW
+SetupDiGetClassDevs
+CreateFile
+GetRawInputDeviceInfo
+
+RID_DEVICE_INFO
+
+
+DEVPKEY*
+DIGCF*
+ERROR*
+//ERROR_NO_MORE_ITEMS

@@ -11,6 +11,10 @@
       <PackageId>HidDemo</PackageId>
       <Company>Slions</Company>
       <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+      <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="squirrel.windows" Version="2.0.1" />
