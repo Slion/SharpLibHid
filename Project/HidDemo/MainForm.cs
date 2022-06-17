@@ -315,8 +315,7 @@ namespace HidDemo
             SetupDiDestroyDeviceInfoListSafeHandle hDevInfo = PInvoke.SetupDiGetClassDevs(null, (string)null, new HWND(0), Extra.Const.DIGCF_ALLCLASSES | Extra.Const.DIGCF_PRESENT);
             if (hDevInfo.IsInvalid)
             {
-                int err = Marshal.GetLastWin32Error();
-                Trace.WriteLine("SetupDiGetClassDevs error: " + err.ToEnum<WIN32_ERROR>());
+                Trace.WriteLine("SetupDiGetClassDevs error: " + GetLastError.String());
                 return false;
             }
             
@@ -349,11 +348,7 @@ namespace HidDemo
                 keepGoing = PInvoke.SetupDiEnumDeviceInterfaces(hDevInfo, null, null, index, &deviceInterfaceData);
                 if (!keepGoing)
                 {
-                    int err = Marshal.GetLastWin32Error();
-                    
-                    Trace.WriteLine("SetupDiEnumDeviceInterfaces error: " + err.ToEnum<WIN32_ERROR>());
-
-                    //Debug.Print(Marshal.GetLastWin32Error().ToString());
+                    Trace.WriteLine("SetupDiEnumDeviceInterfaces error: " + GetLastError.String());
                     break;
                 }
 

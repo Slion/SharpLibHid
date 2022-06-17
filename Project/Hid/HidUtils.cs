@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 
 
@@ -119,5 +120,25 @@ namespace SharpLib.ToEnum
         }
 
     }
+}
 
+//TODO: Move this to SharpLib.Win32 v2
+namespace SharpLib.Win32
+{
+    using SharpLib.ToEnum;
+    using Windows.Win32.Foundation;
+    public static class GetLastError
+    {
+        public static string String()
+        {
+            return Enum().ToString();
+        }
+
+        public static WIN32_ERROR Enum()
+        {
+            int err = Marshal.GetLastWin32Error();
+            return err.ToEnum<WIN32_ERROR>();
+        }
+
+    }
 }
