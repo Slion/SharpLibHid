@@ -194,7 +194,7 @@ namespace HidDemo
         }
 
         /// <summary>
-        /// 
+        /// We have now a much simpler was to do that. We keep this here however as it could be useful for reference at some point.
         /// </summary>
         /// <param name="aDevicePath"></param>
         /// <param name="aClass"></param>
@@ -299,7 +299,9 @@ namespace HidDemo
         }
 
         /// <summary>
-        /// 
+        /// TODO: Use that to implement Device method to get devinfo and data.
+        /// From there we should be able to get any properties.
+        /// Look-up parents until we find one with Bluetooth class to get its description. 
         /// </summary>
         /// <param name="aDevicePath"></param>
         /// <returns></returns>
@@ -319,14 +321,6 @@ namespace HidDemo
                 return false;
             }
             
-
-            //IntPtr hDevInfo = HIDImports.SetupDiGetClassDevs(IntPtr.Zero, null, IntPtr.Zero, HIDImports.DIGCF_DEVICEINTERFACE | HIDImports.DIGCF_PRESENT);
-            //IntPtr hDevInfo = HIDImports.SetupDiCreateDeviceInfoList(IntPtr.Zero, IntPtr.Zero);
-
-            // Alloc and init
-            SP_DEVICE_INTERFACE_DATA deviceInterfaceData = new SP_DEVICE_INTERFACE_DATA();
-            deviceInterfaceData.cbSize = (uint)sizeof(SP_DEVICE_INTERFACE_DATA);
-
             // Alloc and init
             SP_DEVINFO_DATA deviceInfoData = new SP_DEVINFO_DATA();
             deviceInfoData.cbSize = (uint)sizeof(SP_DEVINFO_DATA);
@@ -788,6 +782,11 @@ namespace HidDemo
             }
             Hid.Device device = (Hid.Device)node.Tag;
 
+            device.ShowProperties();
+
+            //OpenPropertiesDialog(device.Name.Substring(4, device.Name.Length-43).Replace('#','\\'));
+
+
             // We were testing this trying to get a device from its instance path or instance id without joy really.
             // The goal was to get to the friendly name of the Razor Junglecat bluetooth device which we should be able to get from its grandparent I believe.
             // See:
@@ -796,13 +795,13 @@ namespace HidDemo
             // https://docs.microsoft.com/en-us/windows-hardware/drivers/install/determining-the-parent-of-a-device
             // https://docs.microsoft.com/en-us/windows-hardware/drivers/install/retrieving-device-relations
             // https://docs.microsoft.com/en-us/windows/win32/api/setupapi/nf-setupapi-setupdigetdevicepropertyw
-            string parent = "BTHLEDevice\\{00001812-0000-1000-8000-00805f9b34fb}_Dev_VID&021532_PID&070a_REV&0001_e889516bc56f\\8&ab05448&1&0017";
-            string deviceInstanceId = "8&ab05448&1&0017";
-            Guid GUID_DEVINTERFACE_BT = new Guid("E0CBF06C-CD8B-4647-BB8A-263B43F0F974");
-            OpenPropertiesDialog(parent);
+            //string parent = "BTHLEDevice\\{00001812-0000-1000-8000-00805f9b34fb}_Dev_VID&021532_PID&070a_REV&0001_e889516bc56f\\8&ab05448&1&0017";
+            //string deviceInstanceId = "8&ab05448&1&0017";
+            //Guid GUID_DEVINTERFACE_BT = new Guid("E0CBF06C-CD8B-4647-BB8A-263B43F0F974");
+            //OpenPropertiesDialog(parent);
 
             // Then show our properties dialog
-            OpenPropertiesDialog(device);
+            //OpenPropertiesDialog(device);
         }
 
         private void copyNodeTextToolStripMenuItem_Click(object sender, EventArgs e)
@@ -812,3 +811,5 @@ namespace HidDemo
         }
     }
 }
+
+//#{4d1e55b2-f16f-11cf-88cb-001111000030}

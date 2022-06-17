@@ -36,9 +36,16 @@ namespace SharpLib.Hid
         /// <summary>
         /// Unique name of that HID device.
         /// Notably used as input to CreateFile.
+        /// You can derive the device instance path AKA instance id from it.
         /// </summary>
         public string Name { get; private set; }
 
+        /// <summary>
+        /// Instance path uniquely identifies a device.
+        /// Can be used as input to SetupDiGetClassDevs to retrieve device handles and from there other properties.
+        /// </summary>
+        public string InstancePath { get; private set; }
+       
         /// <summary>
         /// Friendly name that people should be able to read.
         /// </summary>
@@ -109,6 +116,11 @@ namespace SharpLib.Hid
 
             //Fetch various information defining the given HID device
             Name = Win32.RawInput.GetDeviceName(hRawInputDevice);
+            // Quick and dirty way to workout our instance path from our name
+            // We drop the first 4 characters '\\?\' and the last 39 characters which are class GUID then we replace all # with \ 
+            // We had a more formal and overcomplicated way to do that implemented in the demo which involved going through all devices from that class until we find it
+            // We are hoping this solution is just as reliable
+            InstancePath = Name.Substring(4, Name.Length - 43).Replace('#', '\\');            
 
             //Fetch device info
             iInfo = new RID_DEVICE_INFO();
@@ -546,6 +558,7 @@ namespace SharpLib.Hid
             res += prefix + "[HID Device]" + "\r\n";
             res += indent + "String: " + ToString() + "\r\n";
             res += indent + "Name: " + Name + "\r\n";
+            res += indent + "InstancePath: " + InstancePath + "\r\n";
             res += indent + "Manufacturer: " + Manufacturer + "\r\n";
             res += indent + "Product: " + Product + "\r\n";
             res += indent + "VendorID: 0x" + VendorId.ToString("X4") + "\r\n";
@@ -563,6 +576,28 @@ namespace SharpLib.Hid
         public void DebugWrite()
         {
             Debug.Write(ToString());
+        }
+
+        /// <summary>
+        /// Open the properties dialog that you can otherwise get from Windows Device Manager.
+        /// </summary>
+        public void ShowProperties()
+        {
+            // Define command line parameters before running our process
+            string parameters = "devmgr.dll,DeviceProperties_RunDLL /MachineName \"\"  /DeviceID ";
+            // Add double quote
+            parameters += "\"" + InstancePath + "\"";
+            //Debug.Print(parameters);
+            ProcessStartInfo procStartInfo = new ProcessStartInfo("rundll32.exe", parameters);
+
+            // The following commands are needed to redirect the standard output.
+            // This means that it will be redirected to the Process.StandardOutput StreamReader.
+            //procStartInfo.RedirectStandardOutput = true;
+            //procStartInfo.UseShellExecute = false;
+            // Do not create the black window.
+            //procStartInfo.CreateNoWindow = true;
+            //
+            Process.Start(procStartInfo);
         }
 
     }

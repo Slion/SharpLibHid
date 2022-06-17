@@ -430,7 +430,8 @@ namespace SharpLib.Win32
 
                 }
 
-                node.Nodes.Add(hidDevice.Name);
+                node.Nodes.Add("Name: " + hidDevice.Name);
+                node.Nodes.Add("InstancePath: " + hidDevice.InstancePath);
             }
         }
 
