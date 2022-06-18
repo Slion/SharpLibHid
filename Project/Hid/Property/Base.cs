@@ -19,7 +19,7 @@ namespace SharpLib.Hid.Property
         static Dictionary<string, DEVPROPKEY> iPropertyGuids = null;
 
 
-        public string Name { get; private set; }
+        public string Name { get; protected set; }
 
         /*
         public unsafe static Base New(SetupDiDestroyDeviceInfoListSafeHandle aDevInfo, SP_DEVINFO_DATA aDevInfoData, DEVPROPKEY aKey)
@@ -51,27 +51,36 @@ namespace SharpLib.Hid.Property
                     GetLastError.LogAndThrow("SetupDiGetDeviceProperty");
                 }
             }
-                    
-            string propertyName = "";
-            if (!iPropertyNames.TryGetValue(aKey, out propertyName))
-            {
-                // TODO: If the DEVPROPKEY is not found we could try just finding the GUID
-                propertyName = aKey.fmtid.ToString() + " - " + aKey.pid.ToString();
-            }
 
-
+            string name = NameForKey(aKey);
+            // Create property object matching that property type 
             if (type == DEVPROP_TYPE_FLAGS.DEVPROP_TYPE_STRING)
             {
-                var value = System.Text.Encoding.Unicode.GetString(buffer).TrimEnd('\0');
-                Trace.WriteLine(propertyName + ": " + value);
+                // Create and return that string property
+                var p = new Property.String(name, System.Text.Encoding.Unicode.GetString(buffer).TrimEnd('\0'));
+                Trace.WriteLine(p.Name + ": " + p.Value);
+                return p;
             }
             // TODO: Handle other property types
             else
             {
-                Trace.WriteLine(propertyName + ": type not supported" );
+                Trace.WriteLine(name + ": type not supported" );
             }
 
             return null;
+        }
+
+
+        static string NameForKey(DEVPROPKEY aKey)
+        {
+            string name = "";
+            if (!iPropertyNames.TryGetValue(aKey, out name))
+            {
+                // TODO: If the DEVPROPKEY is not found we could try just finding the GUID
+                name = aKey.fmtid.ToString() + " - " + aKey.pid.ToString();
+            }
+
+            return name;
         }
 
         //public virtual string ToString();

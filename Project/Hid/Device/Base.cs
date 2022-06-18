@@ -29,6 +29,7 @@ namespace SharpLib.Hid.Device
         private string iInstancePath;
         SetupDiDestroyDeviceInfoListSafeHandle iDevInfo;
         SP_DEVINFO_DATA iDevInfoData = new SP_DEVINFO_DATA(true);
+        Dictionary<string, Property.Base> iProperties = new Dictionary<string, Property.Base>();
 
         /// <summary>
         /// Instance path uniquely identifies a device.
@@ -109,7 +110,13 @@ namespace SharpLib.Hid.Device
                 // Fetch all our properties
                 for (int i=0;i<propertyCount;i++)
                 {
-                    SharpLib.Hid.Property.Base.New(iDevInfo, *ptrDevInfoData, propertyKeys[i]);
+                    // TODO: put this in a function
+                    var p = Property.Base.New(iDevInfo, *ptrDevInfoData, propertyKeys[i]);
+                    if (p!=null)
+                    {
+                        // Add that property to our dictionary
+                        iProperties.Add(p.Name, p);
+                    }
                 }
             }
         }
