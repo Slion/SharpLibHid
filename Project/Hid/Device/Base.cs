@@ -29,7 +29,7 @@ namespace SharpLib.Hid.Device
         private string iInstancePath;
         SetupDiDestroyDeviceInfoListSafeHandle iDevInfo;
         SP_DEVINFO_DATA iDevInfoData = new SP_DEVINFO_DATA(true);
-        Dictionary<string, Property.Base> iProperties = new Dictionary<string, Property.Base>();
+        Dictionary<DEVPROPKEY, Property.Base> iProperties = new Dictionary<DEVPROPKEY, Property.Base>();
 
         /// <summary>
         /// Instance path uniquely identifies a device.
@@ -42,8 +42,7 @@ namespace SharpLib.Hid.Device
             {
                 iInstancePath = value;
                 GetDeviceInfoData();
-                GetAllProperties();
-   
+                GetAllProperties();   
             } 
         }
 
@@ -110,18 +109,63 @@ namespace SharpLib.Hid.Device
                 // Fetch all our properties
                 for (int i=0;i<propertyCount;i++)
                 {
-                    // TODO: put this in a function
-                    var p = Property.Base.New(iDevInfo, *ptrDevInfoData, propertyKeys[i]);
-                    if (p!=null)
-                    {
-                        // Add that property to our dictionary
-                        iProperties.Add(p.Name, p);
-                    }
+                    GetProperty(propertyKeys[i]);
                 }
             }
         }
 
+        /// <summary>
+        /// Get property from our cache or load it if needed.
+        /// </summary>
+        /// <param name="aKey"></param>
+        /// <returns></returns>
+        public Property.Base GetProperty(DEVPROPKEY aKey)
+        {
+            // Check if that property is already in our cache
+            Property.Base p;
+            if (iProperties.TryGetValue(aKey,out p))
+            {
+                return p;
+            }
 
+            // Property not yet in our cache
+            return LoadProperty(aKey);
+        }
+
+        /// <summary>
+        /// Load the given property from the system and put it in our cache.
+        /// TODO: Not sure we actually tested reload.
+        /// </summary>
+        /// <param name="aKey"></param>
+        /// <returns></returns>
+        unsafe public Property.Base LoadProperty(DEVPROPKEY aKey)
+        {
+            fixed (SP_DEVINFO_DATA* ptrDevInfoData = &iDevInfoData) // Needed for data members apparently 
+            {
+                var p = Property.Base.New(iDevInfo, *ptrDevInfoData, aKey);
+                if (p != null)
+                {
+                    // Add or replace that property to our dictionary
+                    iProperties[aKey] = p;
+                    //iProperties.Add(aKey, p);
+                }
+                return p;
+            }
+        }
+
+        /// <summary>
+        /// Obtain this device parent.
+        /// TODO: Check what happens when not parent.
+        /// I'm guessing it would throw an exception.
+        /// </summary>
+        /// <returns></returns>
+        public Device.Base Parent()
+        {
+            // TODO: Use our device cache instead?
+            var parent = new Device.Base();
+            parent.InstancePath = GetProperty(DEVPKEY.Device_Parent).ToString();
+            return parent;
+        }
 
         /// <summary>
         /// Make sure dispose is called even if the user forgot about it.

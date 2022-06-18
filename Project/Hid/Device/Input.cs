@@ -27,6 +27,8 @@ using SharpLib.Win32;
 
 namespace SharpLib.Hid.Device
 {
+    using Windows.Win32.Devices.Properties;
+
     /// <summary>
     /// Represent a HID device.
     /// Rename to RawInputDevice?
@@ -315,22 +317,31 @@ namespace SharpLib.Hid.Device
                 FriendlyName = Product + suffix;
             }
             else
-            {   
-                //Extract friendly name from name
-                char[] delimiterChars = { '#', '&'};
-                string[] words = Name.Split(delimiterChars);
-                if (words.Length >= 2)
+            {
+                // Getting friendly name from grand parent worked for Razer Junglecat
+                // TODO: Try to implement that in a more generic way to support more device with similar issue
+                var grandParent = Parent().Parent();
+                if (grandParent.GetProperty(DEVPKEY.Device_Class).ToString()=="Bluetooth")
                 {
-                    //Use our name sub-string to describe this device
-                    FriendlyName = words[1] + " - 0x" + ProductId.ToString("X4") + suffix;
+                    FriendlyName = grandParent.GetProperty(DEVPKEY.Device_FriendlyName) + suffix;
                 }
                 else
                 {
-                    //No proper name just use the device ID instead
-                    FriendlyName = "0x" + ProductId.ToString("X4") + suffix;
+                    //Extract friendly name from name
+                    char[] delimiterChars = { '#', '&' };
+                    string[] words = Name.Split(delimiterChars);
+                    if (words.Length >= 2)
+                    {
+                        //Use our name sub-string to describe this device
+                        FriendlyName = words[1] + " - 0x" + ProductId.ToString("X4") + suffix;
+                    }
+                    else
+                    {
+                        //No proper name just use the device ID instead
+                        FriendlyName = "0x" + ProductId.ToString("X4") + suffix;
+                    }
                 }
             }
-
         }
 
         /// <summary>
