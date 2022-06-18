@@ -6,7 +6,7 @@ using System.Text;
 /// <summary>
 /// TODO: Move it to another project SharpLibSetup
 /// </summary>
-namespace SharpLib.Setup
+namespace SharpLib.Hid.Device
 {
 
     using Windows.Win32;
@@ -24,7 +24,7 @@ namespace SharpLib.Setup
     /// <see cref="Windows.Win32.SetupDiDestroyDeviceInfoListSafeHandle"/> 
     /// <see cref="Windows.Win32.Devices.DeviceAndDriverInstallation.SP_DEVINFO_DATA"/>
     /// </summary>
-    public class Device : IDisposable
+    public class Base : IDisposable
     {
         private string iInstancePath;
         SetupDiDestroyDeviceInfoListSafeHandle iDevInfo;
@@ -109,7 +109,7 @@ namespace SharpLib.Setup
                 // Fetch all our properties
                 for (int i=0;i<propertyCount;i++)
                 {
-                    Hid.Property.Base.New(iDevInfo, *ptrDevInfoData, propertyKeys[i]);
+                    SharpLib.Hid.Property.Base.New(iDevInfo, *ptrDevInfoData, propertyKeys[i]);
                 }
             }
         }
@@ -119,7 +119,7 @@ namespace SharpLib.Setup
         /// <summary>
         /// Make sure dispose is called even if the user forgot about it.
         /// </summary>
-        ~Device()
+        ~Base()
         {
             Dispose();
         }

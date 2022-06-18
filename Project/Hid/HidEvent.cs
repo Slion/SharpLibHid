@@ -184,7 +184,7 @@ namespace SharpLib.Hid
             }
         }
 
-        public Device Device { get; private set; }
+        public Device.Input Device { get; private set; }
         public RAWINPUT RawInput { get {return iRawInput;} } 
         private RAWINPUT iRawInput;
 

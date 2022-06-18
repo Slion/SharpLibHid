@@ -147,7 +147,7 @@ namespace HidDemo
 
             foreach (TreeNode node in treeViewDevices.Nodes)
             {
-                Hid.Device device = (Hid.Device)node.Tag;
+                Hid.Device.Input device = (Hid.Device.Input)node.Tag;
                 if (!device.IsHid)
                 {
                     //Now allowing mouse and keyboard to register too
@@ -166,7 +166,7 @@ namespace HidDemo
         /// </summary>
         /// <param name="aDevicePath"></param>
         /// <returns></returns>
-        public static bool OpenPropertiesDialog(Hid.Device aDevice)
+        public static bool OpenPropertiesDialog(Hid.Device.Input aDevice)
         {
             // We could not find a better way to do this other than just trying with the various classes: HID, Keyboard and Mouse
             // Get the GUID of the HID class
@@ -393,7 +393,7 @@ namespace HidDemo
 
             foreach (TreeNode node in treeViewDevices.Nodes)
             {
-                Hid.Device device = (Hid.Device)node.Tag;
+                Hid.Device.Input device = (Hid.Device.Input)node.Tag;
                 if (device.IsKeyboard || (device.IsHid && 
                     (device.UsageId == mceUsageId || device.UsageId == consumerUsageId || device.UsageId == gamepadUsageId)))
                 {
@@ -419,10 +419,10 @@ namespace HidDemo
             // See: Const.RIDEV_EXINPUTSINK and Const.RIDEV_INPUTSINK
 
             //We collect our devices in a dictionary to remove duplicates
-            Dictionary<uint, Hid.Device>  devices = new Dictionary<uint, Hid.Device>();
+            Dictionary<uint, Hid.Device.Input>  devices = new Dictionary<uint, Hid.Device.Input>();
             foreach (TreeNode node in treeViewDevices.Nodes)
             {
-                Hid.Device device = (Hid.Device)node.Tag;
+                Hid.Device.Input device = (Hid.Device.Input)node.Tag;
                 //Now allowing mouse and keyboard to register too
                 if (node.Checked /*&& device.IsHid*/) 
                 {
@@ -447,7 +447,7 @@ namespace HidDemo
             int i = 0;
             RAWINPUTDEVICE[] rid = new RAWINPUTDEVICE[devices.Count];
 
-            foreach (KeyValuePair<uint,Hid.Device> entry in devices)
+            foreach (KeyValuePair<uint,Hid.Device.Input> entry in devices)
             {                
                 rid[i].usUsagePage = entry.Value.UsagePage;
                 rid[i].usUsage = entry.Value.UsageCollection;
@@ -776,11 +776,11 @@ namespace HidDemo
         {
             // Walk up the tree until we find our device
             TreeNode node = treeViewDevices.SelectedNode;
-            while (!(node.Tag is Hid.Device))
+            while (!(node.Tag is Hid.Device.Input))
             {
                 node = node.Parent;
             }
-            Hid.Device device = (Hid.Device)node.Tag;
+            Hid.Device.Input device = (Hid.Device.Input)node.Tag;
 
             device.ShowProperties();
 

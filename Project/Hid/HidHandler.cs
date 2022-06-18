@@ -39,7 +39,7 @@ namespace SharpLib.Hid
         //TODO: Consider using only the VirtualKey as key since we now resolve left and right modifiers internally
         Dictionary<ulong, Event> iKeyDownEvents;
         RAWINPUTDEVICE[] iRawInputDevices;
-        Dictionary<IntPtr, Device> iDevices = new Dictionary<IntPtr, Device>();
+        Dictionary<IntPtr, Device.Input> iDevices = new Dictionary<IntPtr, Device.Input>();
 
         public bool IsRegistered { get; private set; }
         public bool ManageRepeats { get; private set; }
@@ -106,7 +106,7 @@ namespace SharpLib.Hid
         public void Dispose()
         {
             //Free up cached devices if any
-            foreach (Device d in iDevices.Values)
+            foreach (Device.Input d in iDevices.Values)
             {
                 d.Dispose();
             }
@@ -139,15 +139,15 @@ namespace SharpLib.Hid
         /// </summary>
         /// <param name="aHandle">Handle of the HID device we need to fetch</param>
         /// <returns></returns>
-        public Device FetchDevice(IntPtr aHandle)
+        public Device.Input FetchDevice(IntPtr aHandle)
         {
-            Device device = null;
+            Device.Input device = null;
 
             // Try fetch matching device from our cache
             if (!iDevices.TryGetValue(aHandle, out device))
             {   
                 // Device not found in our cache, just create it then
-                device = new Device(aHandle);
+                device = new Device.Input(aHandle);
                 // Then make sure we cache it
                 iDevices.Add(aHandle, device);
             }
