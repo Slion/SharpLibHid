@@ -16,7 +16,7 @@ CreateFile
 GetRawInputDeviceInfo
 
 RID_DEVICE_INFO
-
+//DEVPROPTYPE
 
 DEVPKEY*
 //DIGCF*
