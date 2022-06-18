@@ -31,7 +31,7 @@ namespace SharpLib.Hid
     /// Represent a HID device.
     /// Rename to RawInputDevice?
     /// </summary>
-    public class Device: IDisposable
+    public class Device: Setup.Device
     {
         /// <summary>
         /// Unique name of that HID device.
@@ -39,12 +39,6 @@ namespace SharpLib.Hid
         /// You can derive the device instance path AKA instance id from it.
         /// </summary>
         public string Name { get; private set; }
-
-        /// <summary>
-        /// Instance path uniquely identifies a device.
-        /// Can be used as input to SetupDiGetClassDevs to retrieve device handles and from there other properties.
-        /// </summary>
-        public string InstancePath { get; private set; }
        
         /// <summary>
         /// Friendly name that people should be able to read.
@@ -93,15 +87,6 @@ namespace SharpLib.Hid
                 Dispose();
                 throw ex;
             }
-        }
-
-
-        /// <summary>
-        /// Make sure dispose is called even if the user forgot about it.
-        /// </summary>
-        ~Device()
-        {
-            Dispose();
         }
 
         /// <summary>
@@ -352,8 +337,9 @@ namespace SharpLib.Hid
         /// Make sure calling disposed multiple times does not crash.
         /// See: http://stackoverflow.com/questions/538060/proper-use-of-the-idisposable-interface/538238#538238
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         {
+            base.Dispose();
             Marshal.FreeHGlobal(PreParsedData);
             PreParsedData = IntPtr.Zero;
         }

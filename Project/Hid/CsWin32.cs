@@ -16,11 +16,42 @@ namespace Windows.Win32
     {
         public static readonly Foundation.BOOLEAN TRUE = new Foundation.BOOLEAN(1);
         public static readonly Foundation.BOOLEAN FALSE = new Foundation.BOOLEAN(0);
+        //public static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1L);
+        public static readonly uint INVALID_HANDLE_VALUE = uint.MaxValue;
     }
+
+
 
 
     namespace Devices.DeviceAndDriverInstallation
     {
+
+        [Flags]
+        public enum DEVICEINFOGETCLASS_FLAGS : uint
+        {
+            // Flags controlling what is included in the device information set built by SetupDiGetClassDevs
+            DIGCF_DEFAULT = 0x00000001,       // only valid with DIGCF_DEVICEINTERFACE
+            DIGCF_PRESENT = 0x00000002,
+            DIGCF_ALLCLASSES = 0x00000004,
+            DIGCF_PROFILE = 0x00000008,
+            DIGCF_DEVICEINTERFACE = 0x00000010
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public partial struct SP_DEVINFO_DATA
+        {
+            unsafe public SP_DEVINFO_DATA(bool aValid = true)
+            {
+                cbSize = (uint)sizeof(SP_DEVINFO_DATA);
+                ClassGuid = Guid.Empty;
+                DevInst = K.INVALID_HANDLE_VALUE;
+                //DevInst = 0;
+                Reserved = 0;
+            }
+        }
+
         /// <summary>
         /// We used that as a fixed size buffer to be cast into SP_DEVICE_INTERFACE_DETAIL_DATA_W
         /// See: https://github.com/microsoft/CsWin32/discussions/589

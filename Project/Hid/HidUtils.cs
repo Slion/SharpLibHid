@@ -127,6 +127,8 @@ namespace SharpLib.Win32
 {
     using SharpLib.ToEnum;
     using Windows.Win32.Foundation;
+    using System.ComponentModel;
+    using System.Diagnostics;
     public static class GetLastError
     {
         public static string String()
@@ -136,8 +138,29 @@ namespace SharpLib.Win32
 
         public static WIN32_ERROR Enum()
         {
-            int err = Marshal.GetLastWin32Error();
+            int err = Int();
             return err.ToEnum<WIN32_ERROR>();
+        }
+
+        public static int Int()
+        {
+            return Marshal.GetLastWin32Error();
+        }
+
+        public static void Throw()
+        {            
+            throw new Win32Exception(Int(),String());
+        }
+
+        public static void Log(string aPrefix="")
+        {
+            Trace.WriteLine(aPrefix + ".GetLastError: " + String());
+        }
+
+        public static void LogAndThrow(string aPrefix = "")
+        {
+            Log(aPrefix);
+            Throw();
         }
 
     }
