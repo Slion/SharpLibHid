@@ -84,6 +84,7 @@ namespace SharpLib.Hid
             catch (System.Exception ex)
             {
                 //Just rollback and propagate
+                Trace.WriteLine("Device.Construct exception: " + ex.ToString());
                 Dispose();
                 throw ex;
             }

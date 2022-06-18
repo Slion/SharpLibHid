@@ -29,7 +29,8 @@ namespace SharpLib.Setup
         private string iInstancePath;
         SetupDiDestroyDeviceInfoListSafeHandle iDevInfo;
         SP_DEVINFO_DATA iDevInfoData = new SP_DEVINFO_DATA(true);
-        
+        static Dictionary<DEVPROPKEY, string> iPropertyNames = null;
+        static Dictionary<string, DEVPROPKEY> iPropertyGuids = null;
 
         /// <summary>
         /// Instance path uniquely identifies a device.
@@ -47,6 +48,10 @@ namespace SharpLib.Setup
             } 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <exception cref="ArgumentException"></exception>
         private unsafe void GetDeviceInfoData()
         {
             // Get our device information set handle, that set though should contain only this device instance really
@@ -80,8 +85,39 @@ namespace SharpLib.Setup
         /// <summary>
         /// 
         /// </summary>
+        void BuildPropertiesDictionary()
+        {
+            lock(this)
+            {
+                if (iPropertyNames != null)
+                {
+                    // Already built
+                    return;
+                }
+
+                var properties = typeof(DEVPKEY).GetProperties();
+                iPropertyNames = new Dictionary<DEVPROPKEY, string>(properties.Length);
+                iPropertyGuids = new Dictionary<string, DEVPROPKEY>(properties.Length);
+                foreach (var p in properties)
+                {
+                    //Trace.WriteLine("Prop: " + p.Name);
+                    //var guid = ((DEVPROPKEY)p.GetValue(null, null)).fmtid;
+                    var guid = ((DEVPROPKEY)p.GetValue(null, null));
+                    iPropertyNames.Add(guid, p.Name);
+                    iPropertyGuids.Add(p.Name, guid);
+                }
+            }
+        }
+
+        /// <summary>
+        /// TODO: Don't do this by default when loading a device as it will slow things down quite a bit
+        /// </summary>
         unsafe void GetAllProperties()
         {
+            BuildPropertiesDictionary();
+
+            Trace.WriteLine("--------------------------------------------------------------------------------");
+
             fixed (SP_DEVINFO_DATA* ptrDevInfoData = &iDevInfoData) // Needed for data members apparently 
             {
                 uint propertyCount;
@@ -105,16 +141,37 @@ namespace SharpLib.Setup
                     DEVPROP_TYPE_FLAGS type;
                     uint size = 0;
                     PInvoke.SetupDiGetDeviceProperty(iDevInfo, ptrDevInfoData, &propertyKeys[i], (uint*)&type, null, 0, &size, 0); // Returns false and ERROR_NO_TOKEN when querying size and type
-                    
+
+                    byte[] buffer = new byte[(int)size];
                     // TODO: Handle property types
-                    //if (PInvoke.SetupDiGetDeviceProperty(iDevInfo, ptrDevInfoData, &propertyKeys[i], (uint*)&type, null, 0, &size, 0))
-                    //{
-                    //    GetLastError.LogAndThrow("SetupDiGetDeviceProperty");
-                    //}
+                    fixed (byte* ptr = buffer)
+                    {
+                        if (!PInvoke.SetupDiGetDeviceProperty(iDevInfo, ptrDevInfoData, &propertyKeys[i], (uint*)&type, ptr, size, null, 0))
+                        {
+                            GetLastError.LogAndThrow("SetupDiGetDeviceProperty");
+                        }
+                    }
+
+                    //string propertyName = iPropertyNames[propertyKeys[i]];
+                    string propertyName = "";
+                    if (!iPropertyNames.TryGetValue(propertyKeys[i], out propertyName))
+                    {
+                        // TODO: If the DEVPROPKEY is not found we could try just finding the GUID
+                        propertyName = propertyKeys[i].fmtid.ToString() + " - " + propertyKeys[i].pid.ToString();
+                    }
+
+
+                    if (type == DEVPROP_TYPE_FLAGS.DEVPROP_TYPE_STRING)
+                    {
+                        var value = System.Text.Encoding.Unicode.GetString(buffer).TrimEnd('\0');
+                        Trace.WriteLine(propertyName + ": " + value);
+                    }
+                    else
+                    {
+                        Trace.WriteLine(propertyName + ": type not supported" );
+                    }
                 }
-
             }
-
         }
 
         /// <summary>
