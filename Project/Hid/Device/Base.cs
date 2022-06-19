@@ -109,9 +109,26 @@ namespace SharpLib.Hid.Device
                 // Fetch all our properties
                 for (int i=0;i<propertyCount;i++)
                 {
-                    GetProperty(propertyKeys[i]);
+                    TryGetProperty(propertyKeys[i]);
                 }
             }
+        }
+
+        /// <summary>
+        /// Won't throw any exception. Just returns null if the given property is not available. 
+        /// </summary>
+        /// <param name="aKey"></param>
+        /// <returns></returns>
+        public Property.Base TryGetProperty(DEVPROPKEY aKey)
+        { 
+            try
+            {
+                return GetProperty(aKey);
+            }
+            catch
+            {
+                return null;
+            }            
         }
 
         /// <summary>

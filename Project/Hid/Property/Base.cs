@@ -64,7 +64,11 @@ namespace SharpLib.Hid.Property
             // TODO: Handle other property types
             else
             {
-                Trace.WriteLine(name + ": type not supported" );
+                string msg = name + ": type not supported";
+                Trace.WriteLine(msg);
+                // Throwing an exception here makes it really slow to load all our devices
+                // Just don't do that for now then
+                //throw new NotSupportedException(msg);
             }
 
             return null;

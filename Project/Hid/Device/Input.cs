@@ -318,12 +318,24 @@ namespace SharpLib.Hid.Device
             }
             else
             {
-                // Getting friendly name from grand parent worked for Razer Junglecat
-                // TODO: Try to implement that in a more generic way to support more device with similar issue
-                var grandParent = Parent().Parent();
-                if (grandParent.GetProperty(DEVPKEY.Device_Class).ToString()=="Bluetooth")
+                // Try get friendly name from our ancestors, that notably works for Razer Junglecat and also everything else apparently
+                Device.Base d = this;
+                while (d.TryGetProperty(DEVPKEY.Device_FriendlyName)==null)
                 {
-                    FriendlyName = grandParent.GetProperty(DEVPKEY.Device_FriendlyName) + suffix;
+                    if (d.TryGetProperty(DEVPKEY.Device_Parent)!=null)
+                    {
+                        d = d.Parent();
+                    }
+                    else 
+                    {
+                        // No more parents, just give up then
+                        break;
+                    }                    
+                }
+
+                if (d.TryGetProperty(DEVPKEY.Device_FriendlyName)!=null)
+                {
+                    FriendlyName = d.GetProperty(DEVPKEY.Device_FriendlyName) + suffix;
                 }
                 else
                 {
