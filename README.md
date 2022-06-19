@@ -15,19 +15,12 @@ You can get a pretty good understanding of what this library can do be running o
 ## Download
 The easiest way to use this library in your own project is to add a reference to the NuGet package that suits your needs.
 
-### Nuget
+### NuGets
 
-#### x64
+| x64 | x86 | Legacy |
+| -- | -- | -- |
+| [![NuGet Badge](https://buildstats.info/nuget/Slions.SharpLib.Hid-x64)](https://www.nuget.org/packages/Slions.SharpLib.Hid-x64/) | [![NuGet Badge](https://buildstats.info/nuget/Slions.SharpLib.Hid-x86)](https://www.nuget.org/packages/Slions.SharpLib.Hid-x86/) | [![NuGet Badge](https://buildstats.info/nuget/SharpLibHid)](https://www.nuget.org/packages/SharpLibHid/) |
 
-[![NuGet Badge](https://buildstats.info/nuget/Slions.SharpLib.Hid-x64)](https://www.nuget.org/packages/Slions.SharpLib.Hid-x64/)
-
-#### x86
-
-[![NuGet Badge](https://buildstats.info/nuget/Slions.SharpLib.Hid-x86)](https://www.nuget.org/packages/Slions.SharpLib.Hid-x86/)
-
-#### Legacy - AnyCPU
-
-[![NuGet Badge](https://buildstats.info/nuget/SharpLibHid)](https://www.nuget.org/packages/SharpLibHid/)
 
 ## Usage
 
