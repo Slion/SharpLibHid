@@ -1,4 +1,3 @@
-[![NuGet Badge](https://buildstats.info/nuget/SharpLibHid)](https://www.nuget.org/packages/SharpLibHid/)
 ![Build status](https://github.com/slion/sharplibhid/actions/workflows/dotnet.yml/badge.svg)
 <img align="right" src="/Publish/usb.png">
 <!--
@@ -13,8 +12,22 @@ C# HID Library using Windows Raw Input. Most useful to handle inputs from IR rem
 
 You can get a pretty good understanding of what this library can do be running our [HID Demo](http://publish.slions.net/HidDemo/).
 
-## Binary Distribution
-The easiest way to make use of this library in your own project is to add a reference to the following [NuGet package](https://www.nuget.org/packages/SharpLibHid/).
+## Download
+The easiest way to use this library in your own project is to add a reference to the NuGet package that suits your needs.
+
+### Nuget
+
+#### x64
+
+[![NuGet Badge](https://buildstats.info/nuget/Slions.SharpLib.Hid-x64)](https://www.nuget.org/packages/Slions.SharpLib.Hid-x64/)
+
+#### x86
+
+[![NuGet Badge](https://buildstats.info/nuget/Slions.SharpLib.Hid-x86)](https://www.nuget.org/packages/Slions.SharpLib.Hid-x86/)
+
+#### Legacy - AnyCPU
+
+[![NuGet Badge](https://buildstats.info/nuget/SharpLibHid)](https://www.nuget.org/packages/SharpLibHid/)
 
 ## Usage
 
