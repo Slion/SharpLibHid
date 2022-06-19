@@ -24,13 +24,13 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore SharpLibHid.sln
     - name: Build debug x86
-      run: dotnet build SharpLibHid.sln --no-restore -c Debug /p:Platform=x86
+      run: dotnet build SharpLibHid.sln -c Debug /p:Platform=x86
     - name: Build release x86
-      run: dotnet build SharpLibHid.sln --no-restore -c Release /p:Platform=x86      
+      run: dotnet build SharpLibHid.sln -c Release /p:Platform=x86      
     - name: Build debug x64
-      run: dotnet build SharpLibHid.sln --no-restore -c Debug /p:Platform=x64
+      run: dotnet build SharpLibHid.sln -c Debug /p:Platform=x64
     - name: Build release x64
-      run: dotnet build SharpLibHid.sln --no-restore -c Release /p:Platform=x64       
+      run: dotnet build SharpLibHid.sln -c Release /p:Platform=x64       
     - name: Test
       run: dotnet test SharpLibHid.sln --no-build --verbosity normal
     - name: Publish Nuget x86
