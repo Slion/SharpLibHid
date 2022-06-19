@@ -11,7 +11,7 @@
       <PackageId>HidDemo</PackageId>
       <Company>Slions</Company>
       <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
-      <Platforms>AnyCPU;x64</Platforms>
+      <Platforms>AnyCPU;x64;x86</Platforms>
 	  <AllowUnsafeBlocks>True</AllowUnsafeBlocks>  
   </PropertyGroup>
   <ItemGroup>

@@ -42,7 +42,7 @@ namespace SharpLib.Hid.Device
             {
                 iInstancePath = value;
                 GetDeviceInfoData();
-                GetAllProperties();   
+                //GetAllProperties();   
             } 
         }
 

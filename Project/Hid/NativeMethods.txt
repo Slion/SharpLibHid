@@ -1,17 +1,28 @@
 ﻿
 
 // DLLs
-Hid.*
-setupapi.*
-Kernel32.*
-User32.*
+// I suspect including entire DLLs like that slows down IntelliSense big time
+// See: https://github.com/microsoft/CsWin32/discussions/591
+//Hid.*
+//setupapi.*
+//Kernel32.*
+//User32.*
 
-// Functions we actually used
+// HID
 HidP_GetUsageValueArray
 HidD_GetProductString
 HidD_GetManufacturerString
-SetupDiGetDevicePropertyW
+
+// Setup API
 SetupDiGetClassDevs
+SetupDiEnumDeviceInfo
+SetupDiEnumDeviceInterfaces
+SetupDiGetDeviceInterfaceDetail
+SetupDiGetDevicePropertyKeys
+SetupDiGetDeviceProperty
+SetupDiGetDeviceInstanceId
+
+
 CreateFile
 GetRawInputDeviceInfo
 
@@ -20,8 +31,5 @@ RID_DEVICE_INFO
 
 DEVPKEY*
 //DIGCF*
-ERROR*
-//ERROR_NO_MORE_ITEMS
 
-//INVALID_HANDLE_VALUE
-
+WIN32_ERROR
