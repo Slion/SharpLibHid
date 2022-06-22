@@ -11,7 +11,7 @@
     <!--<TargetFrameworks>netstandard2.0</TargetFrameworks>-->
     <!--netstandard2.0;net5.0; netcoreapp3.1;-->
     <UseWindowsForms>true</UseWindowsForms>    
-    <Version>1.6.0</Version>
+    <Version>1.6.1</Version>
     <Authors>Stéphane Lenclud</Authors>
     <Copyright>(c)2021 Stéphane Lenclud</Copyright>
     <RootNamespace>SharpLib.Hid</RootNamespace>
@@ -39,74 +39,77 @@
     <PackageProjectUrl>https://github.com/Slion/SharpLibHid</PackageProjectUrl>
     
     <PackageReleaseNotes>
-	  v1.6.0
-	  Device architecture change.
-	  Device properties support.
-	  Device friendly name fetched from ancestors if need be.
-	  NuGet package ID changed.
-	  
-      v1.5.1
-      Joysticks supported to same level as GamePads.
-	  Add function to check if dpad is available.
-	  
-      v1.5.0
-      Fix crash with generic HID devices when using 64-bits architecture.
-      Add virtual reality usage collection.
-      Performance optimizations to cope with high volume of HID input reports coming from Oculus Rift S.
-      Upgrade to SharpLibWin32 v0.2.1.
+		v1.6.1
+		Fix missing eHome remote control device and events.
+		
+		v1.6.0
+		Device architecture change.
+		Device properties support.
+		Device friendly name fetched from ancestors if need be.
+		NuGet package ID changed.
 
-      v1.4.3
-      Adding pinvoke declarations supporting HID Demo device properties dialog.
+		v1.5.1
+		Joysticks supported to same level as GamePads.
+		Add function to check if dpad is available.
 
-      v1.4.2
-      Debug and Log rework.
-      Adding HID Event convenient methods.
+		v1.5.0
+		Fix crash with generic HID devices when using 64-bits architecture.
+		Add virtual reality usage collection.
+		Performance optimizations to cope with high volume of HID input reports coming from Oculus Rift S.
+		Upgrade to SharpLibWin32 v0.2.1.
 
-      v1.4.1
-      Keyboard modifiers and repeats  management.
+		v1.4.3
+		Adding pinvoke declarations supporting HID Demo device properties dialog.
 
-      v1.4.0
-      Adding support for keyboards.
-      Switched to .NET Framework 4.0.
+		v1.4.2
+		Debug and Log rework.
+		Adding HID Event convenient methods.
 
-      v1.3.1
-      Adding TvPower usage present on MCE remotes with basic IR learning capabilities.
+		v1.4.1
+		Keyboard modifiers and repeats  management.
 
-      v1.3.0
-      Registration and Parser functionalities can now be used independently.
+		v1.4.0
+		Adding support for keyboards.
+		Switched to .NET Framework 4.0.
 
-      v1.2.1
-      Upgrading to SharpLibWin32 v0.0.4.
+		v1.3.1
+		Adding TvPower usage present on MCE remotes with basic IR learning capabilities.
 
-      v1.2.0
-      Adding dependency on SharpLibWin32.
+		v1.3.0
+		Registration and Parser functionalities can now be used independently.
 
-      v1.1.0
-      Adding support for gamepad dpad repeat events.
-      Adding support for custom repeat delay and speed.
+		v1.2.1
+		Upgrading to SharpLibWin32 v0.0.4.
 
-      v1.0.7
-      Fixing framework folder name.
+		v1.2.0
+		Adding dependency on SharpLibWin32.
 
-      v1.0.6
-      Project URL updated.
+		v1.1.0
+		Adding support for gamepad dpad repeat events.
+		Adding support for custom repeat delay and speed.
 
-      v1.0.5
-      Fixing HID Demo crash on Surface Pro 3. Adding usage enumeration for GenericDevice.
+		v1.0.7
+		Fixing framework folder name.
 
-      v1.0.4
-      Build configuration fix.
+		v1.0.6
+		Project URL updated.
 
-      v1.0.3
-      x86 Build.
+		v1.0.5
+		Fixing HID Demo crash on Surface Pro 3. Adding usage enumeration for GenericDevice.
 
-      v1.0.2
-      Adding missing public keyword for some of our Usage enumerations.
+		v1.0.4
+		Build configuration fix.
 
-      v1.0.1
-      Adding ThinkPad specific usages.
-      Adding support for optional event repeat.
-    </PackageReleaseNotes>
+		v1.0.3
+		x86 Build.
+
+		v1.0.2
+		Adding missing public keyword for some of our Usage enumerations.
+
+		v1.0.1
+		Adding ThinkPad specific usages.
+		Adding support for optional event repeat.
+	</PackageReleaseNotes>
 
 
   

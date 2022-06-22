@@ -36,9 +36,9 @@ jobs:
     - name: Test
       run: dotnet test SharpLibHid.sln --no-build --verbosity normal
     - name: Publish Nuget x86
-      run: dotnet nuget push './Hid/bin/x86/Release/Slions.SharpLib.Hid-x86.1.6.0.nupkg' --skip-duplicate -k ${{ secrets.NUGET_CREATE_TOKEN }} --source https://api.nuget.org/v3/index.json 
+      run: dotnet nuget push './Hid/bin/x86/Release/Slions.SharpLib.Hid-x86.1.6.1.nupkg' --skip-duplicate -k ${{ secrets.NUGET_CREATE_TOKEN }} --source https://api.nuget.org/v3/index.json 
     - name: Publish Nuget x64
-      run: dotnet nuget push './Hid/bin/x64/Release/Slions.SharpLib.Hid-x64.1.6.0.nupkg' --skip-duplicate -k ${{ secrets.NUGET_CREATE_TOKEN }} --source https://api.nuget.org/v3/index.json 
+      run: dotnet nuget push './Hid/bin/x64/Release/Slions.SharpLib.Hid-x64.1.6.1.nupkg' --skip-duplicate -k ${{ secrets.NUGET_CREATE_TOKEN }} --source https://api.nuget.org/v3/index.json 
 
       #env:
       #   NUGET_APIKEY: ${{ secrets.NUGET_TOKEN }}
