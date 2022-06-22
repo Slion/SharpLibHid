@@ -41,7 +41,16 @@ namespace SharpLib.Hid.Device
             protected set
             {
                 iInstancePath = value;
-                GetDeviceInfoData();
+                try
+                {
+                    GetDeviceInfoData();
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine("Can't get device info for: " + iInstancePath);
+                    // Just ignore error we may still want to use that device though
+                }
+                
                 //GetAllProperties();   
             } 
         }
@@ -202,8 +211,17 @@ namespace SharpLib.Hid.Device
         {
         }
 
-
-
+        /// <summary>
+        /// Provide the instance path as this is basically our device unique identifier.
+        /// This is notably shown in the debugger preview.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            // Should this rather be the FriendlyName?
+            // Derived class is using friendly name anyway so this is not very relevant
+            return InstancePath;
+        }
 
     }
 }

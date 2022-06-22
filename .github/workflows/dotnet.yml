@@ -23,7 +23,7 @@ jobs:
         dotnet-version: 6.0.x
     #- name: Restore dependencies
       #run: dotnet restore SharpLibHid.sln
-# We needed to separately build each target and configuration combination 
+# We needed to separately build each target and configuration combinations
 # Not sure if there is build everything command we could use instead
     - name: Build debug x86
       run: dotnet build SharpLibHid.sln -c Debug /p:Platform=x86

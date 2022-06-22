@@ -86,7 +86,7 @@ namespace SharpLib.Hid.Device
             catch (System.Exception ex)
             {
                 //Just rollback and propagate
-                Trace.WriteLine("Device.Construct exception: " + ex.ToString());
+                Trace.WriteLine("Device.Input.Construct exception: " + ex.ToString());
                 Dispose();
                 throw ex;
             }
@@ -531,7 +531,7 @@ namespace SharpLib.Hid.Device
         }
 
         /// <summary>
-        /// 
+        /// This is notably shown in the debugger preview.
         /// </summary>
         /// <returns></returns>
         override public string ToString()

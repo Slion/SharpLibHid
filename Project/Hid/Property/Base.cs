@@ -29,7 +29,7 @@ namespace SharpLib.Hid.Property
         */
 
         /// <summary>
-        /// Our property factor function
+        /// Our property factory function
         /// </summary>
         /// <param name="aKey"></param>
         /// <returns></returns>
@@ -41,6 +41,10 @@ namespace SharpLib.Hid.Property
             DEVPROP_TYPE_FLAGS type;
             uint size = 0;
             PInvoke.SetupDiGetDeviceProperty(aDevInfo, &aDevInfoData, &aKey, (uint*)&type, null, 0, &size, 0); // Returns false and ERROR_NO_TOKEN when querying size and type
+            if (size==0)
+            {
+                return null;
+            }
 
             // Read the property data as a byte buffer
             byte[] buffer = new byte[(int)size];                    
